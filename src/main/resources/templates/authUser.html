@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="auth">
+	<span>
+				<form class="auth_form" method="POST" action="@{/auth}">
+					<div class="auth_form_div">
+						<label for="input_login">Логин: </label>
+						<input type="text" id="input_login" name="login" />
+					</div>
+					<div class="auth_form_div">
+						<label for="input_password">Пароль: </label>
+						<input type="password" id="input_password" name="password" />
+					</div>
+					<div class="auth_form_div_btn">
+						<button type="submit">Войти</button>
+					</div>
+				</form>
+	</span>
+</body>
+
+</html>

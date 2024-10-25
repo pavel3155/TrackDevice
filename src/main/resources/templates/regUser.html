@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+	<title>Регистрация</title>
+</head>
+<body class="auth">
+		<span>
+			<div th:if="${success}" class="" role="alert">
+				<strong>Аккаунт успешно создан!</strong>
+			</div>
+
+			<form class="auth_form" th:method="POST" th:action="@{/regUser}" th:object="${registerDTO}">
+				<div class="auth_form_div">
+					<label for="input_name">Имя: </label>
+					<input type="text" id="input_name" name="name" th:field="${registerDTO.name}"/>
+					<p th:if="${#fields.hasErrors('name')}" th:errorsclass="text-danger" th:errors="${registerDTO.name}"></p>
+				</div>
+				<div class="auth_form_div">
+					<label for="input_surname">Фамилия: </label>
+					<input type="text" id="input_surname" name="surname" th:field="${registerDTO.surname}" />
+					<p th:if="${#fields.hasErrors('surname')}" th:errorsclass="text-danger" th:errors="*{name}"></p>
+
+				</div>
+                <div class="auth_form_div">
+					<label for="input_email">Email: </label>
+					<input type="text" id="input_email" name="email" th:field="${registerDTO.email}"  />
+					<p th:if="${#fields.hasErrors('surname')}" th:errorsclass="text-danger" th:errors="*{name}"></p>
+				</div>
+                <div class="auth_form_div">
+					<label for="input_password">Пароль: </label>
+					<input type="password" id="input_password" name="password" th:field="${registerDTO.password}"/>
+					<p th:if="${#fields.hasErrors('surname')}" th:errorsclass="text-danger" th:errors="*{name}"></p>
+				</div>
+				<div class="auth_form_div">
+					<label for="confirm_password">Подтвердите пароль: </label>
+					<input type="password" id="confirm_password" name="conf_password" th:field="${registerDTO.confirmPassword}"/>
+					<p th:if="${#fields.hasErrors('surname')}" th:errorsclass="text-danger" th:errors="*{name}"></p>
+				</div>
+                <div class="auth_form_div">
+					<label for="input_role">Роль: </label>
+					<input type="text" id="input_role" name="role" />
+				</div>
+				<div class="auth_form_div_btn">
+					<button type="submit">Регистрация</button>
+				</div>
+			</form>
+		</span>
+</body>
+</html>
