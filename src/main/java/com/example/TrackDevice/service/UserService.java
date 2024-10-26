@@ -21,7 +21,7 @@ public class UserService {
         newUser.setEmail(registerDTO.getEmail());
         newUser.setRole("user");
         newUser.setPassword(bCryptEncoder.encode(registerDTO.getPassword()));
-        return userRepository.save(user);
+        return userRepository.save(newUser);
     }
 
 

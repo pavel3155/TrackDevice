@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Движение ТС</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <header>
 	<div id="header">
@@ -37,9 +37,9 @@
         </nav>
 		<nav>
             <ul class="nav_bar_ul">
-                <li><a target="container" th:href="@{/authUser}">Вход</a></li>
+                <li><a target="container" href="/authUser">Вход</a></li>
                 <li><a href="#">Выход</a></li>
-                <li><a target="container" href="/regUser">Регистрация</a></li>
+                <li><a href="/regUser">Регистрация</a></li>
                
             </ul>
         </nav>
@@ -50,7 +50,7 @@
 
 <body>
 	<div class="body_parent">
-		<iframe src="" name="container"></iframe>
+		<iframe name="container"></iframe>
 	</div>
 
 </body>

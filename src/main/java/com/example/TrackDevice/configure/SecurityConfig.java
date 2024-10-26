@@ -10,14 +10,17 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/css/**").permitAll()
+                        .requestMatchers("/img/**").permitAll()
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/auth").permitAll()
+                        .requestMatchers("/authUser").permitAll()
                         .requestMatchers("/regUser").permitAll()
                         .requestMatchers("/logout").permitAll()
                         .anyRequest().authenticated())
@@ -27,6 +30,8 @@ public class SecurityConfig {
                 .logout(config -> config.logoutSuccessUrl("/"))
                 .build();
     }
+
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
