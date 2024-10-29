@@ -4,16 +4,31 @@ import com.example.TrackDevice.DTO.RegisterDTO;
 import com.example.TrackDevice.model.User;
 import com.example.TrackDevice.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
-
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email);
+        System.out.println(user);
+        if (user != null){
+            var spUser = org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
+                    .password(user.getPassword())
+                    .roles(user.getRole())
+                    .build();
+            return spUser;
+        }
+        return null;
+    }
     public User regNewUser(RegisterDTO registerDTO){
-        User user = new User();
+
         var bCryptEncoder = new BCryptPasswordEncoder();
         User newUser = new User();
         newUser.setName(registerDTO.getName());

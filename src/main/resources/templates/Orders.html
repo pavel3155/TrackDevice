@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>(З)Заявки</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body  class="auth">
+<span>
+
+			<form class="auth_form" sec:authorize="isAuthenticated()" th:method="post" th:action="@{/Orders}" >
+                <div class="auth_form_div">
+					<label for="input_orderData">Дата заявки: </label>
+					<input type="text" id="input_orderData" name="orderData"/>
+				</div>
+
+                <div class="auth_form_div">
+					<label for="input_orderNumber">Номер заявки: </label>
+					<input type="text" id="input_orderNumber" name="orderNumber"/>
+				</div>
+                <div class="auth_form_div">
+					<label for="input_orderDescription">Описание: </label>
+					<input type="text" id="input_orderDescription" name="orderDescription"/>
+				</div>
+				<div class="auth_form_div_btn">
+					<button type="submit">Регистрация</button>
+				</div>
+			</form>
+		</span>
+</body>
+</html>
