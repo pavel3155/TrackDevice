@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 
 @Configuration
@@ -32,10 +33,17 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .permitAll()
                 )
-                .logout(config -> config.logoutSuccessUrl("/"))
+//                .logout(config -> config.logoutSuccessUrl("/"))
+                .logout(logout -> logout
+                                .logoutUrl("/logout")
+                                .logoutSuccessUrl("/index")
+                                //.logoutSuccessHandler(logoutSuccessHandler)
+                                .invalidateHttpSession(true)
+                                //.addLogoutHandler(logoutHandler)
+                                //.deleteCookies(cookieNamesToClear)
+                        )
                 .build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder(){
