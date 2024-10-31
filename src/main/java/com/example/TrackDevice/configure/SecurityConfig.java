@@ -24,24 +24,18 @@ public class SecurityConfig {
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/img/**").permitAll()
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/authUser").permitAll()
+                        .requestMatchers("/login").permitAll()
                         .requestMatchers("/regUser").permitAll()
                         .requestMatchers("/logout").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
-                        .defaultSuccessUrl("/",true)
+                        .loginPage("/login")
+                        .permitAll()
                 )
                 .logout(config -> config.logoutSuccessUrl("/"))
                 .build();
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChainHeaders(HttpSecurity http) throws Exception {
-        return http
-                .headers(headers -> headers
-                        .addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
-                .build();
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){

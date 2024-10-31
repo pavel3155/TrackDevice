@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/style.css">
@@ -7,10 +7,16 @@
 
 <body class="auth">
 	<span>
-				<form class="auth_form" method="POST" action="@{/auth}">
+		<h1>Please Log In</h1>
+		<div th:if="${param.error}">
+			Invalid username and password.</div>
+		<div th:if="${param.logout}">
+			You have been logged out.</div>
+
+				<form class="auth_form" method="post" th:action="@{/login}">
 					<div class="auth_form_div">
 						<label for="input_login">Логин: </label>
-						<input type="text" id="input_login" name="login" />
+						<input type="text" id="input_login" name="username" />
 					</div>
 					<div class="auth_form_div">
 						<label for="input_password">Пароль: </label>

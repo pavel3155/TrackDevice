@@ -21,6 +21,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
     @GetMapping("/regUser")
     public String regUser(Model model) {
         RegisterDTO registerDTO = new RegisterDTO();
