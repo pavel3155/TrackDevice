@@ -10,8 +10,8 @@ class LoginController {
         return "login";
     }
 
-    @GetMapping("/logout")
-    String logout() {
-        return "index";
-    }
+//    @GetMapping("/logout")
+//    String logout() {
+//        return "index";
+//    }
 }

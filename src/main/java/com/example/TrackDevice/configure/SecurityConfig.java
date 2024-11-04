@@ -1,5 +1,6 @@
 package com.example.TrackDevice.configure;
 
+import org.springframework.boot.web.server.Cookie;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,33 +16,47 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 @EnableWebSecurity
 
 public class SecurityConfig {
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+//                .csrf(AbstractHttpConfigurer::disable)
+//
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/").permitAll()
+//                        .requestMatchers("/css/**").permitAll()
+//                        .requestMatchers("/img/**").permitAll()
+//                        .requestMatchers("/login").permitAll()
+//                        .requestMatchers("/regUser").permitAll()
+//                        .requestMatchers("/logout").permitAll()
+//                        .anyRequest().authenticated())
+//                .formLogin(form -> form
+//                        .defaultSuccessUrl("/",false)
+//                )
+//                .logout(config -> config.logoutSuccessUrl("/"))
+//                .build();
+
                 .headers(headers -> headers
                         .frameOptions(frameOptions -> frameOptions.sameOrigin()))
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/img/**").permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/login").permitAll()
-                        .requestMatchers("/regUser").permitAll()
                         .requestMatchers("/logout").permitAll()
+                        .requestMatchers("/regUser").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .permitAll()
-                )
-//                .logout(config -> config.logoutSuccessUrl("/"))
-                .logout(logout -> logout
-                                .logoutUrl("/logout")
-                                .logoutSuccessUrl("/index")
-                                //.logoutSuccessHandler(logoutSuccessHandler)
-                                .invalidateHttpSession(true)
-                                //.addLogoutHandler(logoutHandler)
-                                //.deleteCookies(cookieNamesToClear)
-                        )
+                        .defaultSuccessUrl("/login")
+                        .permitAll())
+                .logout(config -> config.logoutSuccessUrl("/"))
+//                .logout(logout -> logout
+//                                .invalidateHttpSession(true)
+//                                .clearAuthentication(true)
+//                                .logoutUrl("/logout")
+//                                .logoutSuccessUrl("/logout")
+//                                .deleteCookies("JSESSIONID"))
                 .build();
     }
 

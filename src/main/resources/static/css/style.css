@@ -88,7 +88,10 @@
 	
 }
 
-
+.nav_bar_h{
+    margin:0px;
+    padding:0px;
+}
 .nav_bar_ul li {
     font-family: "Times New Roman";
     font-size: 20px;
@@ -127,5 +130,7 @@ body iframe{
 	border:none;
 	
 }
-
+.form_logout{
+    display:flex;
+}
 
