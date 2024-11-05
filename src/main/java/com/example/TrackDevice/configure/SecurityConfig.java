@@ -19,25 +19,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-//                .csrf(AbstractHttpConfigurer::disable)
-//
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/").permitAll()
-//                        .requestMatchers("/css/**").permitAll()
-//                        .requestMatchers("/img/**").permitAll()
-//                        .requestMatchers("/login").permitAll()
-//                        .requestMatchers("/regUser").permitAll()
-//                        .requestMatchers("/logout").permitAll()
-//                        .anyRequest().authenticated())
-//                .formLogin(form -> form
-//                        .defaultSuccessUrl("/",false)
-//                )
-//                .logout(config -> config.logoutSuccessUrl("/"))
-//                .build();
-
-                .headers(headers -> headers
-                        .frameOptions(frameOptions -> frameOptions.sameOrigin()))
-
+//                .headers(headers -> headers
+//                        .frameOptions(frameOptions -> frameOptions.sameOrigin()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/img/**").permitAll()
@@ -48,15 +31,9 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/login")
+                        .defaultSuccessUrl("/")
                         .permitAll())
                 .logout(config -> config.logoutSuccessUrl("/"))
-//                .logout(logout -> logout
-//                                .invalidateHttpSession(true)
-//                                .clearAuthentication(true)
-//                                .logoutUrl("/logout")
-//                                .logoutSuccessUrl("/logout")
-//                                .deleteCookies("JSESSIONID"))
                 .build();
     }
 

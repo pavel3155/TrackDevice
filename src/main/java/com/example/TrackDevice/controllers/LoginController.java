@@ -9,9 +9,4 @@ class LoginController {
     String login() {
         return "login";
     }
-
-//    @GetMapping("/logout")
-//    String logout() {
-//        return "index";
-//    }
 }

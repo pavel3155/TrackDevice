@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	  			xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/style.css">
@@ -7,12 +8,12 @@
 
 <body class="auth">
 	<span>
-		<h1>Please Log In</h1>
-		<div th:if="${param.error}">
-			Invalid username and password.</div>
-		<div th:if="${param.logout}">
-			You have been logged out.</div>
 
+
+
+		<div th:if="${param.error}">Не правильный пароль</div>
+		<div th:if="${param.logout}">Не правильный логин</div>
+		<div>
 				<form class="auth_form" method="post" th:action="@{/login}">
 					<div class="auth_form_div">
 						<label for="input_login">Логин: </label>
@@ -26,6 +27,7 @@
 						<button type="submit">Войти</button>
 					</div>
 				</form>
+		</div>
 	</span>
 </body>
 

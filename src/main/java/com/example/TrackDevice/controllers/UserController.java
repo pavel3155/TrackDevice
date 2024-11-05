@@ -49,7 +49,6 @@ public class UserController {
         if(result.hasErrors()){
             return "regUser";
         }
-
         try {
             userService.regNewUser(registerDTO);
             model.addAttribute("registerDTO", new RegisterDTO());
@@ -61,5 +60,4 @@ public class UserController {
 
         return "regUser";
     }
-
 }
