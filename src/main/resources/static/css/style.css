@@ -48,17 +48,19 @@
 .auth_form input{
 	margin:2px;
 }
+
+
 .auth_form_div_btn{
 	margin:4px;
 	padding:2px;
 	display:flex;
 	justify-content:flex-end;
 	font-size: 20px;
-	font-family: "Times New Roman";
 	
 }
 .auth_form_div_btn button{
 	font-size: 16px;
+	font-family: "Times New Roman";
 }
 
 
@@ -69,15 +71,14 @@
 	padding:0px;
 	background:#e0e0e0;
 	display:flex;
+	align-items: center;
 	justify-content:space-between;
 }
 
 #nav_bar nav{
 	margin:0px;
 	padding:0px;
-	
 }
-
 .nav_bar_ul{
 	list-style-type:none;
 	margin: 0px;
@@ -86,11 +87,6 @@
 	border-top: 3px solid white;
 	border-bottom: 3px solid white;
 	
-}
-
-.nav_bar_h{
-    margin:0px;
-    padding:0px;
 }
 .nav_bar_ul li {
     font-family: "Times New Roman";
@@ -114,6 +110,28 @@
     background-color: #c4c4c4;
 }
 
+
+
+.nav_bar_span_h{
+    margin:0px;
+    padding:0px;
+}
+
+.button_no_borders{
+
+    appearance: none;
+    border: 0px;
+    border-radius: 0x;
+    background: #e0e0e0;
+    padding-left:5px;
+    padding-right:5px;
+    font-family: "Times New Roman";
+    font-size: 20px;
+}
+.button_no_borders:hover {
+    background: #c4c4c4;
+}
+
 .body_parent{
 	height:600px;
 	border: 2px solid;
@@ -133,6 +151,19 @@ body iframe{
 .form_logout{
     display:flex;
 }
-.error{
+.div_error{
+    margin:0px;
+    padding:0px;
+    padding-right:5px;
+    font-size:16px;
+    font-weight:bold;
     color:red;
+    display:flex;
+    justify-content:flex-end;
+
 }
+.div_error p{
+    margin:0px;
+    padding:0px;
+}
+

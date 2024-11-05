@@ -37,19 +37,18 @@
             </ul>
         </nav>
 		<nav>
-			<form class="form_logout" sec:authorize="isAuthenticated()" method="post" action="/logout">
-				<span class="nav_bar_h">
-					<h3 class="nav_bar_h">Добро пожаловать   </h3>
-				</span>
 				<span>
-					<h3 class="nav_bar_h" sec:authentication="name">Username</h3>
+					<h3 sec:authorize="isAuthenticated()" class="nav_bar_span_h" sec:authentication="name">Username</h3>
 				</span>
-				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-				<button type="submit" class="btn btn-danger">Выход</button>
-			</form>
 		</nav>
 		<nav>
             <ul class="nav_bar_ul">
+				<li>
+					<form class="form_logout" sec:authorize="isAuthenticated()" method="post" action="/logout">
+						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+						<button type="submit" class="button_no_borders">Выход</button>
+					</form>
+				</li>
                 <li><a href="/login" th:href="@{/login}">Вход</a></li>
 				<li><a target="container" href="/regUser">Регистрация</a></li>
                
