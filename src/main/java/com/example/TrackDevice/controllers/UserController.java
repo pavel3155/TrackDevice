@@ -1,7 +1,9 @@
 package com.example.TrackDevice.controllers;
 
 import com.example.TrackDevice.DTO.RegisterDTO;
+import com.example.TrackDevice.model.Roles;
 import com.example.TrackDevice.model.User;
+import com.example.TrackDevice.repo.RoleRepository;
 import com.example.TrackDevice.repo.UserRepository;
 import com.example.TrackDevice.service.UserService;
 import jakarta.validation.Valid;
@@ -14,18 +16,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 public class UserController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleRepository roleRepository;
 
 
     @GetMapping("/regUser")
     public String regUser(Model model) {
         RegisterDTO registerDTO = new RegisterDTO();
         model.addAttribute(registerDTO);
+        List<Roles> roles =roleRepository.findAll();
+        model.addAttribute("roles",roles);
+
         return "regUser.html";
     }
 

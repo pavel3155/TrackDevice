@@ -19,5 +19,9 @@ public class User {
     @Column(unique = true,nullable = false)
     private String email;
     private String password;
-    private String role;
+
+    @ManyToOne (optional=false, cascade=CascadeType.ALL)
+    @JoinColumn (name="role_id")
+    private Roles role;
+
 }

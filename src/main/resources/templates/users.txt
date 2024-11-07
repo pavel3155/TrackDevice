@@ -1,4 +1,9 @@
 DROP TABLE if exists Users CASCADE;
+create table Roles 
+(
+	id serial primary key,
+	role  varchar(20)
+);
 
 create table Users 
 (
@@ -7,5 +12,12 @@ create table Users
 	surname varchar(20),
 	email varchar(20),
 	password varchar(20),
-	role varchar(20)
+	role_id integer default 1,
+	CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES Roles (id) ON DELETE SET DEFAULT ON UPDATE CASCADE
 );
+
+
+
+alter table Users USING role::integer;
+alter table Users alter column role set not null;
+alter table Users add constraint fk_role foreign key role references Roles (id);

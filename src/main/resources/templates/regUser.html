@@ -50,7 +50,13 @@
 
                 <div class="auth_form_div">
 					<label for="input_role">Роль: </label>
-					<input type="text" id="input_role" name="role" />
+					<select  id="input_role">
+						<option th:each="role : ${roles}" th:value="${role}" th:text="${role.role}" th:field="*{role}"></option>
+					</select>
+
+
+
+					<!--<input type="text" id="input_role" name="role" />-->
 				</div>
 				<div class="auth_form_div_btn">
 					<button type="submit">Регистрация</button>

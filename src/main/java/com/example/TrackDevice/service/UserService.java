@@ -2,6 +2,7 @@ package com.example.TrackDevice.service;
 
 import com.example.TrackDevice.DTO.RegisterDTO;
 import com.example.TrackDevice.model.User;
+import com.example.TrackDevice.repo.RoleRepository;
 import com.example.TrackDevice.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Service;
 public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    RoleRepository roleRepository;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
@@ -21,7 +25,7 @@ public class UserService implements UserDetailsService {
         if (user != null){
             var spUser = org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
                     .password(user.getPassword())
-                    .roles(user.getRole())
+                    .roles(user.getRole().getRole())
                     .build();
             return spUser;
         }
@@ -34,7 +38,8 @@ public class UserService implements UserDetailsService {
         newUser.setName(registerDTO.getName());
         newUser.setSurname(registerDTO.getSurname());
         newUser.setEmail(registerDTO.getEmail());
-        newUser.setRole("user");
+        System.out.println(registerDTO.getRole());
+        newUser.setRole(registerDTO.getRole());
         newUser.setPassword(bCryptEncoder.encode(registerDTO.getPassword()));
         return userRepository.save(newUser);
     }
