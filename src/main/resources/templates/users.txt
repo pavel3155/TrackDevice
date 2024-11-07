@@ -16,8 +16,3 @@ create table Users
 	CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES Roles (id) ON DELETE SET DEFAULT ON UPDATE CASCADE
 );
 
-
-
-alter table Users USING role::integer;
-alter table Users alter column role set not null;
-alter table Users add constraint fk_role foreign key role references Roles (id);
