@@ -34,7 +34,6 @@ public class UserController {
         model.addAttribute(registerDTO);
         List<Roles> roles =roleRepository.findAll();
         model.addAttribute("roles",roles);
-
         return "regUser.html";
     }
 

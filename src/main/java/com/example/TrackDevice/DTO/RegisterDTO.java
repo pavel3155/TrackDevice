@@ -8,7 +8,6 @@ import lombok.Data;
 
 @Data
 public class RegisterDTO {
-
     @NotEmpty
     private String name;
     @NotEmpty

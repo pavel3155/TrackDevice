@@ -15,20 +15,36 @@
 
 <body>
 	<div>
-			<form class="auth_form" sec:authorize="isAuthenticated()" th:method="post" th:action="@{/Orders}" >
+			<form class="auth_form" sec:authorize="isAuthenticated()"
+				  					th:method="post"
+				  					th:action="@{/Orders}"
+									th:object="${ordersDTO}}">
                 <div class="auth_form_div">
 					<label for="input_orderData">Дата заявки: </label>
-					<input type="text" id="input_orderData" name="orderData"/>
+					<input type="text" id="input_orderData" name="orderData" th:field="*{date}"/>
 					<label for="input_orderNumber">Номер заявки: </label>
-					<input type="text" id="input_orderNumber" name="orderNumber"/>
+					<input type="text" id="input_orderNumber" name="orderNumber" th:field="*{num}"/>
 					<label for="input_orderDescription">Описание: </label>
-					<input type="text" id="input_orderDescription" name="orderDescription"/>
-
+					<input type="text" id="input_orderDescription" name="orderDescription" th:field="*{description}"/>
+					<label for="input_csa">КСА: </label>
+					<select  id="input_csa" th:field="*{csa}">
+						<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
+					</select>
+					<label for="input_dev">ТС: </label>
+					<select  id="input_dev" th:field="*{device}">
+						<option th:each="device : ${devices}" th:value="${device.id}" th:text="${device}"></option>
+					</select>
 				</div>
+
 				<div class="auth_form_div_btn">
 					<button type="submit">Регистрация</button>
 				</div>
 			</form>
+			<div>
+
+			</div>
+
+
 		</div>
 </body>
 </html>
