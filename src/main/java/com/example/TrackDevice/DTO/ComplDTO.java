@@ -1,11 +1,11 @@
 package com.example.TrackDevice.DTO;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
-import lombok.NonNull;
+
 @Data
-public class CsaDTO {
-    @NotNull
+public class ComplDTO {
+    @NotEmpty
     private String num;
     private String address;
 

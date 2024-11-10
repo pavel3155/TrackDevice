@@ -13,35 +13,35 @@
 
 			<form class="auth_form" th:method="post" th:action="@{/regUser}" th:object="${registerDTO}">
 				<div class="div_error">
-					<p th:if="${#fields.hasErrors('name')}"  th:errors="${registerDTO.name}"></p>
+					<p th:if="${#fields.hasErrors('name')}"  th:errors="*{name}"></p>
 				</div>
 				<div class="auth_form_div">
 					<label for="input_name">Имя: </label>
 					<input type="text" id="input_name" name="name" th:field="*{name}"/>
 				</div>
 				<div class="div_error">
-					<p th:if="${#fields.hasErrors('surname')}" th:errors="${registerDTO.surname}"></p>
+					<p th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></p>
 				</div>
 				<div class="auth_form_div">
 					<label for="input_surname">Фамилия: </label>
 					<input type="text" id="input_surname" name="surname" th:field="*{surname}" />
 				</div>
 				<div class="div_error">
-					<p th:if="${#fields.hasErrors('email')}" th:errors="${registerDTO.email}"></p>
+					<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" ></p>
 				</div>
                 <div class="auth_form_div">
 					<label for="input_email">Email: </label>
 					<input type="text" id="input_email" name="email" th:field="*{email}"  />
 				</div>
 				<div class="div_error">
-					<p th:if="${#fields.hasErrors('password')}" th:errors="${registerDTO.password}"></p>
+					<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
 				</div>
                 <div class="auth_form_div">
 					<label for="input_password">Пароль: </label>
 					<input type="password" id="input_password" name="password" th:field="*{password}"/>
 				</div>
 				<div class="div_error">
-					<p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="${registerDTO.confirmPassword}"></p>
+					<p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></p>
 				</div>
 				<div class="auth_form_div">
 					<label for="confirm_password">Подтвердите пароль: </label>
@@ -51,7 +51,7 @@
                 <div class="auth_form_div">
 					<label for="input_role">Роль: </label>
 					<select  id="input_role" th:field="*{role}">
-						<option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.role}"></option>
+						<option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.type}"></option>
 					</select>
 				</div>
 				<div class="auth_form_div_btn">

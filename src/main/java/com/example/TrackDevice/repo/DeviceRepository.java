@@ -1,4 +1,4 @@
-package com.example.TrackDevice.DTO;
+package com.example.TrackDevice.repo;
 
 import com.example.TrackDevice.model.Device;
 import org.springframework.data.jpa.repository.JpaRepository;

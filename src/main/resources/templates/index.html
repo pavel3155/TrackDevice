@@ -29,7 +29,7 @@
 	<div id="nav_bar">
         <nav>
             <ul class="nav_bar_ul">
-                <li><a href="/Orders">Заявка</a></li>
+                <li><a href="/Orders" th:href="@{/Orders}">Заявка</a></li>
                 <li><a href="#">Акты движения ТС</a></li>
                 <li><a href="#">Отчеты</a></li>
                 <li><a href="#">Справочник</a></li>
@@ -50,7 +50,7 @@
 					</form>
 				</li>
                 <li><a href="/login" th:href="@{/login}">Вход</a></li>
-				<li><a target="container" href="/regUser">Регистрация</a></li>
+				<li><a href="/regUser" th:href="@{/regUser}">Регистрация</a></li>
                
             </ul>
         </nav>

@@ -34,7 +34,7 @@ public class UserController {
         model.addAttribute(registerDTO);
         List<Roles> roles =roleRepository.findAll();
         model.addAttribute("roles",roles);
-        return "regUser.html";
+        return "regUser";
     }
 
     @PostMapping("/regUser")
@@ -55,12 +55,17 @@ public class UserController {
         }
         //если ошибки есть
         if(result.hasErrors()){
+            List<Roles> roles =roleRepository.findAll();
+            model.addAttribute("roles",roles);
             return "regUser";
         }
         try {
             userService.regNewUser(registerDTO);
             model.addAttribute("registerDTO", new RegisterDTO());
+            List<Roles> roles =roleRepository.findAll();
+            model.addAttribute("roles",roles);
             model.addAttribute("success",true);
+
         }
         catch (Exception ex){
             result.addError(new FieldError("registerDTO","name",ex.getMessage()));

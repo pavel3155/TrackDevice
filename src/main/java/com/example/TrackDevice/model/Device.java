@@ -20,6 +20,6 @@ public class Device {
     private String model;
     private String inv_num;
     private String ser_num;
-    @OneToMany (mappedBy="device",cascade = CascadeType.ALL, fetch=FetchType.EAGER)
-    private List<Orders> orders;
+//    @OneToMany (mappedBy="device",cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+//    private List<Order> orders;
 }

@@ -16,8 +16,9 @@ public class Roles {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private long id;
-        private String role;
-        @OneToMany (mappedBy="role",cascade = CascadeType.ALL, fetch=FetchType.EAGER)
-        private List<User> users;
+        private String type;
+//        @OneToMany (mappedBy="role")
+//        private List<User> users;
 
-    }
+
+}

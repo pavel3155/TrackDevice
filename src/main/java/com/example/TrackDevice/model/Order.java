@@ -10,17 +10,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "orders")
-public class Orders {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String date;
+    @Column(unique = true,nullable = false)
     private String num;
     private String description;
-    @ManyToOne (optional=false, cascade=CascadeType.ALL)
+    //@ManyToOne (optional=false, cascade=CascadeType.ALL)
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn (name="compl_id")
     private CSA csa;
-    @ManyToOne (optional=false, cascade=CascadeType.ALL)
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn (name="dev_id")
     private Device device;
 

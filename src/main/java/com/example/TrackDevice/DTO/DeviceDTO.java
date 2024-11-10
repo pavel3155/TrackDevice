@@ -1,5 +1,6 @@
 package com.example.TrackDevice.DTO;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -10,6 +11,6 @@ public class DeviceDTO {
     private String type;
     private String model;
     private String inv_num;
-    @NotNull
+    @NotEmpty
     private String ser_num;
 }

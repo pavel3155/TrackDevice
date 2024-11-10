@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CsaRepository extends JpaRepository<CSA,Long> {
+public interface CSARepository extends JpaRepository<CSA,Long>{
     List<CSA> findAll();
 }

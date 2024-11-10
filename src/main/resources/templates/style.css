@@ -1,0 +1,121 @@
+
+#header{
+	display:flex;
+	flex-direction:row;
+	justify-content:space-between;
+	border: 2px solid;
+	margin:0px;
+	padding:3px;
+ }
+ 
+  #header_img div img {
+	display:flex;
+	align-items:center;
+	margin:0px;
+	padding:0px;
+	flex-grow:0;
+ }
+ #header_label {
+	display:flex;
+	flex-grow:1;
+	align-items:center;
+    justify-content:center;
+	background:#e0e0e0;
+	border-left: 3px solid white;
+
+	
+ }
+
+#header_auth {
+	display:flex;
+
+	background:#e0e0e0;
+
+ }	 
+ #header_auth_form {
+	margin:0px;
+	padding:0px;
+	flex-grow:0;
+	border-left: 3px solid white;
+	
+ }	 
+#header_auth_form_div_log{
+	margin:4px;
+	padding:2px;
+	display:flex;
+	justify-content:space-between;
+}
+#header_auth_form_div_pass{
+	margin:4px;
+	padding:2px;
+	display:flex;
+	justify-content:space-between;
+}
+#header_auth_form_div_butt{
+	margin:4px;
+	padding:2px;
+	display:flex;
+	justify-content:space-between;
+}
+#input_login {
+    margin:2px;
+}
+#input_password{
+     margin:2px;
+}
+
+#nav_bar{
+	border: 2px solid;
+	margin-top:3px;
+	padding:0px;
+	background:#e0e0e0;
+}
+
+#nav_bar nav{
+	margin:0px;
+	padding:0px;
+	
+}
+
+#nav_bar_ul{
+	list-style-type:none;
+	margin: 0px;
+    padding-left: 3px;
+	border: 3px solid white;
+	
+}
+
+
+#nav_bar_ul li {
+                font-family: "Times New Roman";
+                font-size: 20px;
+                display:inline-block;
+				margin-left:-3px;
+				padding-left:0px;
+				border-right: 3px solid white;
+				
+
+}
+
+#nav_bar_ul a{
+	text-decoration: none;
+	color: black;
+	margin:0px;
+	padding-left:5px;
+	padding-right:5px;
+
+}
+
+#nav_bar_ul a:hover {
+    background-color: #c4c4c4;
+}
+
+#body_parent{
+	height:600px;
+	border: 2px solid;
+	margin-top:3px;
+	padding:0px;
+	background:#faf7f7;
+}
+
+

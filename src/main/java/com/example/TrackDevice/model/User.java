@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor
@@ -19,9 +20,9 @@ public class User {
     @Column(unique = true,nullable = false)
     private String email;
     private String password;
-
-    @ManyToOne (optional=false, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn (name="role_id")
     private Roles role;
+
 
 }

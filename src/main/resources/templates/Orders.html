@@ -15,7 +15,35 @@
 
 <body>
 	<div>
-			<form class="auth_form" sec:authorize="isAuthenticated()"
+		<form class="auth_form"
+			  th:method="post"
+			  th:action="@{/Orders}"
+			  th:object="${ordersDTO}">
+
+			<div class="auth_form_div">
+				<label for="input_orderData">Дата заявки: </label>
+				<input type="text" id="input_orderData" name="orderData" th:field="*{date}"/>
+				<label for="input_orderNumber">Номер заявки: </label>
+				<input type="text" id="input_orderNumber" name="orderNumber" th:field="*{num}"/>
+				<label for="input_orderDescription">Описание: </label>
+				<input type="text" id="input_orderDescription" name="orderDescription" th:field="*{description}"/>
+				<select  id="input_csa" th:field="*{csa}">
+					<option value="0">Выберите</option>
+					<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
+				</select>
+				<label for="input_dev">ТС: </label>
+				<select  id="input_dev" th:field="*{device}">
+					<option value="0">Выберите</option>
+					<option th:each="device : ${devices}" th:value="${device.id}" th:text="${device.model}"></option>
+				</select>
+			</div>
+			<div class="auth_form_div_btn">
+				<button type="submit">Добавить</button>
+			</div>
+
+		</form>
+
+		<!--	<form class="auth_form" sec:authorize="isAuthenticated()"
 				  					th:method="post"
 				  					th:action="@{/Orders}"
 									th:object="${ordersDTO}}">
@@ -32,17 +60,15 @@
 					</select>
 					<label for="input_dev">ТС: </label>
 					<select  id="input_dev" th:field="*{device}">
-						<option th:each="device : ${devices}" th:value="${device.id}" th:text="${device}"></option>
+						<option th:each="device : ${devices}" th:value="${device.id}" th:text="${device.model}"></option>
 					</select>
 				</div>
 
 				<div class="auth_form_div_btn">
-					<button type="submit">Регистрация</button>
+					<button type="submit">Добавить</button>
 				</div>
-			</form>
-			<div>
+			</form> -->
 
-			</div>
 
 
 		</div>

@@ -19,12 +19,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .headers(headers -> headers
-                        .frameOptions(frameOptions -> frameOptions.sameOrigin()))
+//                .headers(headers -> headers
+//                        .frameOptions(frameOptions -> frameOptions.sameOrigin()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/img/**").permitAll()
+                        .requestMatchers("/js/**").permitAll()
                         .requestMatchers("/").permitAll()
+                        .requestMatchers("/index").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/logout").permitAll()
                         .requestMatchers("/regUser").permitAll()
@@ -33,7 +35,8 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .defaultSuccessUrl("/")
                         .permitAll())
-                .logout(config -> config.logoutSuccessUrl("/"))
+                .logout(config -> config.logoutSuccessUrl("/")
+                        .permitAll())
                 .build();
     }
 
