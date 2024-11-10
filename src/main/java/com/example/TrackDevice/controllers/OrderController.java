@@ -66,7 +66,10 @@ public class OrderController {
         }
         try {
             ordersService.addOrders(ordersDTO);
-
+            List<CSA> csas = csaRepository.findAll();
+            List<Device> devices =deviceRepository.findAll();
+            model.addAttribute("csas", csas);
+            model.addAttribute("devices", devices);
             model.addAttribute("ordersDTO", new OrdersDTO());
             model.addAttribute("success", true);
 
