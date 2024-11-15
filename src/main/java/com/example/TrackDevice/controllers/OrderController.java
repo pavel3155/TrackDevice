@@ -41,7 +41,7 @@ public class OrderController {
     }
 
     @PostMapping("/Orders")
-    public String newOrder (Model model, @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result) {
+    public String newOrder(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result) {
         //если пароль не совпадает, то  добавляеся ошибка в result
 //        if(!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
 //            result.addError(new FieldError("registerDTO",
@@ -57,9 +57,9 @@ public class OrderController {
 //                    "Данный Email уже занят!")));
 //        }
         //если ошибки есть
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             List<CSA> csas = csaRepository.findAll();
-            List<Device> devices =deviceRepository.findAll();
+            List<Device> devices = deviceRepository.findAll();
             model.addAttribute("csas", csas);
             model.addAttribute("devices", devices);
             return "regUser";
@@ -67,7 +67,7 @@ public class OrderController {
         try {
             ordersService.addOrders(ordersDTO);
             List<CSA> csas = csaRepository.findAll();
-            List<Device> devices =deviceRepository.findAll();
+            List<Device> devices = deviceRepository.findAll();
             model.addAttribute("csas", csas);
             model.addAttribute("devices", devices);
             model.addAttribute("ordersDTO", new OrdersDTO());

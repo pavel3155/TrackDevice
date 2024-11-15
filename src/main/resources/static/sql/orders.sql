@@ -1,19 +1,12 @@
 DROP TABLE if exists Сompl CASCADE;
-create table compl 
+create table csa 
 (
 	id serial primary key,
 	num varchar(10),
 	address varchar(200)
 );
-create table Device 
-(
-	id serial primary key,
-	type varchar(50),
-	model varchar(200),
-	inv_num varchar(50),
-	ser_num varchar(50)
-);
-create table Orders 
+
+create table orders 
 (
 	id serial primary key,
 	date varchar(20),
@@ -24,4 +17,6 @@ create table Orders
 	CONSTRAINT fk_compl FOREIGN KEY(compl_id) REFERENCES compl(id) ON DELETE SET DEFAULT ON UPDATE CASCADE,
 	CONSTRAINT fk_dev FOREIGN KEY(dev_id) REFERENCES Device(id) ON DELETE SET DEFAULT ON UPDATE CASCADE
 );
+
+alter table orders add constraint fk_dev FOREIGN KEY(dev_id) REFERENCES device(id) ON DELETE SET DEFAULT ON UPDATE CASCADE;
 

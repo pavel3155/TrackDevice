@@ -34,7 +34,7 @@
 				<label for="input_dev">ТС: </label>
 				<select  id="input_dev" th:field="*{device}">
 					<option value="0">Выберите</option>
-					<option th:each="device : ${devices}" th:value="${device.id}" th:text="${device.model}"></option>
+					<option th:each="device : ${devices}" th:value="${device.id}" th:text="${device}"></option>
 				</select>
 			</div>
 			<div class="auth_form_div_btn">

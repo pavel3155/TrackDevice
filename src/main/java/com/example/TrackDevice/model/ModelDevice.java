@@ -5,23 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "device")
-public class Device {
+@Table(name = "model_device")
+public class ModelDevice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private String name;
     @ManyToOne (fetch = FetchType.EAGER)
-    @JoinColumn (name="model_id")
-    private ModelDevice model;
-    private String inv_num;
-    private String ser_num;
-    private String status;
-//    @OneToMany (mappedBy="device",cascade = CascadeType.ALL, fetch=FetchType.EAGER)
-//    private List<Order> orders;
+    @JoinColumn (name="type_id")
+    private TypeDevice type;
+
 }

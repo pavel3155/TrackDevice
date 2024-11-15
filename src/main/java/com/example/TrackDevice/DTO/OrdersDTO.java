@@ -9,14 +9,11 @@ import lombok.Data;
 
 @Data
 public class OrdersDTO {
-    @NotEmpty
+    @NotNull
     private String date;
-    @NotEmpty
+    @NotNull
     private String num;
-    @NotEmpty
     private String description;
-    @NotNull
     private CSA csa;
-    @NotNull
     private Device device;
 }

@@ -1,5 +1,7 @@
 package com.example.TrackDevice.DTO;
 
+import com.example.TrackDevice.model.ModelDevice;
+import com.example.TrackDevice.model.TypeDevice;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -8,9 +10,11 @@ import java.util.List;
 
 @Data
 public class DeviceDTO {
-    private String type;
-    private String model;
+    private TypeDevice type;
+    private ModelDevice model;
     private String inv_num;
-    @NotEmpty
+    @NotNull
     private String ser_num;
+    private String status;
+
 }
