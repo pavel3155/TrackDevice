@@ -22,42 +22,74 @@
 			  th:object="${deviceDTO}">
 
 			<div class="auth_form_div">
-				<label for="devType">Тип: </label>
-				<select  id="devType" th:field="*{type}">
+				<label for="selTypeDev">Тип: </label>
+				<select  id="selTypeDev" th:field="*{type}" change="loadSelectDevModel()">
 					<option value="0">Тип</option>
 					<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
 				</select>
+				<label id="lblTypeDev">метка</label>
 				<script>
-					$('#devType option[value=2]').prop('selected',true);
+					$('#selTypeDev option[value=2]').prop('selected',true);
 				</script>
-				<label for="devModel">Модель: </label>
-				<select  id="devModel" th:field="*{model}">
-					<option value="0">Модель</option>
-					<option th:each="model : ${models}" th:value="${model.id}" th:text="${model.name}"></option>
-				</select>
+
+				<label for="selModelDev">Модель: </label>
+				<select  id="selModelDev" th:field="*{model}"></select>
+
 				<label for="devSN">Серийный номер: </label>
 				<select  id="devSN" th:field="*{ser_num}">
+					<!--
 					<option value="0">Серийный номер</option>
 					<option th:each="device : ${devices}" th:value="${device.id}" th:text="${device.ser_num}"></option>
+					-->
 				</select>
 			</div>
-
-			<!--<script>
-				src="js/jquery-3.7.1.js"
-				$("#devModel").remoteChained({
-				parents : "#devType",
-				url : "/device/model"
-				});
-				$("#devSN").remoteChained({
-				parents : "#devModel",
-				url : "/device/device"
-				});
-			</script>-->
-
+			<div>
+				<label id="lblModelDev">Модель:</label>
+			</div>
 
 			<div class="auth_form_div_btn">
 				<button type="submit">Выбрать</button>
 			</div>
+			<script>
+				$(document).ready(init);
+                function init() {
+                    $('#selTypeDev').bind('change', loadSelectDevModel);
+                }
+                <!--
+                function lblTypeDev() {
+                    var selTypeIndex=$('#selTypeDev').val();
+                    var selTypeText=$('#selTypeDev option:selected').text();
+                    $('#lblTypeDev').text(selTypeIndex+"_"+selTypeText);
+                }
+                -->
+
+                    function loadSelectDevModel() {
+                     	var selTypeIndex=$('#selTypeDev').val();
+						var selTypeText=$('#selTypeDev option:selected').text();
+						$('#lblTypeDev').text(selTypeIndex+"_"+selTypeText);
+                    	$.getJSON('/device/model' + selTypeText)
+                    	 .done(function (data) {
+                    		$('#selModelDev').empty().prop('disabled', false);
+                    		console.log(data);
+							var models=data;
+							console.log(models);
+							$('#lblModelDev').text(models[1].id);
+							$.each(models, function(i,item) {
+    							$('#selModelDev').append('<option value="' + models[i].id+ '">' + models[i].name + '</option>');
+							});
+                       });
+
+                    }
+
+			</script>
+
+			<!--
+$('#selModelDev').append('<option value="' + models[0].id+ '">' + models[0].name + '</option>');
+$.each(data, function(i,item) {
+    $('#selModelDev').append('<option value="' + data[i].id+ '">' + data[i].name + '</option>');
+});
+-->
+
 		</form>
 	</div>
 </body>
