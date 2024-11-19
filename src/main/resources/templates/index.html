@@ -29,11 +29,18 @@
 	<div id="nav_bar">
         <nav>
             <ul class="nav_bar_ul">
-                <li><a href="/Orders" th:href="@{/Orders}">Заявка</a></li>
-                <li><a href="#">Акты движения ТС</a></li>
-                <li><a href="#">Отчеты</a></li>
-                <li><a href="/device" th:href="@{/device}">Справочник</a></li>
-				<li><a href="#">Настройки</a></li>
+                <li class ="li-horizontally"><a href="/Orders" th:href="@{/Orders}">Заявка</a></li>
+                <li class ="li-horizontally"><a href="#">Акты движения ТС</a></li>
+                <li class ="li-horizontally"><a href="#">Отчеты</a></li>
+                <details class ="li-horizontally">
+					<summary>Справочник</summary>
+					<ul>
+						<li class ="li-vertically"><a href="/device" th:href="@{/device}">Технические средства (ТС)</a></li>
+						<li class ="li-vertically"><a href="/TypeDevice" th:href="@{/device/EditType}">Тип ТС</a></li>
+						<li class ="li-vertically"><a>Модель ТС</a></li>
+					</ul>
+				</details>
+				<li class ="li-horizontally"><a href="#">Настройки</a></li>
             </ul>
         </nav>
 		<nav>
@@ -43,14 +50,14 @@
 		</nav>
 		<nav>
             <ul class="nav_bar_ul">
-				<li>
+				<li class ="li-horizontally">
 					<form class="form_logout" sec:authorize="isAuthenticated()" method="post" action="/logout">
 						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 						<button type="submit" class="button_no_borders">Выход</button>
 					</form>
 				</li>
-                <li><a href="/login" th:href="@{/login}">Вход</a></li>
-				<li><a href="/regUser" th:href="@{/regUser}">Регистрация</a></li>
+                <li class ="li-horizontally"><a href="/login" th:href="@{/login}">Вход</a></li>
+				<li class ="li-horizontally"><a href="/regUser" th:href="@{/regUser}">Регистрация</a></li>
                
             </ul>
         </nav>

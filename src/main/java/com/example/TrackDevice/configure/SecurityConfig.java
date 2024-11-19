@@ -31,6 +31,7 @@ public class SecurityConfig {
                         .requestMatchers("/logout").permitAll()
                         .requestMatchers("/regUser").permitAll()
                         .requestMatchers("/device").permitAll()
+                        .requestMatchers("/TypeDevice").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")

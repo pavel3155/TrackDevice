@@ -78,7 +78,9 @@
 #nav_bar nav{
 	margin:0px;
 	padding:0px;
+	overflow:hidden;
 }
+
 .nav_bar_ul{
 	list-style-type:none;
 	margin: 0px;
@@ -86,9 +88,9 @@
 	border-left: 3px solid white;
 	border-top: 3px solid white;
 	border-bottom: 3px solid white;
-	
 }
-.nav_bar_ul li {
+
+.li-horizontally {
     font-family: "Times New Roman";
     font-size: 20px;
     display:inline-block;
@@ -96,6 +98,26 @@
 	padding-left:0px;
 	border-right: 3px solid white;            
 }
+
+.li-vertically {
+    list-style-type:none;
+    font-family: "Times New Roman";
+    font-size: 20px;
+	margin-left:-3px;
+	padding-left:0px;
+	border-right: 3px solid white;
+
+}
+.li-vertically a{
+
+    text-decoration: none;
+	color: black;
+	margin:0px;
+	padding-left:5px;
+	padding-right:5px;
+}
+
+
 
 .nav_bar_ul a{
 	text-decoration: none;

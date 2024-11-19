@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Тип ТС</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<header>
+    <div id="header-type-device">
+        <script src="js/header.js"></script>
+    </div>
+</header>
+<body>
+    <form class="auth_form"
+          th:method="post"
+          th:action="@{/device/EditType}"
+          th:object="${typeDeviceDTO}">
+
+        <div>
+            <input type="text" name = "in_type">
+            <label>Тип технического устройства</label>
+            <div>
+                <ul style="list-style-type:none;">
+                    <li th:each="type : ${types}" th:utext="${type.type}"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="auth_form_div_btn">
+            <button type="submit">Выбрать</button>
+        </div>
+    </form>
+
+
+</body>
+</html>

@@ -48,6 +48,11 @@ public class DeviceController {
         return "device";
     }
 
+    @PostMapping("/device")
+    public String loadDevice (Model model, @Valid @ModelAttribute DeviceDTO deviceDTODTO, BindingResult result) {
+        return "device";
+    }
+
     @GetMapping("/device/model{type}")
     @ResponseBody
     public ResponseEntity<String> loadModelDevice(@PathVariable String type){
@@ -59,15 +64,22 @@ public class DeviceController {
         return  ResponseEntity.ok(jsonModels);
     }
 
+
+    @GetMapping("/device/EditType")
+    public String editTypeDevice(Model model) {
+        List<TypeDevice> types = typeDeviceRepository.findAll();
+        model.addAttribute("types", types);
+        return "TypeDevice";
+    }
+
+
+
     @GetMapping("/device/device{model}")
     public String loadDevice(@PathVariable ModelDevice modelDevice,Model model){
         List<Device> devices =deviceRepository.findByModel(modelDevice);
         model.addAttribute("devices",devices);
         return "device";
     }
-    @PostMapping("/device")
-    public String loadDevice (Model model, @Valid @ModelAttribute DeviceDTO deviceDTODTO, BindingResult result) {
-        return "device";
-    }
+
 
 }
