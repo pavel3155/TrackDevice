@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Модель ТС</title>
+	<link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style-form.css">
+	<script src="js/jquery-3.7.1.js"></script>
+</head>
+
+<header>
+	<div id="header">
+		<script src="js/header.js"></script>
+	</div>
+</header>
+<body>
+	<div class="container">
+		<form class="forms-child"
+			  th:method="post"
+			  th:action="@{/model}"
+			  th:object="${modelDeviceDTO}">
+			<span>
+				<label for="selTypeDev">Тип: </label>
+				<select  id="selTypeDev" th:field="*{type}" change="loadSelectDevModel()">
+					<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
+				</select>
+				<label id="lblTypeDev">метка</label>
+				<script>
+					$('#selTypeDev option[value=2]').prop('selected',true);
+				</script>
+			</span>
+			<div class ="tbl-div">
+				<table class="table" id="tblModelDevice">
+					<tr>
+						<th class ="col-num">№</th>
+						<th class ="col-basic">Модель</th>
+						<th class ="col-action">Действие</th>
+					</tr>
+				</table>
+			</div>
+			<span>
+				<label for="selModelDev">Модель: </label>
+				<select  id="selModelDev" th:field="*{name}"></select>
+			</span>
+			<span>
+				<label id="lblModelDev">Модель:</label>
+			</span>
+
+			<span>
+				<button type="submit">Выбрать</button>
+			</span>
+			<script>
+				$(document).ready(init);
+                function init() {
+                    $('#selTypeDev').bind('change', loadSelectDevModel);
+                }
+                <!--
+
+                    function loadSelectDevModel() {
+                     	var selTypeIndex=$('#selTypeDev').val();
+						var selTypeText=$('#selTypeDev option:selected').text();
+						$('#lblTypeDev').text(selTypeIndex+"_"+selTypeText);
+                    	$.getJSON('/device/model' + selTypeText)
+                    	 .done(function (data) {
+                    		$('#selModelDev').empty().prop('disabled', false);
+                    		console.log(data);
+							var models=data;
+							console.log(models);
+							$.each(models, function(i,item) {
+    							$('#tblModelDevice').append('<tr><td>' + models[i].id +
+    														'</td><td>' + models[i].name + '</td><tr>');
+							});
+                       });
+                    }
+
+			</script>
+
+		</form>
+	</div>
+</body>
+
+</html>

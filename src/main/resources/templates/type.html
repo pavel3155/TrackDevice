@@ -5,15 +5,17 @@
     <title>Тип ТС</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <header>
-    <div id="header-type-device">
+    <div id="header">
         <script src="js/header.js"></script>
     </div>
 </header>
 <body>
+
     <form class="auth_form"
           th:method="post"
-          th:action="@{/device/EditType}"
+          th:action="@{/type}"
           th:object="${typeDeviceDTO}">
 
         <div>

@@ -5,7 +5,7 @@ document.getElementById("header").innerHTML = '\
             </div>\
         </span>\
         <span class ="header_label">\
-            <div id="header_div_label">\
+            <div>\
                 <h1>Учет движения технических средств</h1>\
             </div>\
         </span>\

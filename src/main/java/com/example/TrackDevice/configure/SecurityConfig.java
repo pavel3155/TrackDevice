@@ -22,6 +22,8 @@ public class SecurityConfig {
 //                .headers(headers -> headers
 //                        .frameOptions(frameOptions -> frameOptions.sameOrigin()))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/resources/**").permitAll()
+                        .requestMatchers("/static/js/**").permitAll()
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/img/**").permitAll()
                         .requestMatchers("/js/**").permitAll()
@@ -31,7 +33,9 @@ public class SecurityConfig {
                         .requestMatchers("/logout").permitAll()
                         .requestMatchers("/regUser").permitAll()
                         .requestMatchers("/device").permitAll()
-                        .requestMatchers("/TypeDevice").permitAll()
+                        .requestMatchers("/device/model").permitAll()
+                        .requestMatchers("/model").permitAll()
+                        .requestMatchers("/type").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
