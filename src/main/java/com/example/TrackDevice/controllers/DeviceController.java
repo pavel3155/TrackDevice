@@ -94,6 +94,18 @@ public class DeviceController {
         return "type";
     }
 
+    @GetMapping("/edit-model-dev{id}")
+    public String editModelDevice(@PathVariable String id, Model model){
+        System.out.println("id= "+id);
+        ModelDevice modelDevice=modelDeviceRepository.getById(Long.parseLong(id));
+        ModelDeviceDTO modelDeviceDTO = new ModelDeviceDTO();
+        modelDeviceDTO.setId(modelDevice.getId());
+        modelDeviceDTO.setType(modelDevice.getType());
+        modelDeviceDTO.setName(modelDevice.getName());
+        System.out.println("type:=" +modelDeviceDTO.getType());
+        model.addAttribute("modelDeviceDTO",modelDeviceDTO);
+        return "edit-model-dev";
+    }
 
 
 

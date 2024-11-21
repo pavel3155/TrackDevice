@@ -36,6 +36,8 @@ public class SecurityConfig {
                         .requestMatchers("/device/model").permitAll()
                         .requestMatchers("/model").permitAll()
                         .requestMatchers("/type").permitAll()
+                        .requestMatchers("/edit-model-dev").permitAll()
+
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")

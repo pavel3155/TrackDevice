@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class ModelDeviceDTO {
+    private long id;
     @NotNull
     private String name;
     @NotNull

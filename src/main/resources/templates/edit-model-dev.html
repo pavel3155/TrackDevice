@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Модель ТС</title>
+	<link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style-form.css">
+</head>
+
+<header>
+	<div id="header">
+		<script src="js/header.js"></script>
+	</div>
+</header>
+<body>
+	<div class="container">
+		<form class="forms-child"
+			  th:method="post"
+			  th:action="@{/edit-model-dev}"
+			  th:object="${modelDeviceDTO}">
+
+			<span>
+				<label th:text="${type.type}></label>
+				<label for="curModelDev">Модель: </label>
+				<input type="text" id="curModelDev" name="ModelDev" th:text = "${name}" th:field="*{name}"/>
+			</span>
+
+			<span>
+				<button type="submit">Обновить</button>
+			</span>
+		</form>
+	</div>
+</body>
+
+</html>

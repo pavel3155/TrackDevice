@@ -55,8 +55,6 @@
                 function init() {
                     $('#selTypeDev').bind('change', loadSelectDevModel);
                 }
-                <!--
-
                     function loadSelectDevModel() {
                      	var selTypeIndex=$('#selTypeDev').val();
 						var selTypeText=$('#selTypeDev option:selected').text();
@@ -68,8 +66,15 @@
 							var models=data;
 							console.log(models);
 							$.each(models, function(i,item) {
-    							$('#tblModelDevice').append('<tr><td>' + models[i].id +
-    														'</td><td>' + models[i].name + '</td><tr>');
+
+    							$('#tblModelDevice').append('<tr><td>' + i +
+    														'</td><td>' + models[i].name +
+    														'</td><td><a href="/edit-model-dev'+models[i].id+'" th:href="@{/modelDeviceUpdate'+ models[i].id+'}" class="a-btn">Редактировать</a></td><tr>');
+
+    														<!--'</td><td><a th:href="@{/modelDeviceUpdate/{id}(id=${'+ models[i].id+'})}" class="a-btn">Редактировать</a>'+-->
+    														<!--'</td><tr>'); '</td><td><a href="/edit-model-dev{'+models[i].id+'}" class="a-btn">Редактировать</a></td><tr>'); -->
+
+
 							});
                        });
                     }
