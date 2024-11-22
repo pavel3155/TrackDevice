@@ -15,6 +15,7 @@ public class DeviceService {
     DeviceRepository deviceRepository;
     @Autowired
     ModelDeviceRepository modelDeviceRepository;
+
     public Device addDevice(DeviceDTO deviceDTO){
         Device device = new Device();
         device.setModel(deviceDTO.getModel());
@@ -23,6 +24,15 @@ public class DeviceService {
         device.setStatus(device.getStatus());
         return deviceRepository.save(device);
     }
+
+    public ModelDevice saveModelDevice(ModelDeviceDTO modelDeviceDTO){
+        ModelDevice modelDevice =new ModelDevice();
+        modelDevice.setId(modelDeviceDTO.getId());
+        modelDevice.setName(modelDeviceDTO.getName());
+        modelDevice.setType(modelDeviceDTO.getType());
+        return modelDeviceRepository.save(modelDevice);
+    }
+
     public ModelDevice addModelDevice(ModelDeviceDTO modelDeviceDTO){
         ModelDevice modelDevice =new ModelDevice();
         modelDevice.setName(modelDeviceDTO.getName());

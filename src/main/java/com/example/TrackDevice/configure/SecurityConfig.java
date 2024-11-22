@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/model").permitAll()
                         .requestMatchers("/type").permitAll()
                         .requestMatchers("/edit-model-dev").permitAll()
+                        .requestMatchers("/add-model-dev").permitAll()
 
                         .anyRequest().authenticated())
                 .formLogin(form -> form

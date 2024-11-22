@@ -16,10 +16,15 @@
     align-items:center;
 
   }
-
+ .select {
+    font-size: 14pt;
+    font-family: "Times New Roman";
+    margin:2px;
+ }
  .tbl-div{
     width: 80%;
-    border: 2px solid;
+    margin: 2px;
+
  }
  .table {
     width: 100%;
@@ -27,11 +32,12 @@
 
  .table th {
       background: #f1f1f1;
-      font-size: 14pt;
+      font-size: 12pt;
       font-weight: 600;
       padding: 2px 6px 2px 6px;
  }
  .table td {
+      font-size: 12pt;
       background: #f9f9f9;
       padding: 2px 6px 2px 6px;
  }

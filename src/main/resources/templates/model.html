@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Модель ТС</title>
@@ -19,17 +18,21 @@
 		<form class="forms-child"
 			  th:method="post"
 			  th:action="@{/model}"
-			  th:object="${modelDeviceDTO}">
+			  th:object="${typeDeviceDTO}">
 			<span>
-				<label for="selTypeDev">Тип: </label>
-				<select  id="selTypeDev" th:field="*{type}" change="loadSelectDevModel()">
+				<label for="selTypeDev">Вуберите тип ТС: </label>
+				<select  id="selTypeDev" class="select" change="loadSelectDevModel()">
 					<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
 				</select>
-				<label id="lblTypeDev">метка</label>
 				<script>
 					$('#selTypeDev option[value=2]').prop('selected',true);
 				</script>
 			</span>
+			<span id="link"></span>
+			<!--<span>
+				 <a th:href="@{/add-model-dev/{id}(id=*{id})}">Редактировать</a>
+			</span>-->
+
 			<div class ="tbl-div">
 				<table class="table" id="tblModelDevice">
 					<tr>
@@ -39,29 +42,30 @@
 					</tr>
 				</table>
 			</div>
-			<span>
-				<label for="selModelDev">Модель: </label>
-				<select  id="selModelDev" th:field="*{name}"></select>
-			</span>
-			<span>
-				<label id="lblModelDev">Модель:</label>
-			</span>
 
 			<span>
-				<button type="submit">Выбрать</button>
+				<button type="submit">Обновить</button>
 			</span>
 			<script>
-				$(document).ready(init);
-                function init() {
+				$(document).ready(loadSelectDevModel);
+				$(document).ready(addLink);
+				$(document).ready(initEvent);
+
+                function initEvent() {
                     $('#selTypeDev').bind('change', loadSelectDevModel);
                 }
-                    function loadSelectDevModel() {
+                function addLink(){
+                	var selTypeIndex=$('#selTypeDev').val();
+                	$('#link').append('<a href="/add-model-dev'+selTypeIndex+'">Создать модель ТС</a>');
+                }
+
+                function loadSelectDevModel() {
                      	var selTypeIndex=$('#selTypeDev').val();
 						var selTypeText=$('#selTypeDev option:selected').text();
-						$('#lblTypeDev').text(selTypeIndex+"_"+selTypeText);
+
                     	$.getJSON('/device/model' + selTypeText)
                     	 .done(function (data) {
-                    		$('#selModelDev').empty().prop('disabled', false);
+                    		$('#tblModelDevice').empty().prop('disabled', false);
                     		console.log(data);
 							var models=data;
 							console.log(models);
@@ -70,11 +74,6 @@
     							$('#tblModelDevice').append('<tr><td>' + i +
     														'</td><td>' + models[i].name +
     														'</td><td><a href="/edit-model-dev'+models[i].id+'" th:href="@{/modelDeviceUpdate'+ models[i].id+'}" class="a-btn">Редактировать</a></td><tr>');
-
-    														<!--'</td><td><a th:href="@{/modelDeviceUpdate/{id}(id=${'+ models[i].id+'})}" class="a-btn">Редактировать</a>'+-->
-    														<!--'</td><tr>'); '</td><td><a href="/edit-model-dev{'+models[i].id+'}" class="a-btn">Редактировать</a></td><tr>'); -->
-
-
 							});
                        });
                     }

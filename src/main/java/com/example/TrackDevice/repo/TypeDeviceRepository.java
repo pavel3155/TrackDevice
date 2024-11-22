@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface TypeDeviceRepository extends JpaRepository<TypeDevice,Long> {
     List<TypeDevice> findAll();
+    TypeDevice getById(long id);
     TypeDevice findByType(String type);
 
 }

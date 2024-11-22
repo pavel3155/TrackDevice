@@ -17,21 +17,23 @@
 
 		<form class="forms-child"
 			  th:method="post"
-			  th:action="@{/edit-model-dev}"
+			  th:action="@{/add-model-dev}"
 			  th:object="${modelDeviceDTO}">
 
 			<div th:if="${success}" class="" role="alert">
-				<strong>Изменения внесены успешно!</strong>
+				<strong>Модель создана!</strong>
+			</div>
+			<div>
+				<strong>Создать модель ТС </strong>
 			</div>
 			<span>
-				<input type="hidden" th:value="${id}" th:field="*{id}">
-				<input type="hidden" th:value="${type}" th:field="*{type}">
-				<b th:text="*{type.type}"></b>
-				<input type="text" id="curModelDev" name="ModelDev" th:text = "${name}" th:field="*{name}"/>
+				<input type="hidden" th:value="${typeDevice}" th:field="*{type}">
+				<b th:text="${typeDevice.type}"></b>
+				<input type="text" id="curModelDev" name="ModelDev" th:field="*{name}"/>
 			</span>
 
 			<span>
-				<button type="submit">Обновить</button>
+				<button type="submit">Добавить</button>
 			</span>
 		</form>
 	</div>

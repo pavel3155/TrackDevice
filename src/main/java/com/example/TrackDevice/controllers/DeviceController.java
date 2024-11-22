@@ -1,13 +1,7 @@
 package com.example.TrackDevice.controllers;
 
-import com.example.TrackDevice.DTO.DeviceDTO;
-import com.example.TrackDevice.DTO.ModelDeviceDTO;
-import com.example.TrackDevice.DTO.OrdersDTO;
-import com.example.TrackDevice.DTO.RegisterDTO;
-import com.example.TrackDevice.model.Device;
-import com.example.TrackDevice.model.ModelDevice;
-import com.example.TrackDevice.model.Roles;
-import com.example.TrackDevice.model.TypeDevice;
+import com.example.TrackDevice.DTO.*;
+import com.example.TrackDevice.model.*;
 import com.example.TrackDevice.repo.DeviceRepository;
 import com.example.TrackDevice.repo.ModelDeviceRepository;
 import com.example.TrackDevice.repo.TypeDeviceRepository;
@@ -56,8 +50,8 @@ public class DeviceController {
     public String ModelDevice(Model model) {
         List<TypeDevice> types = typeDeviceRepository.findAll();
         model.addAttribute("types",types);
-        ModelDeviceDTO modelDeviceDTO  = new ModelDeviceDTO();
-        model.addAttribute(modelDeviceDTO);
+        TypeDeviceDTO typeDeviceDTO  = new TypeDeviceDTO();
+        model.addAttribute(typeDeviceDTO);
         return "model";
     }
     @GetMapping("/device/model{type}")
@@ -72,20 +66,21 @@ public class DeviceController {
     }
 
     @PostMapping("/model")
-    public String addModelDevice(Model model, @Valid @ModelAttribute ModelDeviceDTO modelDeviceDTO, BindingResult result){
+    public String addModelDevice(Model model, @Valid @ModelAttribute TypeDeviceDTO typeDeviceDTO, BindingResult result){
+        System.out.println("typeDeviceDTO:= "+typeDeviceDTO);
 
         if(result.hasErrors()){
             return "model";
         }
         try {
-            deviceService.addModelDevice(modelDeviceDTO);
-            model.addAttribute("modelDeviceDTO", new ModelDeviceDTO());
-            model.addAttribute("success",true);
+            model.addAttribute("typeDeviceDTO", typeDeviceDTO);
+            ModelDeviceDTO modelDeviceDTO = new ModelDeviceDTO();
+            model.addAttribute("modelDeviceDTO",modelDeviceDTO);
         }
         catch (Exception ex){
-            result.addError(new FieldError("modelDeviceDTO","name",ex.getMessage()));
+            result.addError(new FieldError("typeDeviceDTO","name",ex.getMessage()));
         }
-        return "model";
+        return "add-model-dev";
     }
     @GetMapping("/type")
     public String addTypeDevice(Model model) {
@@ -108,5 +103,52 @@ public class DeviceController {
     }
 
 
+    @PostMapping("/edit-model-dev")
+    public String editModelDev(Model model, @Valid @ModelAttribute ModelDeviceDTO modelDeviceDTO, BindingResult result) {
+        //если ошибки есть
+        if (result.hasErrors()) {
+            return "edit-model-dev";
+        }
+        try {
+            System.out.println("modelDeviceDTO:= "+modelDeviceDTO);
+            deviceService.saveModelDevice(modelDeviceDTO);
+            model.addAttribute("modelDeviceDTO",modelDeviceDTO);
+            model.addAttribute("success",true);
+        } catch (Exception ex) {
+            result.addError(new FieldError("modelDeviceDTO", "name", ex.getMessage()));
+        }
+        return "edit-model-dev";
+    }
 
+    @GetMapping("/add-model-dev{id}")
+    public String addModelDevice(@PathVariable String id, Model model){
+        System.out.println("id= "+id);
+        TypeDevice typeDevice = typeDeviceRepository.getById(Long.parseLong(id));
+        System.out.println("type:=" +typeDevice);
+        ModelDeviceDTO modelDeviceDTO = new ModelDeviceDTO();
+        model.addAttribute("typeDevice",typeDevice);
+        model.addAttribute("modelDeviceDTO",modelDeviceDTO);
+        return "add-model-dev";
+    }
+
+    @PostMapping("/add-model-dev")
+    public String addModelDev(Model model, @Valid @ModelAttribute ModelDeviceDTO modelDeviceDTO, BindingResult result) {
+        System.out.println("modelDeviceDTO:= "+modelDeviceDTO);
+
+        //если ошибки есть
+        if (result.hasErrors()) {
+            return "add-model-dev";
+        }
+        try {
+            System.out.println("modelDeviceDTO:= " + modelDeviceDTO);
+            deviceService.addModelDevice(modelDeviceDTO);
+            TypeDevice typeDevice=modelDeviceDTO.getType();
+            model.addAttribute("typeDevice",typeDevice);
+            model.addAttribute("modelDeviceDTO", modelDeviceDTO);
+            model.addAttribute("success", true);
+        } catch (Exception ex) {
+            result.addError(new FieldError("modelDeviceDTO", "name", ex.getMessage()));
+        }
+        return "add-model-dev";
+    }
 }
