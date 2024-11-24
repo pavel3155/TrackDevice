@@ -36,6 +36,9 @@ public class SecurityConfig {
                         .requestMatchers("/device/model").permitAll()
                         .requestMatchers("/model").permitAll()
                         .requestMatchers("/type").permitAll()
+                        .requestMatchers("/editTypeDev").permitAll()
+                        .requestMatchers("/editTypeDev/*").permitAll()
+                        .requestMatchers("/editTypeDev/{id}").permitAll()
                         .requestMatchers("/edit-model-dev").permitAll()
                         .requestMatchers("/add-model-dev").permitAll()
 

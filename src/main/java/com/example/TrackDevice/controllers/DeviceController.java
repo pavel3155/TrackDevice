@@ -85,10 +85,39 @@ public class DeviceController {
     @GetMapping("/type")
     public String addTypeDevice(Model model) {
         List<TypeDevice> types = typeDeviceRepository.findAll();
+        types.remove(0);
         model.addAttribute("types", types);
         return "type";
     }
 
+    @GetMapping("/editTypeDev{id}")
+    public String editTypeDevice(@PathVariable(value ="id") long id, Model model){
+        System.out.println("id= "+id);
+        TypeDevice typeDevice=typeDeviceRepository.getById(id);
+        TypeDeviceDTO typeDeviceDTO =new TypeDeviceDTO();
+        typeDeviceDTO.setId(typeDevice.getId());
+        typeDeviceDTO.setType(typeDevice.getType());
+        System.out.println("type:=" +typeDevice);
+        model.addAttribute("typeDeviceDTO",typeDeviceDTO);
+        return "editTypeDev";
+    }
+
+    @PostMapping("/editTypeDev")
+    public String editTypeDev(Model model, @Valid @ModelAttribute TypeDeviceDTO typeDeviceDTO, BindingResult result) {
+        //если ошибки есть
+        if (result.hasErrors()) {
+            return "editTypeDev";
+        }
+        try {
+            System.out.println("typeDeviceDTO:= "+typeDeviceDTO);
+            deviceService.saveTypeDevice(typeDeviceDTO);
+            model.addAttribute("typeDeviceDTO",typeDeviceDTO);
+            model.addAttribute("success",true);
+        } catch (Exception ex) {
+            result.addError(new FieldError("typeDeviceDTO", "name", ex.getMessage()));
+        }
+        return "editTypeDev";
+    }
     @GetMapping("/edit-model-dev{id}")
     public String editModelDevice(@PathVariable String id, Model model){
         System.out.println("id= "+id);
@@ -126,7 +155,9 @@ public class DeviceController {
         TypeDevice typeDevice = typeDeviceRepository.getById(Long.parseLong(id));
         System.out.println("type:=" +typeDevice);
         ModelDeviceDTO modelDeviceDTO = new ModelDeviceDTO();
-        model.addAttribute("typeDevice",typeDevice);
+        modelDeviceDTO.setType(typeDevice);
+        //model.addAttribute("typeDevice",typeDevice);
+
         model.addAttribute("modelDeviceDTO",modelDeviceDTO);
         return "add-model-dev";
     }
@@ -143,7 +174,7 @@ public class DeviceController {
             System.out.println("modelDeviceDTO:= " + modelDeviceDTO);
             deviceService.addModelDevice(modelDeviceDTO);
             TypeDevice typeDevice=modelDeviceDTO.getType();
-            model.addAttribute("typeDevice",typeDevice);
+            //model.addAttribute("typeDevice",typeDevice);
             model.addAttribute("modelDeviceDTO", modelDeviceDTO);
             model.addAttribute("success", true);
         } catch (Exception ex) {

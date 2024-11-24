@@ -27,13 +27,14 @@
 				<strong>Создать модель ТС </strong>
 			</div>
 			<span>
-				<input type="hidden" th:value="${typeDevice}" th:field="*{type}">
-				<b th:text="${typeDevice.type}"></b>
+				<input type="hidden" th:value="${type}" th:field="*{type}">
+				<b th:text="*{type.type}"></b>
 				<input type="text" id="curModelDev" name="ModelDev" th:field="*{name}"/>
 			</span>
 
 			<span>
 				<button type="submit">Добавить</button>
+				<a href="/model" class="a-btn">Назад</a>
 			</span>
 		</form>
 	</div>

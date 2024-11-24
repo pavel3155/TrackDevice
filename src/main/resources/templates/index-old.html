@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <title>Движение ТС</title>
     <link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" href="css/style-headers.css">
 </head>
 <header>
 	<div id="header">
@@ -33,17 +32,14 @@
                 <li class ="li-horizontally"><a href="/Orders" th:href="@{/Orders}">Заявка</a></li>
                 <li class ="li-horizontally"><a href="#">Акты движения ТС</a></li>
                 <li class ="li-horizontally"><a href="#">Отчеты</a></li>
-                <li class ="li-horizontally">
-					<span class="dropdown">
-						<button class="dropbtn">Справочник
-							<i class="fa fa-caret-down"></i>
-						</button>
-						<span class="dropdown-content">
-							<a href="/device" th:href="@{/device}">Технические средства (ТС)</a>
-							<a href="/type" th:href="@{/type}">Тип ТС</a>
-							<a href="/model" th:href="@{/model}">Модель ТС</a>
-						</span>
-					</span>
+                <details class ="li-horizontally">
+					<summary>Справочник</summary>
+					<ul>
+						<li class ="li-vertically"><a href="/device" th:href="@{/device}">Технические средства (ТС)</a></li>
+						<li class ="li-vertically"><a href="/type" th:href="@{/type}">Тип ТС</a></li>
+						<li class ="li-vertically"><a href="/model" th:href="@{/model}">Модель ТС</a></li>
+					</ul>
+				</details>
 				<li class ="li-horizontally"><a href="#">Настройки</a></li>
             </ul>
         </nav>

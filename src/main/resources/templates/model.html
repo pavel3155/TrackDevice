@@ -16,7 +16,7 @@
 <body>
 	<div class="container">
 		<form class="forms-child"
-			  th:method="post"
+			  th:method="get"
 			  th:action="@{/model}"
 			  th:object="${typeDeviceDTO}">
 			<span>
@@ -28,10 +28,6 @@
 					$('#selTypeDev option[value=2]').prop('selected',true);
 				</script>
 			</span>
-			<span id="link"></span>
-			<!--<span>
-				 <a th:href="@{/add-model-dev/{id}(id=*{id})}">Редактировать</a>
-			</span>-->
 
 			<div class ="tbl-div">
 				<table class="table" id="tblModelDevice">
@@ -42,26 +38,29 @@
 					</tr>
 				</table>
 			</div>
+			<div>
+				<span id="link"></span>
+				<span><a href="/" class="a-btn">Назад</a></span>
+			</div>
 
-			<span>
-				<button type="submit">Обновить</button>
-			</span>
 			<script>
 				$(document).ready(loadSelectDevModel);
-				$(document).ready(addLink);
+				<!--$(document).ready(addLink);-->
 				$(document).ready(initEvent);
 
                 function initEvent() {
                     $('#selTypeDev').bind('change', loadSelectDevModel);
                 }
                 function addLink(){
-                	var selTypeIndex=$('#selTypeDev').val();
+                	var selTypeIndex=$('#selTypeDev option:selected').val();
                 	$('#link').append('<a href="/add-model-dev'+selTypeIndex+'">Создать модель ТС</a>');
                 }
 
                 function loadSelectDevModel() {
                      	var selTypeIndex=$('#selTypeDev').val();
 						var selTypeText=$('#selTypeDev option:selected').text();
+						$('#link').empty().prop('disabled', false);
+						$('#link').append('<a href="/add-model-dev'+selTypeIndex+'" class="a-btn">Создать модель ТС</a>');
 
                     	$.getJSON('/device/model' + selTypeText)
                     	 .done(function (data) {
