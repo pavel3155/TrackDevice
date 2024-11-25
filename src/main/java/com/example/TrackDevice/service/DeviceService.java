@@ -35,6 +35,12 @@ public class DeviceService {
         typeDevice.setType(typeDeviceDTO.getType());
         return typeDeviceRepository.save(typeDevice);
     }
+    public TypeDevice addTypeDevice(TypeDeviceDTO typeDeviceDTO){
+        TypeDevice typeDevice = new TypeDevice();
+        typeDevice.setType(typeDeviceDTO.getType());
+        return typeDeviceRepository.save(typeDevice);
+    }
+
     public ModelDevice saveModelDevice(ModelDeviceDTO modelDeviceDTO){
         ModelDevice modelDevice =new ModelDevice();
         modelDevice.setId(modelDeviceDTO.getId());

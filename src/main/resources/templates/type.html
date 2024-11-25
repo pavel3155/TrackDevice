@@ -31,12 +31,12 @@
                         <th class ="col-action">Действие</th>
                     </tr>
                     <tr th:each="type : ${types}">
-                        <td th:text="${type.id}"></td>
+                        <td th:text="${type.id}" class ="col-num"></td>
                         <td th:text="${type.type}"></td>
                         <td>
                             <span class="tbl-td-span-inline">
                                 <a href="/editTypeDev" th:href="@{/editTypeDev{id}(id=${type.id})}"
-                                   class="a-btn">Редактировать</a>
+                                   class="a-btn a-btn-tbl">Редактировать</a>
                             </span>
                         </td>
                     </tr>

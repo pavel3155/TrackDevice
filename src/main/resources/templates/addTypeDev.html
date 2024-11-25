@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Модель ТС</title>
+    <title>Тип ТС(редактирование)</title>
 	<link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/style-form.css">
 </head>
@@ -15,24 +14,22 @@
 </header>
 <body>
 	<div class="container">
-
 		<form class="forms-child"
 			  th:method="post"
-			  th:action="@{/edit-model-dev}"
-			  th:object="${modelDeviceDTO}">
+			  th:action="@{/addTypeDev}"
+			  th:object="${typeDeviceDTO}">
 
 			<div th:if="${success}" class="" role="alert">
 				<strong>Изменения внесены успешно!</strong>
 			</div>
-			<span>
+			<span style="margin:30px 5px 15px 5px">
 				<input type="hidden" th:value="${id}" th:field="*{id}">
-				<input type="hidden" th:value="${type}" th:field="*{type}">
-				<b th:text="*{type.type}"></b>
-				<input type="text" id="curModelDev" name="ModelDev" th:text = "${name}" th:field="*{name}"/>
+				<b>Создать новый тип ТС:</b>
+				<input type="text" id="curTypeDev" name="TypeDev" th:field="*{type}"/>
 			</span>
-
-			<span>
-				<button type="submit">Обновить</button>
+			<span style="margin:20px 5px 5px 5px">
+				<button type="submit" class="a-btn">Сохранить</button>
+				<a href="/type" class="a-btn">Назад</a>
 			</span>
 		</form>
 	</div>

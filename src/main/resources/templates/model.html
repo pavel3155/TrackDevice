@@ -19,7 +19,7 @@
 			  th:method="get"
 			  th:action="@{/model}"
 			  th:object="${typeDeviceDTO}">
-			<span>
+			<span class="margin-t">
 				<label for="selTypeDev">Вуберите тип ТС: </label>
 				<select  id="selTypeDev" class="select" change="loadSelectDevModel()">
 					<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
@@ -45,7 +45,6 @@
 
 			<script>
 				$(document).ready(loadSelectDevModel);
-				<!--$(document).ready(addLink);-->
 				$(document).ready(initEvent);
 
                 function initEvent() {
@@ -60,19 +59,20 @@
                      	var selTypeIndex=$('#selTypeDev').val();
 						var selTypeText=$('#selTypeDev option:selected').text();
 						$('#link').empty().prop('disabled', false);
-						$('#link').append('<a href="/add-model-dev'+selTypeIndex+'" class="a-btn">Создать модель ТС</a>');
+						$('#link').append('<a href="/addModelDev'+selTypeIndex+'" class="a-btn">Создать модель ТС</a>');
 
                     	$.getJSON('/device/model' + selTypeText)
                     	 .done(function (data) {
                     		$('#tblModelDevice').empty().prop('disabled', false);
+                    		$('#tblModelDevice').append('<tr><th class ="col-num">№</th><th class ="col-basic">Модель</th><th class ="col-action">Действие</th></tr>');
                     		console.log(data);
 							var models=data;
 							console.log(models);
 							$.each(models, function(i,item) {
 
-    							$('#tblModelDevice').append('<tr><td>' + i +
+    							$('#tblModelDevice').append('<tr><td class ="col-num">' + i +
     														'</td><td>' + models[i].name +
-    														'</td><td><a href="/edit-model-dev'+models[i].id+'" th:href="@{/modelDeviceUpdate'+ models[i].id+'}" class="a-btn">Редактировать</a></td><tr>');
+    														'</td><td><a href="/editModelDev'+models[i].id+'" th:href="@{/editModelDev'+ models[i].id+'}" class="a-btn a-btn-tbl">Редактировать</a></td><tr>');
 							});
                        });
                     }

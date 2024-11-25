@@ -23,17 +23,17 @@
 			<div th:if="${success}" class="" role="alert">
 				<strong>Модель создана!</strong>
 			</div>
-			<div>
-				<strong>Создать модель ТС </strong>
-			</div>
+			<span>
+				<h3>Создать модель ТС </h3>
+			</span>
 			<span>
 				<input type="hidden" th:value="${type}" th:field="*{type}">
 				<b th:text="*{type.type}"></b>
 				<input type="text" id="curModelDev" name="ModelDev" th:field="*{name}"/>
 			</span>
 
-			<span>
-				<button type="submit">Добавить</button>
+			<span style="margin:20px 5px 5px 5px">
+				<button type="submit" class="a-btn">Добавить</button>
 				<a href="/model" class="a-btn">Назад</a>
 			</span>
 		</form>

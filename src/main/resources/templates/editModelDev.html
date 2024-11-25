@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Модель ТС</title>
+	<link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style-form.css">
+</head>
+
+<header>
+	<div id="header">
+		<script src="js/header.js"></script>
+	</div>
+</header>
+<body>
+	<div class="container">
+
+		<form class="forms-child"
+			  th:method="post"
+			  th:action="@{/editModelDev}"
+			  th:object="${modelDeviceDTO}">
+
+			<span th:if="${success}" class="" role="alert">
+				<strong>Изменения внесены успешно!</strong>
+			</span>
+			<span>
+				<h3>Внесите изменения в модель ТС</h3>
+			</span>
+			<span>
+				<input type="hidden" th:value="${id}" th:field="*{id}">
+				<input type="hidden" th:value="${type}" th:field="*{type}">
+				<b th:text="*{type.type}"></b>
+				<input type="text" id="curModelDev" name="ModelDev" th:text = "${name}" th:field="*{name}"/>
+			</span>
+
+			<span style="margin:20px 5px 5px 5px">
+				<button type="submit" class="a-btn">Сохранить</button>
+				<a href="/model" class="a-btn">Назад</a>
+			</span>
+
+
+		</form>
+	</div>
+</body>
+
+</html>

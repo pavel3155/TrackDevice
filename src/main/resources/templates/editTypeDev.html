@@ -22,13 +22,14 @@
 			<div th:if="${success}" class="" role="alert">
 				<strong>Изменения внесены успешно!</strong>
 			</div>
-			<span>
+			<span style="margin:30px 5px 15px 5px">
 				<input type="hidden" th:value="${id}" th:field="*{id}">
-				<b>Тип ТС:</b>
+				<b>Внесите изменения в тип ТС:</b>
 				<input type="text" id="curTypeDev" name="TypeDev" th:text = "${type}" th:field="*{type}"/>
 			</span>
-			<span>
-				<button type="submit">Сохранить</button>
+			<span style="margin:20px 5px 5px 5px">
+				<button type="submit" class="a-btn">Сохранить</button>
+				<a href="/type" class="a-btn">Назад</a>
 			</span>
 		</form>
 	</div>

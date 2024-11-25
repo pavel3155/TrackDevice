@@ -83,7 +83,7 @@ public class DeviceController {
         return "add-model-dev";
     }
     @GetMapping("/type")
-    public String addTypeDevice(Model model) {
+    public String viewTypeDevice(Model model) {
         List<TypeDevice> types = typeDeviceRepository.findAll();
         types.remove(0);
         model.addAttribute("types", types);
@@ -118,7 +118,32 @@ public class DeviceController {
         }
         return "editTypeDev";
     }
-    @GetMapping("/edit-model-dev{id}")
+
+    @GetMapping("/addTypeDev")
+    public String addTypeDevice(Model model){
+        TypeDeviceDTO typeDeviceDTO =new TypeDeviceDTO();
+        model.addAttribute("typeDeviceDTO",typeDeviceDTO);
+        return "addTypeDev";
+    }
+    @PostMapping("/addTypeDev")
+    public String addTypeDev(Model model, @Valid @ModelAttribute TypeDeviceDTO typeDeviceDTO, BindingResult result) {
+        //если ошибки есть
+        if (result.hasErrors()) {
+            return "addTypeDev";
+        }
+        try {
+            System.out.println("typeDeviceDTO:= "+typeDeviceDTO);
+            deviceService.addTypeDevice(typeDeviceDTO);
+            model.addAttribute("typeDeviceDTO",typeDeviceDTO);
+            model.addAttribute("success",true);
+        } catch (Exception ex) {
+            result.addError(new FieldError("typeDeviceDTO", "name", ex.getMessage()));
+        }
+        return "addTypeDev";
+    }
+
+
+    @GetMapping("/editModelDev{id}")
     public String editModelDevice(@PathVariable String id, Model model){
         System.out.println("id= "+id);
         ModelDevice modelDevice=modelDeviceRepository.getById(Long.parseLong(id));
@@ -128,15 +153,15 @@ public class DeviceController {
         modelDeviceDTO.setName(modelDevice.getName());
         System.out.println("type:=" +modelDeviceDTO.getType());
         model.addAttribute("modelDeviceDTO",modelDeviceDTO);
-        return "edit-model-dev";
+        return "editModelDev";
     }
 
 
-    @PostMapping("/edit-model-dev")
+    @PostMapping("/editModelDev")
     public String editModelDev(Model model, @Valid @ModelAttribute ModelDeviceDTO modelDeviceDTO, BindingResult result) {
         //если ошибки есть
         if (result.hasErrors()) {
-            return "edit-model-dev";
+            return "editModelDev";
         }
         try {
             System.out.println("modelDeviceDTO:= "+modelDeviceDTO);
@@ -146,10 +171,10 @@ public class DeviceController {
         } catch (Exception ex) {
             result.addError(new FieldError("modelDeviceDTO", "name", ex.getMessage()));
         }
-        return "edit-model-dev";
+        return "editModelDev";
     }
 
-    @GetMapping("/add-model-dev{id}")
+    @GetMapping("/addModelDev{id}")
     public String addModelDevice(@PathVariable String id, Model model){
         System.out.println("id= "+id);
         TypeDevice typeDevice = typeDeviceRepository.getById(Long.parseLong(id));
@@ -159,16 +184,16 @@ public class DeviceController {
         //model.addAttribute("typeDevice",typeDevice);
 
         model.addAttribute("modelDeviceDTO",modelDeviceDTO);
-        return "add-model-dev";
+        return "addModelDev";
     }
 
-    @PostMapping("/add-model-dev")
+    @PostMapping("/addModelDev")
     public String addModelDev(Model model, @Valid @ModelAttribute ModelDeviceDTO modelDeviceDTO, BindingResult result) {
         System.out.println("modelDeviceDTO:= "+modelDeviceDTO);
 
         //если ошибки есть
         if (result.hasErrors()) {
-            return "add-model-dev";
+            return "addModelDev";
         }
         try {
             System.out.println("modelDeviceDTO:= " + modelDeviceDTO);
@@ -180,6 +205,6 @@ public class DeviceController {
         } catch (Exception ex) {
             result.addError(new FieldError("modelDeviceDTO", "name", ex.getMessage()));
         }
-        return "add-model-dev";
+        return "addModelDev";
     }
 }
