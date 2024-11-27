@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>(ТС)Технические средства</title>
     <link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/style-form.css">
 	<script src="js/jquery-3.7.1.js"></script>
 </head>
 
@@ -15,58 +16,57 @@
 </header>
 
 <body>
-	<div>
-		<form class="auth_form"
-			  th:method="post"
+	<span class="container">
+		<form class="forms-child"
+			  th:method="get"
 			  th:action="@{/device}"
 			  th:object="${deviceDTO}">
 
-			<div class="auth_form_div">
+			<span class="margin-t">
 				<label for="selTypeDev">Тип: </label>
 				<select  id="selTypeDev" th:field="*{type}" change="loadSelectDevModel()">
-					<option value="0">Тип</option>
 					<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
 				</select>
-				<label id="lblTypeDev">метка</label>
 				<script>
-					$('#selTypeDev option[value=2]').prop('selected',true);
+					$('#selTypeDev option[value=1]').prop('selected',true);
 				</script>
 
 				<label for="selModelDev">Модель: </label>
 				<select  id="selModelDev" th:field="*{model}"></select>
 
-				<label for="devSN">Серийный номер: </label>
-				<select  id="devSN" th:field="*{ser_num}">
-					<!--
-					<option value="0">Серийный номер</option>
-					<option th:each="device : ${devices}" th:value="${device.id}" th:text="${device.ser_num}"></option>
-					-->
-				</select>
+				<label for="filtrBySN">Серийный номер(фильтр): </label>
+				<input type="text" id="filtrBySN" name="filtrSN"/>
+			</span>
+
+			<div class ="tbl-div">
+				<table class="table" id="tblDevice">
+					<tr>
+						<th class ="dev-col-num">№</th>
+						<th>Тип</th>
+						<th>Модель</th>
+						<th>Серийные №</th>
+						<th>Инвентарный №</th>
+						<th class =dev-col-action>Действие</th>
+					</tr>
+				</table>
 			</div>
 			<div>
-				<label id="lblModelDev">Модель:</label>
-			</div>
-
-			<div class="auth_form_div_btn">
-				<button type="submit">Выбрать</button>
+				<span id="link"></span>
+				<span><a href="/" class="a-btn">Назад</a></span>
 			</div>
 			<script>
-				$(document).ready(init);
-                function init() {
-                    $('#selTypeDev').bind('change', loadSelectDevModel);
-                }
-                <!--
-                function lblTypeDev() {
-                    var selTypeIndex=$('#selTypeDev').val();
-                    var selTypeText=$('#selTypeDev option:selected').text();
-                    $('#lblTypeDev').text(selTypeIndex+"_"+selTypeText);
-                }
-                -->
+				$(document).ready(loadSelectDevModel);
+				$(document).ready(eventSelModelDev);
+				$(document).ready(initEvent);
 
-                    function loadSelectDevModel() {
-                     	var selTypeIndex=$('#selTypeDev').val();
+                function initEvent() {
+                    $('#selTypeDev').bind('change', loadSelectDevModel);
+                    $('#selModelDev').bind('change', eventSelModelDev);
+                }
+
+                function loadSelectDevModel() {
+                		var selTypeIndex=$('#selTypeDev').val();
 						var selTypeText=$('#selTypeDev option:selected').text();
-						$('#lblTypeDev').text(selTypeIndex+"_"+selTypeText);
                     	$.getJSON('/device/model' + selTypeText)
                     	 .done(function (data) {
                     		$('#selModelDev').empty().prop('disabled', false);
@@ -78,13 +78,41 @@
     							$('#selModelDev').append('<option value="' + models[i].id+ '">' + models[i].name + '</option>');
 							});
                        });
+                       $('#selModelDev option[value=1]').prop('selected',true);
 
-                    }
+
+                }
+                function eventSelModelDev() {
+                	var selModelIndex=$('#selModelDev').val();
+                	console.log("selModelIndex="+selModelIndex);
+                	loadTableDevice(selModelIndex)
+                }
+				function loadTableDevice(selModelIndex) {
+
+					console.log("selModelIndex="+selModelIndex);
+
+					$.getJSON('/device' + selModelIndex)
+                    	 .done(function (data) {
+                    		$('#tblDevice').empty().prop('disabled', false);
+                    		console.log(data);
+							var models=data;
+							console.log(models);
+							$.each(models, function(i,item) {
+    							$('#tblDevice').append('<tr><td class ="dev-col-num">' + i +
+    												   '</td><td>' + models[i].type +
+    												   '</td><td>' + models[i].model +
+    												   '</td><td>' + models[i].ser_num +
+    												   '</td><td>' + models[i].inv_num +
+    												   '</td><td><a href="/editDevice'+models[i].id+'" class="a-btn a-btn-tbl">Редактировать</a></td><tr>');
+							});
+                       });
+
+				}
 
 			</script>
 
 		</form>
-	</div>
+	</span>
 </body>
 
 </html>

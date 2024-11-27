@@ -7,6 +7,7 @@ import com.example.TrackDevice.repo.ModelDeviceRepository;
 import com.example.TrackDevice.repo.TypeDeviceRepository;
 import com.example.TrackDevice.service.DeviceService;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -36,13 +38,38 @@ public class DeviceController {
     @GetMapping("/device")
     public String newDevice(Model model) {
         List<TypeDevice> types = typeDeviceRepository.findAll();
+        types.remove(0);
         model.addAttribute("types",types);
         DeviceDTO deviceDTO = new DeviceDTO();
         model.addAttribute(deviceDTO);
         return "device";
     }
+    @GetMapping("/device{idModel}")
+    @ResponseBody
+    public ResponseEntity<String> loadDevice(@PathVariable String idModel){
+        System.out.println("/device{idModel}_id= "+idModel);
+        ModelDevice model =modelDeviceRepository.getById(Long.parseLong(idModel));
+        System.out.println("model:= "+model);
+        List<Device> devices = deviceRepository.findByModel(model);
+        List<JSONDeviceDTO> jsonDeviceDTOList= new ArrayList<>();
+        for (Device dev:devices){
+            JSONDeviceDTO jsonDeviceDTO=new JSONDeviceDTO();
+            jsonDeviceDTO.setId(dev.getId());
+            jsonDeviceDTO.setType(dev.getModel().getType().getType());
+            jsonDeviceDTO.setModel(dev.getModel().getName());
+            jsonDeviceDTO.setInv_num(dev.getInv_num());
+            jsonDeviceDTO.setSer_num(dev.getSer_num());
+            jsonDeviceDTOList.add(jsonDeviceDTO);
+        }
+        System.out.println("devices:= "+devices);
+        System.out.println("jsonDeviceDTOList:= "+jsonDeviceDTOList);
+
+        Gson gson = new Gson();
+        String jsonDevices = gson.toJson(jsonDeviceDTOList);
+        return  ResponseEntity.ok(jsonDevices);
+    }
     @PostMapping("/device")
-    public String loadDevice (Model model, @Valid @ModelAttribute DeviceDTO deviceDTODTO, BindingResult result) {
+    public String addDevice (Model model, @Valid @ModelAttribute DeviceDTO deviceDTODTO, BindingResult result) {
         return "device";
     }
 
@@ -57,7 +84,7 @@ public class DeviceController {
     @GetMapping("/device/model{type}")
     @ResponseBody
     public ResponseEntity<String> loadModelDevice(@PathVariable String type){
-        System.out.println("type= "+type);
+        System.out.println("/device/model{type}_type= "+type);
         TypeDevice typeDevice = typeDeviceRepository.findByType(type);
         List<ModelDevice> models =modelDeviceRepository.findByType(typeDevice);
         Gson gson = new Gson();
@@ -176,9 +203,9 @@ public class DeviceController {
 
     @GetMapping("/addModelDev{id}")
     public String addModelDevice(@PathVariable String id, Model model){
-        System.out.println("id= "+id);
+        System.out.println("addModelDev{id}_id= "+id);
         TypeDevice typeDevice = typeDeviceRepository.getById(Long.parseLong(id));
-        System.out.println("type:=" +typeDevice);
+        System.out.println("addModelDev{id}_type:=" +typeDevice);
         ModelDeviceDTO modelDeviceDTO = new ModelDeviceDTO();
         modelDeviceDTO.setType(typeDevice);
         //model.addAttribute("typeDevice",typeDevice);
