@@ -56,7 +56,7 @@
 			</div>
 			<script>
 				$(document).ready(loadSelectDevModel);
-				$(document).ready(eventSelModelDev);
+				<!--$(document).ready(eventSelModelDev);-->
 				$(document).ready(initEvent);
 
                 function initEvent() {
@@ -77,9 +77,10 @@
 							$.each(models, function(i,item) {
     							$('#selModelDev').append('<option value="' + models[i].id+ '">' + models[i].name + '</option>');
 							});
+							$('#selModelDev option[value=1]').prop('selected',true);
+							var selModelIndex=$('#selModelDev').val();
+							loadTableDevice(selModelIndex);
                        });
-                       $('#selModelDev option[value=1]').prop('selected',true);
-
 
                 }
                 function eventSelModelDev() {
@@ -97,6 +98,7 @@
                     		console.log(data);
 							var models=data;
 							console.log(models);
+							$('#tblDevice').append('<tr><td class ="dev-col-num">№</td><td>Тип</td><td>Модель</td><td>Серийный №</td><td>Инвентарный №</td><td>Действие</td><tr>');
 							$.each(models, function(i,item) {
     							$('#tblDevice').append('<tr><td class ="dev-col-num">' + i +
     												   '</td><td>' + models[i].type +
