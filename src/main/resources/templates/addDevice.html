@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Новое ТС</title>
+	<link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style-form.css">
+</head>
+
+<header>
+	<div id="header">
+		<script src="js/header.js"></script>
+	</div>
+</header>
+<body>
+	<div class="container">
+
+		<form class="forms-child"
+			  th:method="post"
+			  th:action="@{/addDevice}"
+			  th:object="${DeviceDTO}">
+
+			<div th:if="${success}" class="" role="alert">
+				<strong>Техническое средство создано!</strong>
+			</div>
+			<span>
+				<h3>Создать техническое средство </h3>
+			</span>
+			<span>
+				<!--<input type="hidden" th:value="${type}" th:field="*{type}">-->
+				<b th:text="${type.type}"></b>
+				<input type="hidden" th:value="${name}" th:field="*{name}">
+				<b th:text="*{name}"></b>
+				<input type="text" id="ser_num" name="ser_num" th:field="*{ser_num}"/>
+				<input type="text" id="inv_num" name="inv_num" th:field="*{inv_num}"/>
+			</span>
+
+			<span style="margin:20px 5px 5px 5px">
+				<button type="submit" class="a-btn">Добавить</button>
+				<a href="/device" class="a-btn">Назад</a>
+			</span>
+		</form>
+	</div>
+</body>
+
+</html>

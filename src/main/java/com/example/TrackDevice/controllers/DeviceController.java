@@ -68,6 +68,20 @@ public class DeviceController {
         String jsonDevices = gson.toJson(jsonDeviceDTOList);
         return  ResponseEntity.ok(jsonDevices);
     }
+    @GetMapping("/addDevice/model{id}")
+    public String addDevice(@PathVariable(value ="id") long id, Model model){
+        System.out.println("id= "+id);
+        ModelDevice modelDevice = modelDeviceRepository.getById(id);
+        ModelDeviceDTO modelDeviceDTO=new ModelDeviceDTO();
+        modelDeviceDTO.setId(modelDevice.getId());
+        modelDeviceDTO.setName(modelDevice.getName());
+        modelDeviceDTO.setType(modelDevice.getType());
+        Device device =new Device();
+        model.addAttribute("modelDeviceDTO",modelDeviceDTO);
+        model.addAttribute("device",device);
+        return "addDevice";
+    }
+
     @PostMapping("/device")
     public String addDevice (Model model, @Valid @ModelAttribute DeviceDTO deviceDTODTO, BindingResult result) {
         return "device";

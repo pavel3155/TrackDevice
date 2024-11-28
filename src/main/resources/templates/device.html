@@ -91,7 +91,8 @@
 				function loadTableDevice(selModelIndex) {
 
 					console.log("selModelIndex="+selModelIndex);
-
+					$('#link').empty().prop('disabled', false);
+					$('#link').append('<a href="/addDevice/model'+selModelIndex+'" class="a-btn">Создать ТС</a>');
 					$.getJSON('/device' + selModelIndex)
                     	 .done(function (data) {
                     		$('#tblDevice').empty().prop('disabled', false);
