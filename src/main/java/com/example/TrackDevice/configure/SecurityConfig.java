@@ -40,7 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/editTypeDev/*").permitAll()
                         .requestMatchers("/editTypeDev/{id}").permitAll()
                         .requestMatchers("/edit-model-dev").permitAll()
-                        .requestMatchers("/add-model-dev").permitAll()
+                        .requestMatchers("/addDevice").permitAll()
 
                         .anyRequest().authenticated())
                 .formLogin(form -> form

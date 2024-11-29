@@ -18,7 +18,7 @@
 		<form class="forms-child"
 			  th:method="post"
 			  th:action="@{/addDevice}"
-			  th:object="${DeviceDTO}">
+			  th:object="${deviceDTO}">
 
 			<div th:if="${success}" class="" role="alert">
 				<strong>Техническое средство создано!</strong>
@@ -26,14 +26,26 @@
 			<span>
 				<h3>Создать техническое средство </h3>
 			</span>
-			<span>
-				<!--<input type="hidden" th:value="${type}" th:field="*{type}">-->
-				<b th:text="${type.type}"></b>
-				<input type="hidden" th:value="${name}" th:field="*{name}">
-				<b th:text="*{name}"></b>
-				<input type="text" id="ser_num" name="ser_num" th:field="*{ser_num}"/>
-				<input type="text" id="inv_num" name="inv_num" th:field="*{inv_num}"/>
-			</span>
+			<div class ="tbl-div">
+				<input type="hidden" th:value="${modelDevice}" th:field="*{model}">
+				<table class="table" id="tblDevice">
+					<tr>
+						<th class ="dev-col-num">№</th>
+						<th>Тип</th>
+						<th>Модель</th>
+						<th>Серийные №</th>
+						<th>Инвентарный №</th>
+					</tr>
+
+					<tr>
+						<td class ="dev-col-num">1</td>
+						<td><b th:text="${modelDevice.type.type}"></b></td>
+						<td><b th:text="${modelDevice.name}"></b></td>
+						<td><input type="text" id="ser_num1" name="ser_num" th:field="*{ser_num}"/></td>
+						<td><input type="text" id="inv_num1" name="inv_num" th:field="*{inv_num}"/></td>
+					</tr>
+				</table>
+			</div>
 
 			<span style="margin:20px 5px 5px 5px">
 				<button type="submit" class="a-btn">Добавить</button>

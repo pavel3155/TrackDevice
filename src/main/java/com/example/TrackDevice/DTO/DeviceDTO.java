@@ -10,7 +10,9 @@ import java.util.List;
 
 @Data
 public class DeviceDTO {
-    private TypeDevice type;
+    //private TypeDevice type;
+    private long id;
+    @NotNull
     private ModelDevice model;
     private String inv_num;
     @NotNull

@@ -24,7 +24,7 @@
 
 			<span class="margin-t">
 				<label for="selTypeDev">Тип: </label>
-				<select  id="selTypeDev" th:field="*{type}" change="loadSelectDevModel()">
+				<select  id="selTypeDev"  change="loadSelectDevModel()">
 					<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
 				</select>
 				<script>
@@ -92,7 +92,7 @@
 
 					console.log("selModelIndex="+selModelIndex);
 					$('#link').empty().prop('disabled', false);
-					$('#link').append('<a href="/addDevice/model'+selModelIndex+'" class="a-btn">Создать ТС</a>');
+					$('#link').append('<a href="/addDevice'+selModelIndex+'" class="a-btn">Создать ТС</a>');
 					$.getJSON('/device' + selModelIndex)
                     	 .done(function (data) {
                     		$('#tblDevice').empty().prop('disabled', false);
@@ -111,7 +111,11 @@
                        });
 
 				}
-
+                function addLink(){
+                	var selModelIndex=$('#selModelDev').val();
+                	console.log("addLink_selModelIndex:="+selModelIndex);
+                	$('#link').append('<a href="/addDevice/model'+selModelIndex+'">Создать ТС</a>');
+                }
 			</script>
 
 		</form>
