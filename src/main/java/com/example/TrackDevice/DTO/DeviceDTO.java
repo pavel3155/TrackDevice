@@ -12,11 +12,10 @@ import java.util.List;
 public class DeviceDTO {
     //private TypeDevice type;
     private long id;
-    @NotNull
-    private ModelDevice model;
+    private ModelDevice modelDevice;
     private String inv_num;
     @NotNull
     private String ser_num;
     private String status;
-
+//    private long idModelDevice;
 }

@@ -85,9 +85,20 @@
      width: 20%;
   }
 
+ .AlignCenter {
+    text-align:center;
+ }
 
+.notMarginAndPadding {
+    margin:0;
+    padding0;
+}
 
+.tbl-td-input-text{
+    width: 90%;
+    border:none;
 
+}
 
   .a-btn{
       margin:2px;

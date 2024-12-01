@@ -68,24 +68,118 @@ public class DeviceController {
         String jsonDevices = gson.toJson(jsonDeviceDTOList);
         return  ResponseEntity.ok(jsonDevices);
     }
+
+
+//    @GetMapping("/addDevice{id}")
+//    public String addDevice(@PathVariable(value ="id") long id, Model model){
+//        System.out.println("id= "+id);
+//        ModelDevice modelDevice = modelDeviceRepository.getById(id);
+//        //DeviceDTO deviceDTO =new DeviceDTO();
+//        POSTDeviceDTO postDeviceDTO = new POSTDeviceDTO();
+//        postDeviceDTO.setIdModel(modelDevice.getId());
+//        postDeviceDTO.setType(modelDevice.getType().getType());
+//        postDeviceDTO.setModelDevice(modelDevice.getName());
+//        System.out.println("postDeviceDTO"+postDeviceDTO);
+//
+////        Device device=new Device();
+////        model.addAttribute("device",device);
+////        model.addAttribute("modelDevice",modelDevice);
+//        model.addAttribute("postDeviceDTO",postDeviceDTO);
+//        return "addDevice";
+//    }
+
+
     @GetMapping("/addDevice{id}")
     public String addDevice(@PathVariable(value ="id") long id, Model model){
         System.out.println("id= "+id);
         ModelDevice modelDevice = modelDeviceRepository.getById(id);
-        ModelDeviceDTO modelDeviceDTO=new ModelDeviceDTO();
-        modelDeviceDTO.setId(modelDevice.getId());
-        modelDeviceDTO.setName(modelDevice.getName());
-        modelDeviceDTO.setType(modelDevice.getType());
+        System.out.println("modelDevice"+modelDevice);
         DeviceDTO deviceDTO =new DeviceDTO();
-        model.addAttribute("modelDevice",modelDevice);
+        deviceDTO.setModelDevice(modelDevice);
+        System.out.println("deviceDTO"+deviceDTO);
         model.addAttribute("deviceDTO",deviceDTO);
         return "addDevice";
     }
 
-    @PostMapping("/device")
-    public String addDevice (Model model, @Valid @ModelAttribute DeviceDTO deviceDTODTO, BindingResult result) {
-        return "device";
+    @PostMapping("/addDevice")
+    public String addDevice(Model model, @Valid @ModelAttribute DeviceDTO deviceDTO, BindingResult result){
+        System.out.println("deviceDTO:= "+deviceDTO);
+
+        if(result.hasErrors()){
+            model.addAttribute("deviceDTO", deviceDTO);
+            return "addDevice";
+        }
+        try {
+            deviceService.addDevice(deviceDTO);
+            model.addAttribute("deviceDTO", deviceDTO);
+            model.addAttribute("success",true);
+        }
+        catch (Exception ex){
+            result.addError(new FieldError("deviceDTO","name",ex.getMessage()));
+        }
+        return "addDevice";
     }
+    @GetMapping("/editDevice{id}")
+    public String editDevice(@PathVariable(value ="id") long id, Model model){
+        System.out.println("idDev= "+id);
+        Device device=deviceRepository.getById(id);
+
+        DeviceDTO deviceDTO = new DeviceDTO();
+        deviceDTO.setId(device.getId());
+        deviceDTO.setModelDevice(device.getModel());
+        deviceDTO.setInv_num(device.getInv_num());
+        deviceDTO.setSer_num(device.getSer_num());
+        System.out.println("deviceDTO:=" +deviceDTO);
+        model.addAttribute("deviceDTO",deviceDTO);
+        return "editDevice";
+    }
+
+
+    @PostMapping("/editDevice")
+    public String editDevice(Model model, @Valid @ModelAttribute DeviceDTO deviceDTO, BindingResult result) {
+        //если ошибки есть
+        if (result.hasErrors()) {
+            model.addAttribute("deviceDTO", deviceDTO);
+            return "editDevice";
+        }
+        try {
+            System.out.println("deviceDTO:= "+deviceDTO);
+            deviceService.saveDevice(deviceDTO);
+            model.addAttribute("deviceDTO", deviceDTO);
+            model.addAttribute("success",true);
+        } catch (Exception ex) {
+            result.addError(new FieldError("deviceDTO", "name", ex.getMessage()));
+        }
+        return "editDevice";
+    }
+
+//    @PostMapping("/addDevice")
+//    public String addDevice(Model model, @Valid @ModelAttribute POSTDeviceDTO postDeviceDTO, BindingResult result){
+//        System.out.println("postDeviceDTO:= "+postDeviceDTO);
+//
+//
+//    if(result.hasErrors()){
+//            model.addAttribute("postDeviceDTO", postDeviceDTO);
+//            return "addDevice";
+//        }
+//        try {
+//            ModelDevice modelDevice =modelDeviceRepository.getById(postDeviceDTO.getIdModel());
+//            System.out.println("modelDevice"+modelDevice);
+//            Device device = new Device();
+//            device.setModel(modelDevice);
+//            device.setInv_num(postDeviceDTO.getInv_num());
+//            device.setSer_num(postDeviceDTO.getSer_num());
+//            deviceService.addDevice(device);
+//            //ModelDevice modelDevice=deviceDTO.getModelDevice();
+//            model.addAttribute("postDeviceDTO", postDeviceDTO);
+////            model.addAttribute("modelDevice",modelDevice);
+//            model.addAttribute("success",true);
+//        }
+//        catch (Exception ex){
+//            result.addError(new FieldError("postDeviceDTO","name",ex.getMessage()));
+//        }
+//        return "addDevice";
+//    }
 
     @GetMapping("/model")
     public String ModelDevice(Model model) {
@@ -106,23 +200,23 @@ public class DeviceController {
         return  ResponseEntity.ok(jsonModels);
     }
 
-    @PostMapping("/model")
-    public String addModelDevice(Model model, @Valid @ModelAttribute TypeDeviceDTO typeDeviceDTO, BindingResult result){
-        System.out.println("typeDeviceDTO:= "+typeDeviceDTO);
-
-        if(result.hasErrors()){
-            return "model";
-        }
-        try {
-            model.addAttribute("typeDeviceDTO", typeDeviceDTO);
-            ModelDeviceDTO modelDeviceDTO = new ModelDeviceDTO();
-            model.addAttribute("modelDeviceDTO",modelDeviceDTO);
-        }
-        catch (Exception ex){
-            result.addError(new FieldError("typeDeviceDTO","name",ex.getMessage()));
-        }
-        return "add-model-dev";
-    }
+//    @PostMapping("/model")
+//    public String addModelDevice(Model model, @Valid @ModelAttribute TypeDeviceDTO typeDeviceDTO, BindingResult result){
+//        System.out.println("typeDeviceDTO:= "+typeDeviceDTO);
+//
+//        if(result.hasErrors()){
+//            return "model";
+//        }
+//        try {
+//            model.addAttribute("typeDeviceDTO", typeDeviceDTO);
+//            ModelDeviceDTO modelDeviceDTO = new ModelDeviceDTO();
+//            model.addAttribute("modelDeviceDTO",modelDeviceDTO);
+//        }
+//        catch (Exception ex){
+//            result.addError(new FieldError("typeDeviceDTO","name",ex.getMessage()));
+//        }
+//        return "add-model-dev";
+//    }
     @GetMapping("/type")
     public String viewTypeDevice(Model model) {
         List<TypeDevice> types = typeDeviceRepository.findAll();

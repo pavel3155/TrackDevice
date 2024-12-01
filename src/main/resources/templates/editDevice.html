@@ -17,15 +17,16 @@
 
 		<form class="forms-child"
 			  th:method="post"
-			  th:action="@{/addDevice}"
+			  th:action="@{/editDevice}"
 			  th:object="${deviceDTO}">
 
 
 			<div th:if="${success}" class="" role="alert">
-				<strong>Техническое средство создано!</strong>
+				<br>
+				<strong>Изменения в техническом средстве сохранены!</strong>
 			</div>
 			<span>
-				<h3>Создать техническое средство </h3>
+				<h3>Редактировать техническое средство </h3>
 			</span>
 			<div class ="tbl-div">
 
@@ -42,17 +43,16 @@
 						<td class ="dev-col-num">1</td>
 						<td class="AlignCenter"><p class="notMarginAndPadding" th:text="${deviceDTO.modelDevice.type.type}"></p></td>
 						<td class="AlignCenter"><p class="notMarginAndPadding" th:text="${deviceDTO.modelDevice.name}"></p></td>
-						<td class="AlignCenter"><input class="tbl-td-input-text" type="text" id="ser_num" name="ser_num" th:field="*{ser_num}"/></td>
-						<td class="AlignCenter"><input class="tbl-td-input-text" type="text" id="inv_num" name="inv_num" th:field="*{inv_num}"/></td>
+						<td class="AlignCenter"><input class="tbl-td-input-text" type="text" id="ser_num" name="ser_num" th:text="${deviceDTO.ser_num}" th:field="*{ser_num}"/></td>
+						<td class="AlignCenter"><input class="tbl-td-input-text" type="text" id="inv_num" name="inv_num" th:text="${deviceDTO.inv_num}" th:field="*{inv_num}"/></td>
 					</tr>
 				</table>
-				<!--<p th:text="${idModel}"></p></td>-->
+				<input type="hidden" th:value="${id}" th:field="*{id}">
 				<input type="hidden" th:value="${modelDevice}" th:field="*{modelDevice}">
-				<!--<input type="hidden" th:value="${modelDevice.type}" th:field="*{modelDevice.type}">-->
 			</div>
 
 			<span style="margin:20px 5px 5px 5px">
-				<button type="submit" class="a-btn">Добавить</button>
+				<button type="submit" class="a-btn">Сохранить</button>
 				<a href="/device" class="a-btn">Назад</a>
 			</span>
 		</form>
