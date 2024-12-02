@@ -43,8 +43,8 @@
 						<td class ="dev-col-num">1</td>
 						<td class="AlignCenter"><p class="notMarginAndPadding" th:text="${deviceDTO.modelDevice.type.type}"></p></td>
 						<td class="AlignCenter"><p class="notMarginAndPadding" th:text="${deviceDTO.modelDevice.name}"></p></td>
-						<td class="AlignCenter"><input class="tbl-td-input-text" type="text" id="ser_num" name="ser_num" th:text="${deviceDTO.ser_num}" th:field="*{ser_num}"/></td>
-						<td class="AlignCenter"><input class="tbl-td-input-text" type="text" id="inv_num" name="inv_num" th:text="${deviceDTO.inv_num}" th:field="*{inv_num}"/></td>
+						<td class="AlignCenter"><input class="tbl-td-input-text" type="text" id="ser_num" name="ser_num"  th:field="*{ser_num}"/></td>
+						<td class="AlignCenter"><input class="tbl-td-input-text" type="text" id="inv_num" name="inv_num"  th:field="*{inv_num}"/></td>
 					</tr>
 				</table>
 				<input type="hidden" th:value="${id}" th:field="*{id}">

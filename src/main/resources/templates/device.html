@@ -28,7 +28,7 @@
 					<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
 				</select>
 				<script>
-					$('#selTypeDev option[value=1]').prop('selected',true);
+					$('#selTypeDev option[value=0]').prop('selected',true);
 				</script>
 
 				<label for="selModelDev">Модель: </label>
@@ -73,11 +73,11 @@
                     		console.log(data);
 							var models=data;
 							console.log(models);
-							$('#lblModelDev').text(models[1].id);
+
 							$.each(models, function(i,item) {
     							$('#selModelDev').append('<option value="' + models[i].id+ '">' + models[i].name + '</option>');
 							});
-							$('#selModelDev option[value=1]').prop('selected',true);
+							$('#selModelDev option[value=0]').prop('selected',true);
 							var selModelIndex=$('#selModelDev').val();
 							loadTableDevice(selModelIndex);
                        });
