@@ -7,6 +7,6 @@ public class POSTDeviceDTO {
     private long idModel;//id ModelDevice
     private  String type;
     private String modelDevice;
-    private String inv_num;
-    private String ser_num;
+    private String invNum;
+    private String serNum;
 }

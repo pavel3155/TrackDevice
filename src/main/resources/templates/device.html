@@ -34,8 +34,9 @@
 				<label for="selModelDev">Модель: </label>
 				<select  id="selModelDev" th:field="*{modelDevice}"></select>
 
-				<label for="filtrBySN">Серийный номер(фильтр): </label>
-				<input type="text" id="filtrBySN" name="filtrSN"/>
+				<label for="filtrSN">Серийный номер(фильтр): </label>
+				<input type="text" id="filtrSN" name="filtrSN"/>
+				<button type="button" id="btnFiltrSn" class="a-btn">Применить</button>
 			</span>
 
 			<div class ="tbl-div">
@@ -46,7 +47,7 @@
 						<th>Модель</th>
 						<th>Серийные №</th>
 						<th>Инвентарный №</th>
-						<th class =dev-col-action>Действие</th>
+						<th class ="dev-col-action">Действие</th>
 					</tr>
 				</table>
 			</div>
@@ -62,6 +63,7 @@
                 function initEvent() {
                     $('#selTypeDev').bind('change', loadSelectDevModel);
                     $('#selModelDev').bind('change', eventSelModelDev);
+                    $('#btnFiltrSn').bind('click', eventSelModelDev);
                 }
 
                 function loadSelectDevModel() {
@@ -79,21 +81,25 @@
 							});
 							$('#selModelDev option[value=0]').prop('selected',true);
 							var selModelIndex=$('#selModelDev').val();
-							loadTableDevice(selModelIndex);
+							var filterSN=$('#filtrSN').val();
+							loadTableDevice(selModelIndex,filterSN);
                        });
 
                 }
                 function eventSelModelDev() {
                 	var selModelIndex=$('#selModelDev').val();
                 	console.log("selModelIndex="+selModelIndex);
-                	loadTableDevice(selModelIndex)
+                	var filterSN=$('#filtrSN').val();
+                	console.log("filterSN="+filterSN);
+                	loadTableDevice(selModelIndex,filterSN)
                 }
-				function loadTableDevice(selModelIndex) {
+				function loadTableDevice(selModelIndex,filterSN) {
 
 					console.log("selModelIndex="+selModelIndex);
+					console.log("filterSN="+filterSN);
 					$('#link').empty().prop('disabled', false);
 					$('#link').append('<a href="/addDevice'+selModelIndex+'" class="a-btn">Создать ТС</a>');
-					$.getJSON('/device' + selModelIndex)
+					$.getJSON('/device' + selModelIndex+'&'+filterSN)
                     	 .done(function (data) {
                     		$('#tblDevice').empty().prop('disabled', false);
                     		console.log(data);
@@ -104,8 +110,8 @@
     							$('#tblDevice').append('<tr><td class ="dev-col-num">' + i +
     												   '</td><td>' + models[i].type +
     												   '</td><td>' + models[i].model +
-    												   '</td><td>' + models[i].ser_num +
-    												   '</td><td>' + models[i].inv_num +
+    												   '</td><td>' + models[i].sernum +
+    												   '</td><td>' + models[i].invnum +
     												   '</td><td><a href="/editDevice'+models[i].id+'" class="a-btn a-btn-tbl">Редактировать</a></td><tr>');
 							});
                        });

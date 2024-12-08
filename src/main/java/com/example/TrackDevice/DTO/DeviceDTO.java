@@ -13,9 +13,8 @@ public class DeviceDTO {
     //private TypeDevice type;
     private long id;
     private ModelDevice modelDevice;
-    private String inv_num;
+    private String invnum;
     @NotNull
-    private String ser_num;
+    private String sernum;
     private String status;
-//    private long idModelDevice;
 }

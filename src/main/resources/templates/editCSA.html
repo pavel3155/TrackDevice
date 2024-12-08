@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Новое ТС</title>
+	<link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style-form.css">
+</head>
+
+<header>
+	<div id="header">
+		<script src="js/header.js"></script>
+	</div>
+</header>
+<body>
+	<div class="container">
+
+		<form class="forms-child"
+			  th:method="post"
+			  th:action="@{/editCSA}"
+			  th:object="${csaDTO}">
+
+
+			<div th:if="${success}" class="" role="alert">
+				<br>
+				<strong>Параметры КСА изменены!</strong>
+			</div>
+			<span>
+				<h3>Редактировать КСА </h3>
+			</span>
+			<div class ="tbl-div">
+
+				<table class="table" id="tblCSA">
+					<tr>
+						<th class ="col-num">№</th>
+						<th>Регион</th>
+						<th>КСА</th>
+						<th>Адрес №</th>
+					</tr>
+
+					<tr>
+						<td class ="col-num">1</td>
+						<td class="AlignCenter"><input class="tbl-td-input-text" type="text" id="code" name="code"  th:field="*{code}"/></td>
+						<td class="AlignCenter"><input class="tbl-td-input-text" type="text" id="num" name="num"  th:field="*{num}"/></td>
+						<td class="AlignCenter"><input class="tbl-td-input-text" type="text" id="address" name="address"  th:field="*{address}"/></td>
+					</tr>
+				</table>
+				<input type="hidden" th:value="${id}" th:field="*{id}">
+			</div>
+
+			<span style="margin:20px 5px 5px 5px">
+				<button type="submit" class="a-btn">Сохранить</button>
+				<a href="/csa" class="a-btn">Назад</a>
+			</span>
+		</form>
+	</div>
+</body>
+
+</html>

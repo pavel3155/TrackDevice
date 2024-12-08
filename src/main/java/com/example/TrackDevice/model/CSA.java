@@ -15,6 +15,7 @@ public class CSA {
     @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "")
     private long id;
     private String num;
+    private String code;
     private String address;
 
 }

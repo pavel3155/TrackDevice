@@ -14,4 +14,5 @@ public class OrdersDTO {
     private String description;
     private CSA csa;
     private Device device;
+    private String status;
 }

@@ -2,7 +2,6 @@ package com.example.TrackDevice.service;
 
 import com.example.TrackDevice.DTO.DeviceDTO;
 import com.example.TrackDevice.DTO.ModelDeviceDTO;
-import com.example.TrackDevice.DTO.POSTDeviceDTO;
 import com.example.TrackDevice.DTO.TypeDeviceDTO;
 import com.example.TrackDevice.model.Device;
 import com.example.TrackDevice.model.ModelDevice;
@@ -23,20 +22,11 @@ public class DeviceService {
     @Autowired
     TypeDeviceRepository typeDeviceRepository;
 
-//    public Device addDevice(@Valid Device device){
-//        Device newDevice = new Device();
-//        newDevice.setModel(device.getModel());
-//        newDevice.setSer_num(device.getSer_num());
-//        newDevice.setInv_num(device.getInv_num());
-//        //newDevice.setStatus(deviceDTO.getStatus());
-//      return deviceRepository.save(newDevice);
-//    }
-
     public Device addDevice(@Valid DeviceDTO deviceDTO){
         Device device = new Device();
         device.setModel(deviceDTO.getModelDevice());
-        device.setSer_num(deviceDTO.getSer_num());
-        device.setInv_num(deviceDTO.getInv_num());
+        device.setSernum(deviceDTO.getSernum());
+        device.setInvnum(deviceDTO.getInvnum());
         //newDevice.setStatus(deviceDTO.getStatus());
         return deviceRepository.save(device);
     }
@@ -44,8 +34,8 @@ public class DeviceService {
         Device device = new Device();
         device.setId(deviceDTO.getId());
         device.setModel(deviceDTO.getModelDevice());
-        device.setSer_num(deviceDTO.getSer_num());
-        device.setInv_num(deviceDTO.getInv_num());
+        device.setSernum(deviceDTO.getSernum());
+        device.setInvnum(deviceDTO.getInvnum());
         //newDevice.setStatus(deviceDTO.getStatus());
         return deviceRepository.save(device);
     }

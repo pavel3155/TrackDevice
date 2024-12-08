@@ -7,12 +7,11 @@ import com.example.TrackDevice.repo.ModelDeviceRepository;
 import com.example.TrackDevice.repo.TypeDeviceRepository;
 import com.example.TrackDevice.service.DeviceService;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -33,8 +32,6 @@ public class DeviceController {
     @Autowired
     DeviceService deviceService;
 
-
-
     @GetMapping("/device")
     public String newDevice(Model model) {
         List<TypeDevice> types = typeDeviceRepository.findAll();
@@ -44,21 +41,30 @@ public class DeviceController {
         model.addAttribute(deviceDTO);
         return "device";
     }
-    @GetMapping("/device{idModel}")
+
+    @GetMapping("/device{idModel}&{filterSN}")
     @ResponseBody
-    public ResponseEntity<String> loadDevice(@PathVariable String idModel){
+    public ResponseEntity<String> loadDevice(@PathVariable String idModel, @PathVariable String filterSN){
         System.out.println("/device{idModel}_id= "+idModel);
+        System.out.println("/device{idModel}_filterSN= "+filterSN);
         ModelDevice model =modelDeviceRepository.getById(Long.parseLong(idModel));
         System.out.println("model:= "+model);
-        List<Device> devices = deviceRepository.findByModel(model);
+        List<Device> devices = new ArrayList<>();
+
+        if (filterSN.isEmpty()){
+            devices = deviceRepository.findByModel(model);
+        } else {
+            devices = deviceRepository.findByModelAndSernumContainingIgnoreCase(model,filterSN);
+        }
+
         List<JSONDeviceDTO> jsonDeviceDTOList= new ArrayList<>();
         for (Device dev:devices){
             JSONDeviceDTO jsonDeviceDTO=new JSONDeviceDTO();
             jsonDeviceDTO.setId(dev.getId());
             jsonDeviceDTO.setType(dev.getModel().getType().getType());
             jsonDeviceDTO.setModel(dev.getModel().getName());
-            jsonDeviceDTO.setInv_num(dev.getInv_num());
-            jsonDeviceDTO.setSer_num(dev.getSer_num());
+            jsonDeviceDTO.setInvnum(dev.getInvnum());
+            jsonDeviceDTO.setSernum(dev.getSernum());
             jsonDeviceDTOList.add(jsonDeviceDTO);
         }
         System.out.println("devices:= "+devices);
@@ -68,6 +74,32 @@ public class DeviceController {
         String jsonDevices = gson.toJson(jsonDeviceDTOList);
         return  ResponseEntity.ok(jsonDevices);
     }
+
+//    @GetMapping("/device{idModel}")
+//    @ResponseBody
+//    @CacheEvict
+//    public ResponseEntity<String> loadDevice(@PathVariable String idModel){
+//        System.out.println("/device{idModel}_id= "+idModel);
+//        ModelDevice model =modelDeviceRepository.getById(Long.parseLong(idModel));
+//        System.out.println("model:= "+model);
+//        List<Dev> devices = deviceRepository.findByModel(model);
+//        List<JSONDeviceDTO> jsonDeviceDTOList= new ArrayList<>();
+//        for (Dev dev:devices){
+//            JSONDeviceDTO jsonDeviceDTO=new JSONDeviceDTO();
+//            jsonDeviceDTO.setId(dev.getId());
+//            jsonDeviceDTO.setType(dev.getModel().getType().getType());
+//            jsonDeviceDTO.setModel(dev.getModel().getName());
+//            jsonDeviceDTO.setInvnum(dev.getInvnum());
+//            jsonDeviceDTO.setSernum(dev.getSernum());
+//            jsonDeviceDTOList.add(jsonDeviceDTO);
+//        }
+//        System.out.println("devices:= "+devices);
+//        System.out.println("jsonDeviceDTOList:= "+jsonDeviceDTOList);
+//
+//        Gson gson = new Gson();
+//        String jsonDevices = gson.toJson(jsonDeviceDTOList);
+//        return  ResponseEntity.ok(jsonDevices);
+//    }
 
 
 //    @GetMapping("/addDevice{id}")
@@ -127,8 +159,8 @@ public class DeviceController {
         DeviceDTO deviceDTO = new DeviceDTO();
         deviceDTO.setId(device.getId());
         deviceDTO.setModelDevice(device.getModel());
-        deviceDTO.setInv_num(device.getInv_num());
-        deviceDTO.setSer_num(device.getSer_num());
+        deviceDTO.setInvnum(device.getInvnum());
+        deviceDTO.setSernum(device.getSernum());
         System.out.println("deviceDTO:=" +deviceDTO);
         model.addAttribute("deviceDTO",deviceDTO);
         return "editDevice";

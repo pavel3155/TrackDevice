@@ -25,5 +25,6 @@ public class Order {
     @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn (name="dev_id")
     private Device device;
+    private String status;
 
 }

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>(З)Заявки</title>
+    <link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/style-form.css">
+</head>
+
+<header>
+	<div id="header">
+		<script src="js/header.js"></script>
+	</div>
+</header>
+
+<body>
+	<div class="container">
+
+		<form class="forms-child"
+			  th:method="post"
+			  th:action="@{/addOrders}"
+			  th:object="${ordersDTO}">
+
+			<div th:if="${success}" class="" role="alert">
+				<strong>Заявка создана!</strong>
+			</div>
+			<span>
+				<h3>Создать заявку </h3>
+			</span>
+
+			<div class ="tbl-div">
+				<table class="table" id="tblOrder">
+					<tr>
+						<td>Дата</td>
+						<td class="AlignCenter">
+							<input id="orderData" type="date" th:field="*{date}"/>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Заявка №</td>
+						<td class="AlignCenter">
+							<input type="text" id="orderNum" name="orderNum" th:field="*{num}"/>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>КСА</td>
+						<td class="AlignCenter">
+							<label id="lblOrderCSA" for="orderCSA" th:text="${csa}"></label>
+							<input type="hidden" id="orderCSA" th:value="${csa}" th:field="*{csa}">
+						</td>
+						<td><a href="/selCSA" class="a-btn">Выбрать КСА</a></td>
+					</tr>
+					<tr>
+						<td>Техническое средство</td>
+						<td class="AlignCenter">
+							<label id="lblOrderDevice"  for="orderDevice" th:text="${device}"></label>
+							<input type="hidden" id="orderDevice" th:value="${device}" th:field="*{device}">
+						</td>
+						<td><a href="/selDevice" class="a-btn">Выбрать ТС</a></a></td>
+					</tr>
+					<tr>
+						<td>Статус</td>
+						<td class="AlignCenter">
+							<input type="text" id="orderStatus" name="orderStatus" th:value="${status}" th:field="*{status}"/>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Описание</td>
+						<td class="AlignCenter">
+							<input type="text" id="orderDescription" name="orderDescription" th:value="${description}" th:field="*{description}"/>
+						</td>
+						<td></td>
+					</tr>
+
+				</table>
+			</div>
+
+			<!--<span class="margin-t">
+				<div>
+					<label for="orderData">Дата: </label>
+					<input id="orderData" type="date"/>
+				</div>
+
+				<div>
+					<label for="orderNum">Заявка №: </label>
+					<input type="text" id="orderNum" name="orderNum"/>
+				</div>
+				<div>
+					<label for="orderCSA">КСА: </label>
+					<input type="hidden" id="orderCSA" th:value="${modelDevice}" th:field="*{modelDevice}">
+					<a href="/device" class="a-btn">Выбрать ТС</a>
+				</div>
+
+				<div>
+					<label id="lblOrderDevice"  for="orderDevice">Выберите техническое стредство: </label>
+					<input type="hidden" id="orderDevice" th:value="${modelDevice}" th:field="*{modelDevice}">
+					<a href="/device" class="a-btn">Выбрать ТС</a>
+				</div>
+
+				<div>
+					<label for="orderStatus">Статус: </label>
+					<input type="text" id="orderStatus" name="orderStatus"/>
+				</div>
+
+				<div>
+					<label for="orderDescription">Описание: </label>
+					<input type="text" id="orderDescription" name="orderDescription" th:field="*{description}"/>
+				</div>
+
+
+			</span>
+			-->
+
+			<span style="margin:20px 5px 5px 5px">
+				<button type="submit" class="a-btn">Добавить</button>
+				<a href="/Orders" class="a-btn">Назад</a>
+			</span>
+
+		</form>
+
+		<!--	<form class="auth_form" sec:authorize="isAuthenticated()"
+				  					th:method="post"
+				  					th:action="@{/Orders}"
+									th:object="${ordersDTO}}">
+                <div class="auth_form_div">
+					<label for="input_orderData">Дата заявки: </label>
+					<input type="text" id="input_orderData" name="orderData" th:field="*{date}"/>
+					<label for="input_orderNumber">Номер заявки: </label>
+					<input type="text" id="input_orderNumber" name="orderNumber" th:field="*{num}"/>
+					<label for="input_orderDescription">Описание: </label>
+					<input type="text" id="input_orderDescription" name="orderDescription" th:field="*{description}"/>
+					<label for="input_csa">КСА: </label>
+					<select  id="input_csa" th:field="*{csa}">
+						<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
+					</select>
+					<label for="input_dev">ТС: </label>
+					<select  id="input_dev" th:field="*{device}">
+						<option th:each="device : ${devices}" th:value="${device.id}" th:text="${device.model}"></option>
+					</select>
+				</div>
+
+				<div class="auth_form_div_btn">
+					<button type="submit">Добавить</button>
+				</div>
+			</form> -->
+
+		</div>
+</body>
+</html>

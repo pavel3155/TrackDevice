@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>(З)Заявки</title>
     <link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/style-form.css">
 </head>
 
 <header>
@@ -14,63 +15,59 @@
 </header>
 
 <body>
-	<div>
-		<form class="auth_form"
-			  th:method="post"
+	<div class="container">
+
+		<form class="forms-child"
+			  th:method="get"
 			  th:action="@{/Orders}"
 			  th:object="${ordersDTO}">
 
-			<div class="auth_form_div">
-				<label for="input_orderData">Дата заявки: </label>
-				<input type="text" id="input_orderData" name="orderData" th:field="*{date}"/>
-				<label for="input_orderNumber">Номер заявки: </label>
-				<input type="text" id="input_orderNumber" name="orderNumber" th:field="*{num}"/>
-				<label for="input_orderDescription">Описание: </label>
-				<input type="text" id="input_orderDescription" name="orderDescription" th:field="*{description}"/>
-				<select  id="input_csa" th:field="*{csa}">
-					<option value="0">Выберите</option>
+			<span class="margin-t">
+				<label for="filtrData">Дата: </label>
+				<input id="filtrData" type="date"/>
+
+				<label for="filtrNumOrder">Заявка №: </label>
+				<input type="text" id="filtrNumOrder" name="filtrNumOrder"/>
+				<label for="filtrCSA">КСА: </label>
+				<select  id="filtrCSA" th:field="*{csa}">
 					<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
 				</select>
-				<label for="input_dev">ТС: </label>
-				<select  id="input_dev" th:field="*{device}">
-					<option value="0">Выберите</option>
-					<option th:each="device : ${devices}" th:value="${device.id}" th:text="${device}"></option>
-				</select>
-			</div>
-			<div class="auth_form_div_btn">
-				<button type="submit">Добавить</button>
-			</div>
+				<label for="filtrStatus">Статус: </label>
+				<input type="text" id="filtrStatus" name="filtrStatus"/>
+				<button type="button" id="btnFiltrOrder" class="a-btn">Применить</button>
+			</span>
+			<div class ="tbl-div">
 
+				<table class="table" id="tblDevice">
+					<tr>
+						<th class ="dev-col-num">№</th>
+						<th>Дата</th>
+						<th>№заявки</th>
+						<th>КСА</th>
+						<th>Техническое средство</th>
+						<th>Описание</th>
+						<th>Статус</th>
+						<th>Действие</th>
+					</tr>
+				</table>
+			</div>
+			<div>
+				<span id="link"><a href="/addOrder" class="a-btn">Создать заявку</a></span>
+				<span><a href="/" class="a-btn">Назад</a></span>
+			</div>
+			<script>
+				$(document).ready(loadOrders);
+				$(document).ready(initEvent);
+                function initEvent() {
+                    $('#btnFiltrOrder').bind('click', loadOrders);
+                }
+				function loadOrders() {
+					console.log("выполняется loadOrders");
+					$('#link').empty().prop('disabled', false);
+					$('#link').append('<a href="/addOrder" class="a-btn">Создать заявку</a>');
+				}
+			</script>
 		</form>
-
-		<!--	<form class="auth_form" sec:authorize="isAuthenticated()"
-				  					th:method="post"
-				  					th:action="@{/Orders}"
-									th:object="${ordersDTO}}">
-                <div class="auth_form_div">
-					<label for="input_orderData">Дата заявки: </label>
-					<input type="text" id="input_orderData" name="orderData" th:field="*{date}"/>
-					<label for="input_orderNumber">Номер заявки: </label>
-					<input type="text" id="input_orderNumber" name="orderNumber" th:field="*{num}"/>
-					<label for="input_orderDescription">Описание: </label>
-					<input type="text" id="input_orderDescription" name="orderDescription" th:field="*{description}"/>
-					<label for="input_csa">КСА: </label>
-					<select  id="input_csa" th:field="*{csa}">
-						<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
-					</select>
-					<label for="input_dev">ТС: </label>
-					<select  id="input_dev" th:field="*{device}">
-						<option th:each="device : ${devices}" th:value="${device.id}" th:text="${device.model}"></option>
-					</select>
-				</div>
-
-				<div class="auth_form_div_btn">
-					<button type="submit">Добавить</button>
-				</div>
-			</form> -->
-
-
-
-		</div>
+	</div>
 </body>
 </html>

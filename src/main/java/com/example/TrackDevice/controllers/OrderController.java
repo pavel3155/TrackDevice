@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class OrderController {
     @Autowired
     OrdersService ordersService;
     @GetMapping("/Orders")
-    public String newOrder(Model model) {
+    public String Orders(Model model) {
         List<CSA> csas = csaRepository.findAll();
         List<Device> devices =deviceRepository.findAll();
         OrdersDTO ordersDTO=new OrdersDTO();
@@ -38,7 +39,7 @@ public class OrderController {
     }
 
     @PostMapping("/Orders")
-    public String newOrder(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result) {
+    public String Orders(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result) {
         //если пароль не совпадает, то  добавляеся ошибка в result
 //        if(!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
 //            result.addError(new FieldError("registerDTO",
@@ -76,5 +77,31 @@ public class OrderController {
 
         return "Orders";
     }
+    @GetMapping("/addOrder")
+    public String addOrder(Model model,@Valid @ModelAttribute Device device,@Valid @ModelAttribute CSA csa, BindingResult result) {
+        System.out.println("/addOrder....");
+        System.out.println("csa:=" +csa);
+        OrdersDTO ordersDTO=new OrdersDTO();
+        if (device!=null){
+            ordersDTO.setDevice(device);
+        }
+        if (csa!=null){
+            ordersDTO.setCsa(csa);
+        }
+        model.addAttribute("ordersDTO", ordersDTO);
+        return "addOrder";
+    }
+
+    @GetMapping("/addOrder/selCSA{id}")
+    public String selCSA(@PathVariable(value ="id") long id, Model model){
+        System.out.println("idCSA= "+id);
+        CSA csa=csaRepository.getById(id);
+        System.out.println("/addOrder/selCSA{id}...");
+        System.out.println("csa:=" +csa);
+        model.addAttribute("csa",csa);
+        return "addOrder";
+    }
+
+
 }
 

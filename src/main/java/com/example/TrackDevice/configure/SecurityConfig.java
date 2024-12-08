@@ -41,7 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/editTypeDev/{id}").permitAll()
                         .requestMatchers("/edit-model-dev").permitAll()
                         .requestMatchers("/addDevice").permitAll()
-
+                        .requestMatchers("/csa").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
