@@ -41,17 +41,20 @@
 					<tr>
 						<td>Заявка №</td>
 						<td class="AlignCenter">
-							<input type="text" id="orderNum" name="orderNum" th:field="*{num}"/>
+							<input type="text" id="orderNum" name="orderNum" th:value="${ordersDTO.num}" th:field="${ordersDTO.num}"/>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>КСА</td>
 						<td class="AlignCenter">
-							<label id="lblOrderCSA" for="orderCSA" th:text="${csa}"></label>
+							<label id="lblOrderCSA" for="orderCSA" th:text="${ordersDTO.csa.num}+${ordersDTO.csa.address}"></label>
 							<input type="hidden" id="orderCSA" th:value="${csa}" th:field="*{csa}">
+
 						</td>
-						<td><a href="/selCSA" class="a-btn">Выбрать КСА</a></td>
+						<td><a th:href="@{/selCSA(num=${ordersDTO.num})}" class="a-btn">Выбрать КСА</a></td>
+						<!--<td><a href="/selCSA" class="a-btn">Выбрать КСА</a></td> -->
+
 					</tr>
 					<tr>
 						<td>Техническое средство</td>
@@ -59,7 +62,7 @@
 							<label id="lblOrderDevice"  for="orderDevice" th:text="${device}"></label>
 							<input type="hidden" id="orderDevice" th:value="${device}" th:field="*{device}">
 						</td>
-						<td><a href="/selDevice" class="a-btn">Выбрать ТС</a></a></td>
+						<td><a href="/selDevice" class="a-btn">Выбрать ТС</a></td>
 					</tr>
 					<tr>
 						<td>Статус</td>
@@ -78,42 +81,6 @@
 
 				</table>
 			</div>
-
-			<!--<span class="margin-t">
-				<div>
-					<label for="orderData">Дата: </label>
-					<input id="orderData" type="date"/>
-				</div>
-
-				<div>
-					<label for="orderNum">Заявка №: </label>
-					<input type="text" id="orderNum" name="orderNum"/>
-				</div>
-				<div>
-					<label for="orderCSA">КСА: </label>
-					<input type="hidden" id="orderCSA" th:value="${modelDevice}" th:field="*{modelDevice}">
-					<a href="/device" class="a-btn">Выбрать ТС</a>
-				</div>
-
-				<div>
-					<label id="lblOrderDevice"  for="orderDevice">Выберите техническое стредство: </label>
-					<input type="hidden" id="orderDevice" th:value="${modelDevice}" th:field="*{modelDevice}">
-					<a href="/device" class="a-btn">Выбрать ТС</a>
-				</div>
-
-				<div>
-					<label for="orderStatus">Статус: </label>
-					<input type="text" id="orderStatus" name="orderStatus"/>
-				</div>
-
-				<div>
-					<label for="orderDescription">Описание: </label>
-					<input type="text" id="orderDescription" name="orderDescription" th:field="*{description}"/>
-				</div>
-
-
-			</span>
-			-->
 
 			<span style="margin:20px 5px 5px 5px">
 				<button type="submit" class="a-btn">Добавить</button>

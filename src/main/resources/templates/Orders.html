@@ -28,16 +28,19 @@
 
 				<label for="filtrNumOrder">Заявка №: </label>
 				<input type="text" id="filtrNumOrder" name="filtrNumOrder"/>
+
 				<label for="filtrCSA">КСА: </label>
 				<select  id="filtrCSA" th:field="*{csa}">
 					<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
 				</select>
+
 				<label for="filtrStatus">Статус: </label>
 				<input type="text" id="filtrStatus" name="filtrStatus"/>
+
 				<button type="button" id="btnFiltrOrder" class="a-btn">Применить</button>
 			</span>
-			<div class ="tbl-div">
 
+			<div class ="tbl-div">
 				<table class="table" id="tblDevice">
 					<tr>
 						<th class ="dev-col-num">№</th>
@@ -52,7 +55,7 @@
 				</table>
 			</div>
 			<div>
-				<span id="link"><a href="/addOrder" class="a-btn">Создать заявку</a></span>
+				<!--<span id="link"><a href="/addOrder?idCSA=1" class="a-btn">Создать заявку</a></span> -->
 				<span><a href="/" class="a-btn">Назад</a></span>
 			</div>
 			<script>
@@ -63,8 +66,9 @@
                 }
 				function loadOrders() {
 					console.log("выполняется loadOrders");
-					$('#link').empty().prop('disabled', false);
+
 					$('#link').append('<a href="/addOrder" class="a-btn">Создать заявку</a>');
+					$('#link').empty().prop('disabled', false);
 				}
 			</script>
 		</form>

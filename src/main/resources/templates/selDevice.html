@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>(ТС)Технические средства</title>
+    <link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/style-form.css">
+	<script src="js/jquery-3.7.1.js"></script>
+</head>
+
+<header>
+	<div id="header">
+		<script src="js/header.js"></script>
+	</div>
+</header>
+
+<body>
+	<span class="container">
+		<form class="forms-child"
+			  th:method="get"
+			  th:action="@{/device}"
+			  th:object="${deviceDTO}">
+
+			<span class="margin-t">
+				<label for="selTypeDev">Тип: </label>
+				<select  id="selTypeDev"  change="loadSelectDevModel()">
+					<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
+				</select>
+				<script>
+					$('#selTypeDev option[value=0]').prop('selected',true);
+				</script>
+
+				<label for="selModelDev">Модель: </label>
+				<select  id="selModelDev" th:field="*{modelDevice}"></select>
+
+				<label for="filtrSN">Серийный номер(фильтр): </label>
+				<input type="text" id="filtrSN" name="filtrSN"/>
+				<button type="button" id="btnFiltrSn" class="a-btn">Применить</button>
+			</span>
+
+			<div class ="tbl-div">
+				<table class="table" id="tblDevice">
+					<tr>
+						<th class ="dev-col-num">№</th>
+						<th>Тип</th>
+						<th>Модель</th>
+						<th>Серийные №</th>
+						<th>Инвентарный №</th>
+						<th class ="dev-col-action">Действие</th>
+					</tr>
+				</table>
+			</div>
+			<div>
+				<span id="link"></span>
+				<span><a href="/" class="a-btn">Назад</a></span>
+			</div>
+			<script>
+				$(document).ready(loadSelectDevModel);
+				<!--$(document).ready(eventSelModelDev);-->
+				$(document).ready(initEvent);
+
+                function initEvent() {
+                    $('#selTypeDev').bind('change', loadSelectDevModel);
+                    $('#selModelDev').bind('change', eventSelModelDev);
+                    $('#btnFiltrSn').bind('click', eventSelModelDev);
+                }
+
+                function loadSelectDevModel() {
+                		var selTypeIndex=$('#selTypeDev').val();
+						var selTypeText=$('#selTypeDev option:selected').text();
+                    	$.getJSON('/device/model' + selTypeText)
+                    	 .done(function (data) {
+                    		$('#selModelDev').empty().prop('disabled', false);
+                    		console.log(data);
+							var models=data;
+							console.log(models);
+
+							$.each(models, function(i,item) {
+    							$('#selModelDev').append('<option value="' + models[i].id+ '">' + models[i].name + '</option>');
+							});
+							$('#selModelDev option[value=0]').prop('selected',true);
+							var selModelIndex=$('#selModelDev').val();
+							var filterSN=$('#filtrSN').val();
+							loadTableDevice(selModelIndex,filterSN);
+                       });
+
+                }
+                function eventSelModelDev() {
+                	var selModelIndex=$('#selModelDev').val();
+                	console.log("selModelIndex="+selModelIndex);
+                	var filterSN=$('#filtrSN').val();
+                	console.log("filterSN="+filterSN);
+                	loadTableDevice(selModelIndex,filterSN)
+                }
+				function loadTableDevice(selModelIndex,filterSN) {
+
+					console.log("selModelIndex="+selModelIndex);
+					console.log("filterSN="+filterSN);
+					$('#link').empty().prop('disabled', false);
+					$('#link').append('<a href="/addDevice'+selModelIndex+'" class="a-btn">Создать ТС</a>');
+					$.getJSON('/device' + selModelIndex+'&'+filterSN)
+                    	 .done(function (data) {
+                    		$('#tblDevice').empty().prop('disabled', false);
+                    		console.log(data);
+							var models=data;
+							console.log(models);
+							$('#tblDevice').append('<tr><td class ="dev-col-num">№</td><td>Тип</td><td>Модель</td><td>Серийный №</td><td>Инвентарный №</td><td>Действие</td><tr>');
+							$.each(models, function(i,item) {
+    							$('#tblDevice').append('<tr><td class ="dev-col-num">' + i +
+    												   '</td><td>' + models[i].type +
+    												   '</td><td>' + models[i].model +
+    												   '</td><td>' + models[i].sernum +
+    												   '</td><td>' + models[i].invnum +
+    												   '</td><td><a href="/editDevice'+models[i].id+'" class="a-btn a-btn-tbl">Редактировать</a></td><tr>');
+							});
+                       });
+
+				}
+                function addLink(){
+                	var selModelIndex=$('#selModelDev').val();
+                	console.log("addLink_selModelIndex:="+selModelIndex);
+                	$('#link').append('<a href="/addDevice/model'+selModelIndex+'">Создать ТС</a>');
+                }
+			</script>
+
+		</form>
+	</span>
+</body>
+
+</html>

@@ -107,7 +107,8 @@ public class CSAController {
         return "addCSA";
     }
     @GetMapping("/selCSA")
-    public String selCsa(Model model) {
+    public String selCsa(@RequestParam(value ="num") String num, Model model) {
+        System.out.println("/selCSA_num:= "+num);
         List<String> codes = csaRepository.findDistinctCode();
         model.addAttribute("codes",codes);
         CSA csa  = new CSA();
