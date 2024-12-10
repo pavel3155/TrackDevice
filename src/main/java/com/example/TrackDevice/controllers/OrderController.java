@@ -108,6 +108,14 @@ public class OrderController {
         model.addAttribute("ordersDTO",ordersDTO);
         return "redirect:/addOrder";
     }
+    @PostMapping("/addOrder")
+    public String addOrder(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result) {
+        System.out.println("POST_/addOrder_ordersDTO:= "+ordersDTO);
+
+
+
+        return "Orders";
+    }
 
 
 }

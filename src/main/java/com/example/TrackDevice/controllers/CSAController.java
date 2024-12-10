@@ -2,6 +2,7 @@ package com.example.TrackDevice.controllers;
 
 import com.example.TrackDevice.DTO.CSADTO;
 import com.example.TrackDevice.DTO.DeviceDTO;
+import com.example.TrackDevice.DTO.OrdersDTO;
 import com.example.TrackDevice.DTO.TypeDeviceDTO;
 import com.example.TrackDevice.model.CSA;
 import com.example.TrackDevice.model.Device;
@@ -106,16 +107,33 @@ public class CSAController {
         }
         return "addCSA";
     }
-    @GetMapping("/selCSA")
-    public String selCsa(@RequestParam(value ="num") String num, Model model) {
-        System.out.println("/selCSA_num:= "+num);
-        List<String> codes = csaRepository.findDistinctCode();
-        model.addAttribute("codes",codes);
-        CSA csa  = new CSA();
-        model.addAttribute(csa);
+//    @GetMapping("/selCSA")
+//    public String selCsa(@RequestParam(value ="num") String num, Model model) {
+//        System.out.println("/selCSA_num:= "+num);
+//        List<String> codes = csaRepository.findDistinctCode();
+//        model.addAttribute("codes",codes);
+//        CSA csa  = new CSA();
+//        model.addAttribute(csa);
+//        return "selCSA";
+//    }
+
+@GetMapping("/selCSA")
+public String selCsa(Model model) {
+    System.out.println("@GetMapping(\"/selCSA\")");
+    List<String> codes = csaRepository.findDistinctCode();
+    model.addAttribute("codes",codes);
+    OrdersDTO ordersDTO=new OrdersDTO();
+    model.addAttribute("ordersDTO",ordersDTO);
+//    CSA csa  = new CSA();
+//    model.addAttribute(csa);
+    return "selCSA";
+}
+    @PostMapping("/selCSA")
+    public String selCsa(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result){
+        System.out.println("@PostMapping(\"/selCSA\")_ordersDTO:= "+ordersDTO);
+        model.addAttribute("ordersDTO",ordersDTO);
         return "selCSA";
     }
-
 }
 
 

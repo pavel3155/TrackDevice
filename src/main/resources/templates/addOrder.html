@@ -6,6 +6,7 @@
     <title>(З)Заявки</title>
     <link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/style-form.css">
+	<script src="js/jquery-3.7.1.js"></script>
 </head>
 
 <header>
@@ -17,9 +18,9 @@
 <body>
 	<div class="container">
 
-		<form class="forms-child"
+		<form id="addOrder" class="forms-child"
 			  th:method="post"
-			  th:action="@{/addOrders}"
+			  th:action="@{/addOrder}"
 			  th:object="${ordersDTO}">
 
 			<div th:if="${success}" class="" role="alert">
@@ -41,7 +42,7 @@
 					<tr>
 						<td>Заявка №</td>
 						<td class="AlignCenter">
-							<input type="text" id="orderNum" name="orderNum" th:value="${ordersDTO.num}" th:field="${ordersDTO.num}"/>
+							<input type="text" id="orderNum" name="orderNum"  th:field="*{num}"/>
 						</td>
 						<td></td>
 					</tr>
@@ -52,14 +53,14 @@
 							<input type="hidden" id="orderCSA" th:value="${csa}" th:field="*{csa}">
 
 						</td>
-						<td><a th:href="@{/selCSA(num=${ordersDTO.num})}" class="a-btn">Выбрать КСА</a></td>
-						<!--<td><a href="/selCSA" class="a-btn">Выбрать КСА</a></td> -->
+						<td><button id="btnSelCSA" type="submit" class="a-btn">Выбрать КСА</button></td>
+						<!--<td><a th:href="@{/selCSA(num=*{num})}" class="a-btn">Выбрать КСА</a></td> -->
 
 					</tr>
 					<tr>
 						<td>Техническое средство</td>
 						<td class="AlignCenter">
-							<label id="lblOrderDevice"  for="orderDevice" th:text="${device}"></label>
+							<label id="lblOrderDevice"  for="orderDevice" th:text="${ordersDTO.device}"></label>
 							<input type="hidden" id="orderDevice" th:value="${device}" th:field="*{device}">
 						</td>
 						<td><a href="/selDevice" class="a-btn">Выбрать ТС</a></td>
@@ -67,14 +68,14 @@
 					<tr>
 						<td>Статус</td>
 						<td class="AlignCenter">
-							<input type="text" id="orderStatus" name="orderStatus" th:value="${status}" th:field="*{status}"/>
+							<input type="text" id="orderStatus" name="orderStatus" th:field="*{status}"/>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>Описание</td>
 						<td class="AlignCenter">
-							<input type="text" id="orderDescription" name="orderDescription" th:value="${description}" th:field="*{description}"/>
+							<input type="text" id="orderDescription" name="orderDescription" th:field="*{description}"/>
 						</td>
 						<td></td>
 					</tr>
@@ -88,33 +89,23 @@
 			</span>
 
 		</form>
+	</div>
+	<script>
 
-		<!--	<form class="auth_form" sec:authorize="isAuthenticated()"
-				  					th:method="post"
-				  					th:action="@{/Orders}"
-									th:object="${ordersDTO}}">
-                <div class="auth_form_div">
-					<label for="input_orderData">Дата заявки: </label>
-					<input type="text" id="input_orderData" name="orderData" th:field="*{date}"/>
-					<label for="input_orderNumber">Номер заявки: </label>
-					<input type="text" id="input_orderNumber" name="orderNumber" th:field="*{num}"/>
-					<label for="input_orderDescription">Описание: </label>
-					<input type="text" id="input_orderDescription" name="orderDescription" th:field="*{description}"/>
-					<label for="input_csa">КСА: </label>
-					<select  id="input_csa" th:field="*{csa}">
-						<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
-					</select>
-					<label for="input_dev">ТС: </label>
-					<select  id="input_dev" th:field="*{device}">
-						<option th:each="device : ${devices}" th:value="${device.id}" th:text="${device.model}"></option>
-					</select>
-				</div>
+        $(document).ready(initEvent);
 
-				<div class="auth_form_div_btn">
-					<button type="submit">Добавить</button>
-				</div>
-			</form> -->
+        function initEvent() {
+            $('#btnSelCSA').bind('click', selCSA);
+        }
+		function selCSA(){
+			var orderNum=$('#orderNum').val();
+			console.log("orderNum:= "+orderNum);
+			$('#addOrder').attr("action","/selCSA")
 
-		</div>
+
+		}
+
+	</script>
+
 </body>
 </html>
