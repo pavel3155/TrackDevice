@@ -9,7 +9,7 @@ import lombok.Data;
 public class OrdersDTO {
     @NotNull
     private String date;
-    @NotNull
+
     private String num;
     private String description;
     private CSA csa;

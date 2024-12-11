@@ -35,21 +35,21 @@
 					<tr>
 						<td>Дата</td>
 						<td class="AlignCenter">
-							<input id="orderData" type="date" th:field="*{date}"/>
+							<input id="orderData" type="date" th:value="${date}" th:field="*{date}"/>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>Заявка №</td>
 						<td class="AlignCenter">
-							<input type="text" id="orderNum" name="orderNum"  th:field="*{num}"/>
+							<input type="text" id="orderNum" name="orderNum" th:text="${num}" th:field="*{num}"/>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>КСА</td>
 						<td class="AlignCenter">
-							<label id="lblOrderCSA" for="orderCSA" th:text="${ordersDTO.csa.num}+${ordersDTO.csa.address}"></label>
+							<label id="lblOrderCSA" for="orderCSA" th:text="${ordersDTO.csa}"></label>
 							<input type="hidden" id="orderCSA" th:value="${csa}" th:field="*{csa}">
 
 						</td>
@@ -101,7 +101,6 @@
 			var orderNum=$('#orderNum').val();
 			console.log("orderNum:= "+orderNum);
 			$('#addOrder').attr("action","/selCSA")
-
 
 		}
 

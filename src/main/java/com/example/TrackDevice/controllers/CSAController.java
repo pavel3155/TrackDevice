@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -118,21 +119,25 @@ public class CSAController {
 //    }
 
 @GetMapping("/selCSA")
-public String selCsa(Model model) {
-    System.out.println("@GetMapping(\"/selCSA\")");
+public String selCsa(@ModelAttribute OrdersDTO ordersDTO, Model model) {
+    System.out.println("Get_selCSA");
+    System.out.println("ordersDTO:= "+ordersDTO);
     List<String> codes = csaRepository.findDistinctCode();
     model.addAttribute("codes",codes);
-    OrdersDTO ordersDTO=new OrdersDTO();
+    //OrdersDTO ordersDTO=new OrdersDTO();
     model.addAttribute("ordersDTO",ordersDTO);
-//    CSA csa  = new CSA();
-//    model.addAttribute(csa);
+
+    CSA csa  = new CSA();
+    model.addAttribute(csa);
     return "selCSA";
 }
     @PostMapping("/selCSA")
-    public String selCsa(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result){
-        System.out.println("@PostMapping(\"/selCSA\")_ordersDTO:= "+ordersDTO);
+    public String selCsa(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
+                         BindingResult result, RedirectAttributes atrRedirect){
+        System.out.println("POST_selCSA_ordersDTO:= "+ordersDTO);
         model.addAttribute("ordersDTO",ordersDTO);
-        return "selCSA";
+        atrRedirect.addFlashAttribute("ordersDTO",ordersDTO);
+        return "redirect:/selCSA";
     }
 }
 

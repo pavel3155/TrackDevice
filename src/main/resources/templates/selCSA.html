@@ -15,10 +15,10 @@
 </header>
 <body>
 	<div class="container">
-		<form class="forms-child"
-			  th:method="get"
+		<form id="frSelCSA" class="forms-child"
+			  th:method="POST"
 			  th:action="@{/selCSA}"
-			  th:object="${csa}">
+			  th:object="${orderDTO}">
 			<span class="margin-t">
 				<label for="selCodeCSA">Вуберите код региона: </label>
 				<select  id="selCodeCSA" class="select">
@@ -43,6 +43,10 @@
 				<span id="link"></span>
 				<span><a href="/" class="a-btn">Назад</a></span>
 			</div>
+			<input type="submit" id="btnSend" style="display:none;">
+
+			<!-- <input type="hidden" id="orderDate" th:text="${date}" th:field="*{date}"> -->
+
 
 			<script>
 				$(document).ready(loadCSA);
@@ -71,11 +75,17 @@
     														'</td><td>' + models[i].code +
     														'</td><td>' + models[i].num +
     														'</td><td>' + models[i].address +
-    														'</td><td><a href="/addOrder?idCSA=' +models[i].id +'" class="a-btn a-btn-tbl">Выбрать</a></td><tr>');
+    														<!-- '</td><td><a href="/addOrder?idCSA=' +models[i].id +'" class="a-btn a-btn-tbl">Выбрать</a></td><tr>'); -->
+    														'</td><td><button id="btnSelected" type="button" class="a-btn" onclick ="GoToAddOrder('+models[i].id +')">Выбрать</button></td><tr>');
 							});
                          });
                 }
-
+				function GoToAddOrder(idCSA){
+					console.log("GoToAddOrder...");
+					console.log("idCSA:="+idCSA);
+					$('#frSelCSA').attr("action","/addOrder?idCSA=4");
+					$('#btnSend').click();
+				}
 			</script>
 
 		</form>
