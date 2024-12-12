@@ -3,8 +3,10 @@ package com.example.TrackDevice.controllers;
 import com.example.TrackDevice.DTO.*;
 import com.example.TrackDevice.model.CSA;
 import com.example.TrackDevice.model.Device;
+import com.example.TrackDevice.model.Order;
 import com.example.TrackDevice.repo.CSARepository;
 import com.example.TrackDevice.repo.DeviceRepository;
+import com.example.TrackDevice.repo.OrderRepository;
 import com.example.TrackDevice.service.OrdersService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +27,17 @@ public class OrderController {
     DeviceRepository deviceRepository;
     @Autowired
     OrdersService ordersService;
+    @Autowired
+    OrderRepository orderRepository;
 
     @GetMapping("/Orders")
     public String Orders(Model model) {
         List<CSA> csas = csaRepository.findAll();
-        List<Device> devices =deviceRepository.findAll();
-        OrdersDTO ordersDTO=new OrdersDTO();
-       model.addAttribute("csas", csas);
-//        model.addAttribute("devices", devices);
-        model.addAttribute(ordersDTO);
+        List<Order> orders = orderRepository.findAll();
+        System.out.println("orders:= "+orders);
+        model.addAttribute("csas", csas);
+        model.addAttribute("orders",orders);
+
         return "Orders";
     }
 
@@ -77,39 +81,63 @@ public class OrderController {
         return "Orders";
     }
     @GetMapping("/addOrder")
-//    public String addOrder(@RequestParam(value ="idCSA", required = false) long csa_id,Model model) {
-    public String addOrder(Model model) {
+    public String Order(@ModelAttribute OrdersDTO ordersDTO, Model model) {
         System.out.println("GET_/addOrder....");
-//        System.out.println("csa_id:=" +csa_id);
-//        CSA csa=csaRepository.getById(csa_id);
-
-
-
-        OrdersDTO ordersDTO=new OrdersDTO();
-//        ordersDTO.setCsa(csa);
-//        System.out.println("ordersDTO.setCsa:= "+ordersDTO.getCsa());
-//        if (device!=null){
-//            ordersDTO.setDevice(device);
-//        }
-//        if (csa!=null){
-//            ordersDTO.setCsa(csa);
-//        }
+        System.out.println("ordersDTO:= "+ordersDTO);
+        if (ordersDTO==null){
+            System.out.println("ordersDTO==null");
+            ordersDTO=new OrdersDTO();
+        }
+        if (ordersDTO.getCsa()==null){
+            System.out.println("ordersDTO.getCsa()==null....");
+            CSA csa = csaRepository.getById(1);
+            ordersDTO.setCsa(csa);
+            ordersDTO.setIdCSA(1);
+        }
+        if (ordersDTO.getDevice() ==null){
+            System.out.println("ordersDTO.getDevice()==null....");
+            Device device=deviceRepository.getById(1);
+            ordersDTO.setDevice(device);
+            ordersDTO.setIdDevice(1);
+        }
+        if (ordersDTO.getStatus() ==null){
+            ordersDTO.setStatus("открыта");
+        }
         model.addAttribute("ordersDTO", ordersDTO);
         return "addOrder";
     }
+
     @PostMapping("/addOrder")
-    public String addOrder(@RequestParam(value ="idCSA", required = false) String csa_id,
-                           Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
+    public String Order(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
                            BindingResult result, RedirectAttributes atrRedirect) {
         System.out.println("POST_/addOrder_ordersDTO:= "+ordersDTO);
-        System.out.println("POST_/addOrder_csa_id:= "+csa_id);
-        atrRedirect.addAttribute("ordersDTO",ordersDTO);
+        ordersDTO.setCsa(csaRepository.getById(ordersDTO.getIdCSA()));
+        ordersDTO.setDevice(deviceRepository.getById(ordersDTO.getIdDevice()));
+        System.out.println("POST_/addOrder_ordersDTO:= "+ordersDTO);
+        //System.out.println("POST_/addOrder_csa_id:= "+csa_id);
+        atrRedirect.addFlashAttribute("ordersDTO",ordersDTO);
+    return "redirect:/addOrder";
+    }
+    @PostMapping("/addOrder/Add")
+    public String addOrder(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
+                           BindingResult result, RedirectAttributes atrRedirect) {
+        System.out.println("POST:/addOrder/Add...");
+        System.out.println("ordersDTO:= "+ordersDTO);
 
-
+        if (result.hasErrors()) {
+            return "addOrder";
+        }
+        try {
+            ordersService.addOrders(ordersDTO);
+            atrRedirect.addFlashAttribute("success",true);
+            atrRedirect.addFlashAttribute("ordersDTO",ordersDTO);
+        } catch (Exception ex) {
+            result.addError(new FieldError("ordersDTO", "name", ex.getMessage()));
+        }
         return "redirect:/addOrder";
     }
 
-//    public String selCSA(@PathVariable(value ="id") long id, Model model){
+
     @GetMapping("/addOrder/selCSA")
     public String selCSA(@RequestParam(value ="idCSA") long csa_id, Model model){
         System.out.println("idCSA= "+csa_id);

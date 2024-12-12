@@ -18,11 +18,19 @@
 <body>
 	<span class="container">
 		<form class="forms-child"
-			  th:method="get"
-			  th:action="@{/device}"
-			  th:object="${deviceDTO}">
+			  th:method="POST"
+			  th:action="@{/addOrder}"
+			  th:object="${ordersDTO}">
 
 			<span class="margin-t">
+				<input type="hidden" th:value="${num}" th:field="*{num}">
+				<input type="hidden" th:value="${date}" th:field="*{date}">
+				<input type="hidden" th:value="${csa}" th:field="*{csa}">
+				<input id ="idCSA" type="hidden" th:value="${idCSA}" th:field="*{idCSA}">
+				<input id ="idDevice" type="hidden" th:value="${idDevice}" th:field="*{idDevice}">
+				<input type="hidden" th:value="${status}" th:field="*{status}">
+				<input type="hidden" th:value="${description}" th:field="*{description}">
+
 				<label for="selTypeDev">Тип: </label>
 				<select  id="selTypeDev"  change="loadSelectDevModel()">
 					<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
@@ -32,7 +40,7 @@
 				</script>
 
 				<label for="selModelDev">Модель: </label>
-				<select  id="selModelDev" th:field="*{modelDevice}"></select>
+				<select  id="selModelDev"></select>
 
 				<label for="filtrSN">Серийный номер(фильтр): </label>
 				<input type="text" id="filtrSN" name="filtrSN"/>
@@ -55,6 +63,7 @@
 				<span id="link"></span>
 				<span><a href="/" class="a-btn">Назад</a></span>
 			</div>
+			<input type="submit" id="btnSend" style="display:none;">
 			<script>
 				$(document).ready(loadSelectDevModel);
 				<!--$(document).ready(eventSelModelDev);-->
@@ -112,11 +121,21 @@
     												   '</td><td>' + models[i].model +
     												   '</td><td>' + models[i].sernum +
     												   '</td><td>' + models[i].invnum +
-    												   '</td><td><a href="/editDevice'+models[i].id+'" class="a-btn a-btn-tbl">Редактировать</a></td><tr>');
+    												   '</td><td><button id="btnSelected" type="button" class="a-btn" onclick ="GoToAddOrder('+models[i].id +')">Выбрать</button></td><tr>');
+    												   /* '</td><td><a href="/editDevice'+models[i].id+'" class="a-btn a-btn-tbl">Редактировать</a></td><tr>'); */
 							});
                        });
 
 				}
+
+				function GoToAddOrder(idDevice){
+					console.log("GoToAddOrder...");
+					console.log("idDevice:="+idDevice);
+					$('#idDevice').val(idDevice);
+					/* $('#frSelCSA').attr("action","/addOrder?idCSA=4"); */
+					$('#btnSend').click();
+				}
+
                 function addLink(){
                 	var selModelIndex=$('#selModelDev').val();
                 	console.log("addLink_selModelIndex:="+selModelIndex);

@@ -118,19 +118,19 @@ public class CSAController {
 //        return "selCSA";
 //    }
 
-@GetMapping("/selCSA")
-public String selCsa(@ModelAttribute OrdersDTO ordersDTO, Model model) {
-    System.out.println("Get_selCSA");
-    System.out.println("ordersDTO:= "+ordersDTO);
-    List<String> codes = csaRepository.findDistinctCode();
-    model.addAttribute("codes",codes);
-    //OrdersDTO ordersDTO=new OrdersDTO();
-    model.addAttribute("ordersDTO",ordersDTO);
+    @GetMapping("/selCSA")
+    public String selCsa(@ModelAttribute OrdersDTO ordersDTO, Model model) {
+        System.out.println("Get_selCSA");
+        System.out.println("ordersDTO:= "+ordersDTO);
+        List<String> codes = csaRepository.findDistinctCode();
+        model.addAttribute("codes",codes);
+        //OrdersDTO ordersDTO=new OrdersDTO();
+        model.addAttribute("ordersDTO",ordersDTO);
 
-    CSA csa  = new CSA();
-    model.addAttribute(csa);
-    return "selCSA";
-}
+        CSA csa  = new CSA();
+        model.addAttribute(csa);
+        return "selCSA";
+    }
     @PostMapping("/selCSA")
     public String selCsa(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
                          BindingResult result, RedirectAttributes atrRedirect){

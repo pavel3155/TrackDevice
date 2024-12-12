@@ -9,10 +9,11 @@ import lombok.Data;
 public class OrdersDTO {
     @NotNull
     private String date;
-
     private String num;
     private String description;
     private CSA csa;
+    private long idCSA;
     private Device device;
+    private long idDevice;
     private String status;
 }

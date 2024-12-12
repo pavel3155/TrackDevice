@@ -21,7 +21,7 @@
 		<form class="forms-child"
 			  th:method="get"
 			  th:action="@{/Orders}"
-			  th:object="${ordersDTO}">
+			  th:object="${orders}">
 
 			<span class="margin-t">
 				<label for="filtrData">Дата: </label>
@@ -31,7 +31,7 @@
 				<input type="text" id="filtrNumOrder" name="filtrNumOrder"/>
 
 				<label for="filtrCSA">КСА: </label>
-				<select  id="filtrCSA" th:field="*{csa}">
+				<select  id="filtrCSA">
 					<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
 				</select>
 
@@ -52,6 +52,21 @@
 						<th>Описание</th>
 						<th>Статус</th>
 						<th>Действие</th>
+					</tr>
+					<tr th:each="order : ${orders}">
+						<td th:text="${order.id}" class ="col-num"></td>
+						<td th:text="${order.date}"></td>
+						<td th:text="${order.num}"></td>
+						<td th:text="${order.csa.num}"></td>
+						<td th:text="${order.device.model.name}"></td>
+						<td th:text="${order.description}"></td>
+						<td th:text="${order.status}"></td>
+						<td>
+                            <span class="tbl-td-span-inline">
+                                <a href="/editOrder" th:href="@{/editOrder{id}(id=${order.id})}"
+								   class="a-btn a-btn-tbl">Редактировать</a>
+                            </span>
+						</td>
 					</tr>
 				</table>
 			</div>

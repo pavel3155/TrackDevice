@@ -17,7 +17,7 @@ public class OrdersService {
       order.setCsa(ordersDTO.getCsa());
       order.setDevice(ordersDTO.getDevice());
       order.setDescription(ordersDTO.getDescription());
-
+      order.setStatus(ordersDTO.getStatus());
       return orderRepository.save(order);
     }
 }

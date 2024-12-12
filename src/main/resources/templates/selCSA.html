@@ -17,8 +17,8 @@
 	<div class="container">
 		<form id="frSelCSA" class="forms-child"
 			  th:method="POST"
-			  th:action="@{/selCSA}"
-			  th:object="${orderDTO}">
+			  th:action="@{/addOrder}"
+			  th:object="${ordersDTO}">
 			<span class="margin-t">
 				<label for="selCodeCSA">Вуберите код региона: </label>
 				<select  id="selCodeCSA" class="select">
@@ -27,6 +27,12 @@
 				<script>
 					$('#selCodeCSA option[value="02"]').prop('selected',true);
 				</script>
+				<input type="hidden" th:value="${num}" th:field="*{num}">
+				<input type="hidden" th:value="${date}" th:field="*{date}">
+				<input id ="idCSA" type="hidden" th:value="${idCSA}" th:field="*{idCSA}">
+				<input id ="idDevice" type="hidden" th:value="${idDevice}" th:field="*{idDevice}">
+				<input type="hidden" th:value="${status}" th:field="*{status}">
+				<input type="hidden" th:value="${description}" th:field="*{description}">
 			</span>
 
 			<div class ="tbl-div">
@@ -83,7 +89,8 @@
 				function GoToAddOrder(idCSA){
 					console.log("GoToAddOrder...");
 					console.log("idCSA:="+idCSA);
-					$('#frSelCSA').attr("action","/addOrder?idCSA=4");
+					$('#idCSA').val(idCSA);
+					/* $('#frSelCSA').attr("action","/addOrder?idCSA=4"); */
 					$('#btnSend').click();
 				}
 			</script>

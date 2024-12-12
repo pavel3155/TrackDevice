@@ -20,7 +20,7 @@
 
 		<form id="addOrder" class="forms-child"
 			  th:method="post"
-			  th:action="@{/addOrder}"
+			  th:action="@{/addOrder/Add}"
 			  th:object="${ordersDTO}">
 
 			<div th:if="${success}" class="" role="alert">
@@ -31,6 +31,8 @@
 			</span>
 
 			<div class ="tbl-div">
+				<input id ="idCSA" type="hidden" th:value="${idCSA}" th:field="*{idCSA}">
+				<input id ="idDevice" type="hidden" th:value="${idDevice}" th:field="*{idDevice}">
 				<table class="table" id="tblOrder">
 					<tr>
 						<td>Дата</td>
@@ -42,40 +44,43 @@
 					<tr>
 						<td>Заявка №</td>
 						<td class="AlignCenter">
-							<input type="text" id="orderNum" name="orderNum" th:text="${num}" th:field="*{num}"/>
+							<input type="text" id="orderNum" name="orderNum" th:value="${num}" th:field="*{num}"/>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>КСА</td>
 						<td class="AlignCenter">
-							<label id="lblOrderCSA" for="orderCSA" th:text="${ordersDTO.csa}"></label>
+							<label id="lblOrderCSA" for="orderCSA" th:text="${ordersDTO.csa.num}+', '+${ordersDTO.csa.address}"></label>
 							<input type="hidden" id="orderCSA" th:value="${csa}" th:field="*{csa}">
-
 						</td>
 						<td><button id="btnSelCSA" type="submit" class="a-btn">Выбрать КСА</button></td>
-						<!--<td><a th:href="@{/selCSA(num=*{num})}" class="a-btn">Выбрать КСА</a></td> -->
 
 					</tr>
 					<tr>
 						<td>Техническое средство</td>
 						<td class="AlignCenter">
-							<label id="lblOrderDevice"  for="orderDevice" th:text="${ordersDTO.device}"></label>
+							<label id="lblOrderDevice"  for="orderDevice"
+								   th:text="${ordersDTO.device.model.type.type} + ': ' +
+								   			${ordersDTO.device.model.name} + ', сер.№:= ' +
+								   			${ordersDTO.device.sernum} + ', инв.№:= ' +
+								   			${ordersDTO.device.invnum}"></label>
 							<input type="hidden" id="orderDevice" th:value="${device}" th:field="*{device}">
 						</td>
-						<td><a href="/selDevice" class="a-btn">Выбрать ТС</a></td>
+						<td><button id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button></td>
 					</tr>
 					<tr>
 						<td>Статус</td>
 						<td class="AlignCenter">
-							<input type="text" id="orderStatus" name="orderStatus" th:field="*{status}"/>
+							<label id="lblOrderStatus" for="orderStatus" th:text="${ordersDTO.status}"></label>
+							<input type="hidden" id="orderStatus" name="orderStatus" th:field="*{status}"/>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>Описание</td>
 						<td class="AlignCenter">
-							<input type="text" id="orderDescription" name="orderDescription" th:field="*{description}"/>
+							<input type="text" id="orderDescription" name="orderDescription"  th:value="${description}" th:field="*{description}"/>
 						</td>
 						<td></td>
 					</tr>
@@ -96,12 +101,16 @@
 
         function initEvent() {
             $('#btnSelCSA').bind('click', selCSA);
+            $('#btnSelDev').bind('click', selDev);
         }
 		function selCSA(){
 			var orderNum=$('#orderNum').val();
 			console.log("orderNum:= "+orderNum);
 			$('#addOrder').attr("action","/selCSA")
-
+		}
+		function selDev(){
+			console.log("selDev...");
+			$('#addOrder').attr("action","/selDevice")
 		}
 
 	</script>

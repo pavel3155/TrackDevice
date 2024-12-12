@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +74,30 @@ public class DeviceController {
         Gson gson = new Gson();
         String jsonDevices = gson.toJson(jsonDeviceDTOList);
         return  ResponseEntity.ok(jsonDevices);
+    }
+
+    @GetMapping("/selDevice")
+    public String selDevice(@ModelAttribute OrdersDTO ordersDTO, Model model) {
+        System.out.println("Get:/selDevice...");
+        System.out.println("ordersDTO:= "+ordersDTO);
+
+        List<TypeDevice> types = typeDeviceRepository.findAll();
+        types.remove(0);
+        model.addAttribute("types",types);
+//        DeviceDTO deviceDTO = new DeviceDTO();
+//        model.addAttribute(deviceDTO);
+        model.addAttribute("ordersDTO",ordersDTO);
+        return "selDevice";
+    }
+
+    @PostMapping("/selDevice")
+    public String selDevice(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
+                         BindingResult result, RedirectAttributes atrRedirect){
+        System.out.println("POST:/selDevice...");
+        System.out.println("ordersDTO:= "+ordersDTO);
+        model.addAttribute("ordersDTO",ordersDTO);
+        atrRedirect.addFlashAttribute("ordersDTO",ordersDTO);
+        return "redirect:/selDevice";
     }
 
 //    @GetMapping("/device{idModel}")
