@@ -27,6 +27,7 @@
 				<script>
 					$('#selCodeCSA option[value="02"]').prop('selected',true);
 				</script>
+				<input id ="idOrder" type="hidden" th:value="${id}" th:field="*{id}">
 				<input type="hidden" th:value="${num}" th:field="*{num}">
 				<input type="hidden" th:value="${date}" th:field="*{date}">
 				<input id ="idCSA" type="hidden" th:value="${idCSA}" th:field="*{idCSA}">
@@ -90,7 +91,6 @@
 					console.log("GoToAddOrder...");
 					console.log("idCSA:="+idCSA);
 					$('#idCSA').val(idCSA);
-					/* $('#frSelCSA').attr("action","/addOrder?idCSA=4"); */
 					$('#btnSend').click();
 				}
 			</script>

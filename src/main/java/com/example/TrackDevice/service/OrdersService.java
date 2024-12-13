@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class OrdersService {
     @Autowired
     OrderRepository orderRepository;
-    public Order addOrders(OrdersDTO ordersDTO){
+    public Order add(OrdersDTO ordersDTO){
       Order order = new Order();
       order.setDate(ordersDTO.getDate());
       order.setNum(ordersDTO.getNum());
@@ -19,5 +19,16 @@ public class OrdersService {
       order.setDescription(ordersDTO.getDescription());
       order.setStatus(ordersDTO.getStatus());
       return orderRepository.save(order);
+    }
+    public Order save(OrdersDTO ordersDTO){
+        Order order = new Order();
+        order.setId(ordersDTO.getId());
+        order.setDate(ordersDTO.getDate());
+        order.setNum(ordersDTO.getNum());
+        order.setCsa(ordersDTO.getCsa());
+        order.setDevice(ordersDTO.getDevice());
+        order.setDescription(ordersDTO.getDescription());
+        order.setStatus(ordersDTO.getStatus());
+        return orderRepository.save(order);
     }
 }

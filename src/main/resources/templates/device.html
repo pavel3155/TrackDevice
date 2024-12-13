@@ -105,7 +105,7 @@
                     		console.log(data);
 							var models=data;
 							console.log(models);
-							$('#tblDevice').append('<tr><td class ="dev-col-num">№</td><td>Тип</td><td>Модель</td><td>Серийный №</td><td>Инвентарный №</td><td>Действие</td><tr>');
+							$('#tblDevice').append('<tr><th class ="dev-col-num">№</th><th>Тип</th><th>Модель</th><th>Серийный №</th><th>Инвентарный №</th><th>Действие</th><tr>');
 							$.each(models, function(i,item) {
     							$('#tblDevice').append('<tr><td class ="dev-col-num">' + i +
     												   '</td><td>' + models[i].type +

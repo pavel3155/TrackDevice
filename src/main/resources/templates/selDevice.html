@@ -23,6 +23,7 @@
 			  th:object="${ordersDTO}">
 
 			<span class="margin-t">
+				<input id ="idOrder" type="hidden" th:value="${id}" th:field="*{id}">
 				<input type="hidden" th:value="${num}" th:field="*{num}">
 				<input type="hidden" th:value="${date}" th:field="*{date}">
 				<input type="hidden" th:value="${csa}" th:field="*{csa}">
@@ -106,8 +107,8 @@
 
 					console.log("selModelIndex="+selModelIndex);
 					console.log("filterSN="+filterSN);
-					$('#link').empty().prop('disabled', false);
-					$('#link').append('<a href="/addDevice'+selModelIndex+'" class="a-btn">Создать ТС</a>');
+					/* $('#link').empty().prop('disabled', false); */
+					/* $('#link').append('<a href="/addDevice'+selModelIndex+'" class="a-btn">Создать ТС</a>'); */
 					$.getJSON('/device' + selModelIndex+'&'+filterSN)
                     	 .done(function (data) {
                     		$('#tblDevice').empty().prop('disabled', false);

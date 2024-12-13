@@ -66,7 +66,7 @@ public class OrderController {
             return "regUser";
         }
         try {
-            ordersService.addOrders(ordersDTO);
+            ordersService.add(ordersDTO);
             List<CSA> csas = csaRepository.findAll();
             List<Device> devices = deviceRepository.findAll();
             model.addAttribute("csas", csas);
@@ -110,14 +110,20 @@ public class OrderController {
     @PostMapping("/addOrder")
     public String Order(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
                            BindingResult result, RedirectAttributes atrRedirect) {
-        System.out.println("POST_/addOrder_ordersDTO:= "+ordersDTO);
+        System.out.println("POST:/addOrder...");
+        System.out.println("ordersDTO:= "+ordersDTO);
         ordersDTO.setCsa(csaRepository.getById(ordersDTO.getIdCSA()));
         ordersDTO.setDevice(deviceRepository.getById(ordersDTO.getIdDevice()));
         System.out.println("POST_/addOrder_ordersDTO:= "+ordersDTO);
-        //System.out.println("POST_/addOrder_csa_id:= "+csa_id);
         atrRedirect.addFlashAttribute("ordersDTO",ordersDTO);
+        if(ordersDTO.getId()!=0){
+            System.out.println("ordersDTO.getId():= "+ordersDTO.getId());
+            return "redirect:/editOrder";
+        }
     return "redirect:/addOrder";
     }
+
+
     @PostMapping("/addOrder/Add")
     public String addOrder(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
                            BindingResult result, RedirectAttributes atrRedirect) {
@@ -128,7 +134,7 @@ public class OrderController {
             return "addOrder";
         }
         try {
-            ordersService.addOrders(ordersDTO);
+            ordersService.add(ordersDTO);
             atrRedirect.addFlashAttribute("success",true);
             atrRedirect.addFlashAttribute("ordersDTO",ordersDTO);
         } catch (Exception ex) {
@@ -151,8 +157,47 @@ public class OrderController {
         model.addAttribute("ordersDTO",ordersDTO);
         return "redirect:/addOrder";
     }
-
-
+    @GetMapping("/editOrder")
+    public String editOrder(@ModelAttribute OrdersDTO ordersDTO, Model model) {
+        System.out.println("GET:/editOrder....");
+        System.out.println("ordersDTO:= "+ordersDTO);
+        model.addAttribute("ordersDTO", ordersDTO);
+        return "editOrder";
+    }
+    @GetMapping("/editOrder{id}")
+    public String editOrder(@PathVariable long id, Model model) {
+        System.out.println("GET:/editOrder{id}....");
+        Order order = orderRepository.getById(id);
+        System.out.println("order:= "+order);
+        OrdersDTO ordersDTO =new OrdersDTO();
+        ordersDTO.setId(order.getId());
+        ordersDTO.setDate(order.getDate());
+        ordersDTO.setNum(order.getNum());
+        ordersDTO.setCsa(order.getCsa());
+        ordersDTO.setIdCSA(order.getCsa().getId());
+        ordersDTO.setDevice(order.getDevice());
+        ordersDTO.setIdDevice(order.getDevice().getId());
+        ordersDTO.setDescription(order.getDescription());
+        ordersDTO.setStatus(order.getStatus());
+        model.addAttribute("ordersDTO", ordersDTO);
+        return "editOrder";
+    }
+    @PostMapping("/editOrder")
+    public String editOrder(@Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result,Model model) {
+        System.out.println("POST:/editOrder...");
+        System.out.println("ordersDTO:= "+ordersDTO);
+        if (result.hasErrors()) {
+            return "editOrder";
+        }
+        try {
+            ordersService.save(ordersDTO);
+            model.addAttribute("success",true);
+            model.addAttribute("ordersDTO",ordersDTO);
+        } catch (Exception ex) {
+            result.addError(new FieldError("ordersDTO", "name", ex.getMessage()));
+        }
+        return "/editOrder";
+    }
 
 }
 

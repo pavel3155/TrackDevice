@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 public class OrdersDTO {
+    private long id;
     @NotNull
     private String date;
     private String num;

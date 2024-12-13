@@ -20,17 +20,18 @@
 
 		<form id="addOrder" class="forms-child"
 			  th:method="post"
-			  th:action="@{/addOrder/Add}"
+			  th:action="@{/editOrder}"
 			  th:object="${ordersDTO}">
 
 			<div th:if="${success}" class="" role="alert">
-				<strong>Заявка создана!</strong>
+				<strong>Все изменения сохранены!</strong>
 			</div>
 			<span>
 				<h3>Создать заявку </h3>
 			</span>
 
 			<div class ="tbl-div">
+				<input id ="idOrder" type="hidden" th:value="${id}" th:field="*{id}">
 				<input id ="idCSA" type="hidden" th:value="${idCSA}" th:field="*{idCSA}">
 				<input id ="idDevice" type="hidden" th:value="${idDevice}" th:field="*{idDevice}">
 				<table class="table" id="tblOrder">
@@ -67,12 +68,13 @@
 						</td>
 						<td><button id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button></td>
 					</tr>
-					<td>Серийный №</td>
-					<td class="AlignCenter">
-						<label id="lblOrderDeviceSN"  for="orderDevice"
-							   th:text="${ordersDTO.device.sernum} "></label>
-					</td>
-					<td></td>
+					<tr>
+						<td>Серийный №</td>
+						<td class="AlignCenter">
+							<label id="lblOrderDeviceSN"  for="orderDevice"
+								   th:text="${ordersDTO.device.sernum} "></label>
+						</td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>Инвентарный №</td>
@@ -82,6 +84,7 @@
 							<input type="hidden" id="orderDeviceIN" th:value="${device}" th:field="*{device}">
 						</td>
 						<td></td>
+					</tr>
 					<tr>
 						<td style=" font-weight: 600">Статус</td>
 						<td class="AlignCenter">
@@ -102,7 +105,7 @@
 			</div>
 
 			<span style="margin:20px 5px 5px 5px">
-				<button type="submit" class="a-btn">Добавить</button>
+				<button type="submit" class="a-btn">Сохранить</button>
 				<a href="/Orders" class="a-btn">Назад</a>
 			</span>
 

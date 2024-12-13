@@ -41,7 +41,7 @@
 				<button type="button" id="btnFiltrOrder" class="a-btn">Применить</button>
 			</span>
 
-			<div class ="tbl-div">
+			<div class ="full-div">
 				<table class="table" id="tblDevice">
 					<tr>
 						<th class ="dev-col-num">№</th>
@@ -63,7 +63,7 @@
 						<td th:text="${order.status}"></td>
 						<td>
                             <span class="tbl-td-span-inline">
-                                <a href="/editOrder" th:href="@{/editOrder{id}(id=${order.id})}"
+                                <a href="/editOrder" th:href="@{/editOrder{order}(order=${order.id})}"
 								   class="a-btn a-btn-tbl">Редактировать</a>
                             </span>
 						</td>
@@ -71,7 +71,6 @@
 				</table>
 			</div>
 			<div>
-				<!--<span id="link"><a href="/addOrder?idCSA=1" class="a-btn">Создать заявку</a></span> -->
 				<span id="link"></span>
 				<span><a href="/" class="a-btn">Назад</a></span>
 			</div>
