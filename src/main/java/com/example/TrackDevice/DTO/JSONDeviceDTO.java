@@ -9,6 +9,7 @@ public class JSONDeviceDTO {
     private String model;
     private String sernum;
     private String invnum;
+    private String csa;
 
 
 

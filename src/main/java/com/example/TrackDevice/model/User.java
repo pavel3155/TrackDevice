@@ -23,6 +23,8 @@ public class User {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn (name="role_id")
     private Roles role;
-
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn (name="csa_id")
+    private CSA csa;
 
 }

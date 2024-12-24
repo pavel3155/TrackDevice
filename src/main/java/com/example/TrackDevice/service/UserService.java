@@ -24,7 +24,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByEmail(email);
         System.out.println("Пользователь: "+user);
         System.out.println("Пользователь email : "+user.getEmail());
-        System.out.println("ОРоль: "+user.getRole());
+        System.out.println("Роль: "+user.getRole());
         String typeRole = user.getRole().getType();
         System.out.println("Роль: "+typeRole);
         //System.out.println("Роль: "+user.getRole().getType());
@@ -45,6 +45,7 @@ public class UserService implements UserDetailsService {
         newUser.setSurname(registerDTO.getSurname());
         newUser.setEmail(registerDTO.getEmail());
         newUser.setRole(registerDTO.getRole());
+        newUser.setCsa(registerDTO.getCsa());
         newUser.setPassword(bCryptEncoder.encode(registerDTO.getPassword()));
         return userRepository.save(newUser);
     }

@@ -54,6 +54,13 @@
 						<option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.type}"></option>
 					</select>
 				</div>
+				<div class="auth_form_div">
+					<label for="input_csa">КСА: </label>
+					<select  id="input_csa" th:field="*{csa}">
+						<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
+					</select>
+				</div>
+
 				<div class="auth_form_div_btn">
 					<button type="submit">Регистрация</button>
 				</div>

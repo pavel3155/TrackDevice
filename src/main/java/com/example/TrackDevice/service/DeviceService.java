@@ -27,6 +27,7 @@ public class DeviceService {
         device.setModel(deviceDTO.getModelDevice());
         device.setSernum(deviceDTO.getSernum());
         device.setInvnum(deviceDTO.getInvnum());
+        device.setCsa(deviceDTO.getCsa());
         //newDevice.setStatus(deviceDTO.getStatus());
         return deviceRepository.save(device);
     }
@@ -36,6 +37,7 @@ public class DeviceService {
         device.setModel(deviceDTO.getModelDevice());
         device.setSernum(deviceDTO.getSernum());
         device.setInvnum(deviceDTO.getInvnum());
+        device.setCsa(deviceDTO.getCsa());
         //newDevice.setStatus(deviceDTO.getStatus());
         return deviceRepository.save(device);
     }

@@ -14,12 +14,10 @@
 </header>
 <body>
 	<div class="container">
-
 		<form class="forms-child"
 			  th:method="post"
 			  th:action="@{/addDevice}"
 			  th:object="${deviceDTO}">
-
 
 			<div th:if="${success}" class="" role="alert">
 				<strong>Техническое средство создано!</strong>
@@ -28,7 +26,6 @@
 				<h3>Создать техническое средство </h3>
 			</span>
 			<div class ="tbl-div">
-
 				<table class="table" id="tblDevice">
 					<tr>
 						<th class ="dev-col-num">№</th>
@@ -37,7 +34,6 @@
 						<th>Серийные №</th>
 						<th>Инвентарный №</th>
 					</tr>
-
 					<tr>
 						<td class ="dev-col-num">1</td>
 						<td class="AlignCenter"><p class="notMarginAndPadding" th:text="${deviceDTO.modelDevice.type.type}"></p></td>
@@ -46,11 +42,9 @@
 						<td class="AlignCenter"><input class="tbl-td-input-text" type="text" id="invnum" name="invnum" th:field="*{invnum}"/></td>
 					</tr>
 				</table>
-				<!--<p th:text="${idModel}"></p></td>-->
 				<input type="hidden" th:value="${modelDevice}" th:field="*{modelDevice}">
-				<!--<input type="hidden" th:value="${modelDevice.type}" th:field="*{modelDevice.type}">-->
+				<!-- <input type="hidden" th:value="${csa}" th:field="*{csa}"> -->
 			</div>
-
 			<span style="margin:20px 5px 5px 5px">
 				<button type="submit" class="a-btn">Добавить</button>
 				<a href="/device" class="a-btn">Назад</a>

@@ -1,8 +1,10 @@
 package com.example.TrackDevice.controllers;
 
 import com.example.TrackDevice.DTO.RegisterDTO;
+import com.example.TrackDevice.model.CSA;
 import com.example.TrackDevice.model.Roles;
 import com.example.TrackDevice.model.User;
+import com.example.TrackDevice.repo.CSARepository;
 import com.example.TrackDevice.repo.RoleRepository;
 import com.example.TrackDevice.repo.UserRepository;
 import com.example.TrackDevice.service.UserService;
@@ -26,6 +28,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private CSARepository csaRepository;
 
 
     @GetMapping("/regUser")
@@ -33,7 +37,9 @@ public class UserController {
         RegisterDTO registerDTO = new RegisterDTO();
         model.addAttribute(registerDTO);
         List<Roles> roles =roleRepository.findAll();
+        List<CSA> csas = csaRepository.findAll();
         model.addAttribute("roles",roles);
+        model.addAttribute("csas",csas);
         return "regUser";
     }
 

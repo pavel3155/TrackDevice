@@ -1,15 +1,13 @@
 package com.example.TrackDevice.controllers;
 
 import com.example.TrackDevice.DTO.*;
-import com.example.TrackDevice.model.CSA;
-import com.example.TrackDevice.model.Device;
-import com.example.TrackDevice.model.Order;
-import com.example.TrackDevice.repo.CSARepository;
-import com.example.TrackDevice.repo.DeviceRepository;
-import com.example.TrackDevice.repo.OrderRepository;
+import com.example.TrackDevice.model.*;
+import com.example.TrackDevice.repo.*;
 import com.example.TrackDevice.service.OrdersService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,15 +27,33 @@ public class OrderController {
     OrdersService ordersService;
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    RoleRepository roleRepository;
 
     @GetMapping("/Orders")
-    public String Orders(Model model) {
+    public String Orders(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        System.out.println("UserName:= "+userDetails.getUsername());
+        System.out.println("Role:= "+userDetails.getAuthorities());
+
+        Roles roleCSA =roleRepository.findByType("CSA");
+        System.out.println("roleCSA:= "+roleCSA);
+        List<Order> orders;
+        if(userDetails.getAuthorities().contains(roleCSA)){
+            User user = userRepository.findByEmail(userDetails.getUsername());
+            System.out.println("user:="+user);
+            CSA csa = user.getCsa();
+            System.out.println("csa:= "+csa);
+            orders = orderRepository.getByCsa(csa);
+        } else{
+            orders = orderRepository.findAll();
+        }
+
         List<CSA> csas = csaRepository.findAll();
-        List<Order> orders = orderRepository.findAll();
         System.out.println("orders:= "+orders);
         model.addAttribute("csas", csas);
         model.addAttribute("orders",orders);
-
         return "Orders";
     }
 
@@ -81,18 +97,33 @@ public class OrderController {
         return "Orders";
     }
     @GetMapping("/addOrder")
-    public String Order(@ModelAttribute OrdersDTO ordersDTO, Model model) {
-        System.out.println("GET_/addOrder....");
+    public String Order(@ModelAttribute OrdersDTO ordersDTO,@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        System.out.println("GET:/addOrder....");
         System.out.println("ordersDTO:= "+ordersDTO);
+
+        System.out.println("Username:= "+userDetails.getUsername());
+        System.out.println("Role:= "+userDetails.getAuthorities());
+
         if (ordersDTO==null){
             System.out.println("ordersDTO==null");
             ordersDTO=new OrdersDTO();
         }
         if (ordersDTO.getCsa()==null){
             System.out.println("ordersDTO.getCsa()==null....");
-            CSA csa = csaRepository.getById(1);
-            ordersDTO.setCsa(csa);
-            ordersDTO.setIdCSA(1);
+
+            Roles roleCSA =roleRepository.findByType("CSA");
+            System.out.println("roleCSA:= "+roleCSA);
+
+            if(userDetails.getAuthorities().contains(roleCSA)){
+                CSA csa= userRepository.findByEmail(userDetails.getUsername()).getCsa();
+                System.out.println("csa:="+csa);
+                ordersDTO.setCsa(csa);
+                ordersDTO.setIdCSA(csa.getId());
+            }else{
+                CSA csa = csaRepository.getById(1);
+                ordersDTO.setCsa(csa);
+                ordersDTO.setIdCSA(1);
+            }
         }
         if (ordersDTO.getDevice() ==null){
             System.out.println("ordersDTO.getDevice()==null....");

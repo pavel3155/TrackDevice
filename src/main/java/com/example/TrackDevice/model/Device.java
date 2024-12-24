@@ -20,4 +20,9 @@ public class Device {
     private String invnum;
     private String sernum;
     private String status;
+    @ManyToOne (fetch = FetchType.EAGER)
+    @JoinColumn (name="csa_id", nullable = false, columnDefinition = "INT DEFAULT 1")
+    private CSA csa;
+
+
 }

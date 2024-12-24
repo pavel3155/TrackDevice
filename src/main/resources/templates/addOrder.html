@@ -54,7 +54,7 @@
 							<label id="lblOrderCSA" for="orderCSA" th:text="${ordersDTO.csa.num}+', '+${ordersDTO.csa.address}"></label>
 							<input type="hidden" id="orderCSA" th:value="${csa}" th:field="*{csa}">
 						</td>
-						<td><button id="btnSelCSA" type="submit" class="a-btn">Выбрать КСА</button></td>
+						<td><button sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')" id="btnSelCSA" type="submit" class="a-btn">Выбрать КСА</button></td>
 
 					</tr>
 					<tr>
@@ -65,7 +65,10 @@
 								   			${ordersDTO.device.model.name}"></label>
 							<input type="hidden" id="orderDevice" th:value="${device}" th:field="*{device}">
 						</td>
-						<td><button id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button></td>
+						<td>
+							<button sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')" id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button>
+							<button sec:authorize="hasRole('ROLE_CSA')" id="btnSelDevCSA" type="submit" class="a-btn">Выбрать ТС КСА</button>
+						</td>
 					</tr>
 					<td>Серийный №</td>
 					<td class="AlignCenter">
@@ -115,6 +118,7 @@
         function initEvent() {
             $('#btnSelCSA').bind('click', selCSA);
             $('#btnSelDev').bind('click', selDev);
+            $('#btnSelDev').bind('click', selDevCSA);
         }
 		function selCSA(){
 			var orderNum=$('#orderNum').val();
@@ -124,6 +128,13 @@
 		function selDev(){
 			console.log("selDev...");
 			$('#addOrder').attr("action","/selDevice")
+		}
+		function selDevCSA(){
+			console.log("selDevCSA...");
+			console.log("selDevCSA...");
+			console.log("selDevCSA...");
+			console.log("selDevCSA...");
+			console.log("selDevCSA...");
 		}
 
 	</script>

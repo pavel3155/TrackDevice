@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,5 +20,12 @@ public class CSA {
     private String num;
     private String code;
     private String address;
+    @ManyToOne (fetch = FetchType.EAGER)
+    @JoinColumn (name="dev_id")
+    private Device device;
+
+//    @OneToMany(fetch = FetchType.EAGER)
+//    @JoinColumn (name="dev_id")
+//    private List<Device> devices = new ArrayList<>();
 
 }
