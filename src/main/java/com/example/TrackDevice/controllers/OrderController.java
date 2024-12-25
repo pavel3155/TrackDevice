@@ -32,6 +32,12 @@ public class OrderController {
     @Autowired
     RoleRepository roleRepository;
 
+    /**
+     * Метод обрабатывает запрос GET при преходе на сраницу Orders
+     * @param userDetails - с помощью анаотации @AuthenticationPrincipal, получаем данные пользователя
+     * @param model - объект класса Model
+     * @return - страница Orders
+     */
     @GetMapping("/Orders")
     public String Orders(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         System.out.println("UserName:= "+userDetails.getUsername());

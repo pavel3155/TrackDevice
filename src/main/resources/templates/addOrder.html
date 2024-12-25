@@ -66,8 +66,9 @@
 							<input type="hidden" id="orderDevice" th:value="${device}" th:field="*{device}">
 						</td>
 						<td>
-							<button sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')" id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button>
-							<button sec:authorize="hasRole('ROLE_CSA')" id="btnSelDevCSA" type="submit" class="a-btn">Выбрать ТС КСА</button>
+							<button id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button>
+							<!-- <button sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')" id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button>
+							<button sec:authorize="hasRole('ROLE_CSA')" id="btnSelDevCSA" type="submit" class="a-btn">Выбрать ТС КСА</button> -->
 						</td>
 					</tr>
 					<td>Серийный №</td>

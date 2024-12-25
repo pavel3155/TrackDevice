@@ -18,57 +18,59 @@
 <body>
 	<div class="container">
 
-		<form class="forms-child"
+		<form class="forms-operation"
 			  th:method="get"
 			  th:action="@{/Orders}"
 			  th:object="${orders}">
 
-			<span class="margin-t">
-				<label for="filtrData">Дата: </label>
-				<input id="filtrData" type="date"/>
+			<div class="container-inner">
+				<span class="margin-t">
+					<label for="filtrData">Дата: </label>
+					<input id="filtrData" type="date"/>
 
-				<label for="filtrNumOrder">Заявка №: </label>
-				<input type="text" id="filtrNumOrder" name="filtrNumOrder"/>
+					<label for="filtrNumOrder">Заявка №: </label>
+					<input type="text" id="filtrNumOrder" name="filtrNumOrder"/>
 
-				<label for="filtrCSA">КСА: </label>
-				<select  id="filtrCSA">
-					<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
-				</select>
+					<label for="filtrCSA">КСА: </label>
+					<select  id="filtrCSA">
+						<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
+					</select>
 
-				<label for="filtrStatus">Статус: </label>
-				<input type="text" id="filtrStatus" name="filtrStatus"/>
+					<label for="filtrStatus">Статус: </label>
+					<input type="text" id="filtrStatus" name="filtrStatus"/>
 
-				<button type="button" id="btnFiltrOrder" class="a-btn">Применить</button>
-			</span>
+					<button type="button" id="btnFiltrOrder" class="a-btn">Применить</button>
+				</span>
 
-			<div class ="full-div">
-				<table class="table" id="tblDevice">
-					<tr>
-						<th class ="dev-col-num">№</th>
-						<th>Дата</th>
-						<th>№заявки</th>
-						<th>КСА</th>
-						<th>Техническое средство</th>
-						<th>Описание</th>
-						<th>Статус</th>
-						<th>Действие</th>
-					</tr>
-					<tr th:each="order : ${orders}">
-						<td th:text="${order.id}" class ="col-num"></td>
-						<td th:text="${order.date}"></td>
-						<td th:text="${order.num}"></td>
-						<td th:text="${order.csa.num}"></td>
-						<td th:text="${order.device.model.name}"></td>
-						<td th:text="${order.description}"></td>
-						<td th:text="${order.status}"></td>
-						<td>
-                            <span class="tbl-td-span-inline">
-                                <a href="/editOrder" th:href="@{/editOrder{order}(order=${order.id})}"
-								   class="a-btn a-btn-tbl">Редактировать</a>
-                            </span>
-						</td>
-					</tr>
-				</table>
+				<div class ="tbl-div">
+					<table class="table" id="tblDevice">
+						<tr>
+							<th class ="dev-col-num">№</th>
+							<th>Дата</th>
+							<th>№заявки</th>
+							<th>КСА</th>
+							<th>Техническое средство</th>
+							<th>Описание</th>
+							<th>Статус</th>
+							<th>Действие</th>
+						</tr>
+						<tr th:each="order : ${orders}">
+							<td th:text="${order.id}" class ="col-num"></td>
+							<td th:text="${order.date}"></td>
+							<td th:text="${order.num}"></td>
+							<td th:text="${order.csa.num}"></td>
+							<td th:text="${order.device.model.name}"></td>
+							<td th:text="${order.description}"></td>
+							<td th:text="${order.status}"></td>
+							<td>
+								<span class="tbl-td-span-inline">
+									<a href="/editOrder" th:href="@{/editOrder{order}(order=${order.id})}"
+									   class="a-btn a-btn-tbl">Редактировать</a>
+								</span>
+							</td>
+						</tr>
+					</table>
+				</div>
 			</div>
 			<div>
 				<span id="link"></span>
@@ -84,8 +86,6 @@
             console.log("выполняется loadOrders");
 			$('#link').empty().prop('disabled', false);
             $('#link').append('<a href="/addOrder" class="a-btn">Создать заявку</a>');
-            <!-- $('#link').append('<a href="/addOrder?idCSA=1" class="a-btn">Создать заявку</a>'); -->
-
         }
 	</script>
 </body>

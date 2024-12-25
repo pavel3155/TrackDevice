@@ -92,7 +92,8 @@
 							$('#selModelDev option[value=0]').prop('selected',true);
 							var selModelIndex=$('#selModelDev').val();
 							var filterSN=$('#filtrSN').val();
-							loadTableDevice(selModelIndex,filterSN);
+							var idCSA=$('#idCSA').val();
+							loadTableDevice(selModelIndex,filterSN,idCSA);
                        });
 
                 }
@@ -101,15 +102,17 @@
                 	console.log("selModelIndex="+selModelIndex);
                 	var filterSN=$('#filtrSN').val();
                 	console.log("filterSN="+filterSN);
-                	loadTableDevice(selModelIndex,filterSN)
+                	var idCSA=$('#idCSA').val();
+                	console.log("idCSA="+idCSA);
+                	loadTableDevice(selModelIndex,filterSN,idCSA)
                 }
-				function loadTableDevice(selModelIndex,filterSN) {
+				function loadTableDevice(selModelIndex,filterSN,idCSA) {
 
 					console.log("selModelIndex="+selModelIndex);
 					console.log("filterSN="+filterSN);
-					/* $('#link').empty().prop('disabled', false); */
-					/* $('#link').append('<a href="/addDevice'+selModelIndex+'" class="a-btn">Создать ТС</a>'); */
-					$.getJSON('/device' + selModelIndex+'&'+filterSN)
+					console.log("idCSA="+idCSA);
+
+					$.getJSON('/selDevice' + selModelIndex+'&'+filterSN+'&'+idCSA)
                     	 .done(function (data) {
                     		$('#tblDevice').empty().prop('disabled', false);
                     		console.log(data);

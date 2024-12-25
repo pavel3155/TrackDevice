@@ -76,6 +76,53 @@ public class DeviceController {
         return  ResponseEntity.ok(jsonDevices);
     }
 
+    @GetMapping("/selDevice{idModel}&{filterSN}&{idCSA}")
+    @ResponseBody
+    public ResponseEntity<String> loadDevice(@PathVariable String idModel,
+                                             @PathVariable String filterSN,
+                                             @PathVariable Integer idCSA)
+    {
+        System.out.println("GET:/selDevice{idModel}&{filterSN}&{idCSA}...");
+        System.out.println("idModel:= "+idModel);
+        System.out.println("filterSN:= "+filterSN);
+        System.out.println("idCSA:= "+idCSA);
+
+        ModelDevice model =modelDeviceRepository.getById(Long.parseLong(idModel));
+        System.out.println("model:= "+model);
+        CSA csa = csaRepository.getById(idCSA);
+
+        List<Device> devices = new ArrayList<>();
+        if (filterSN.isEmpty()){
+            if(csa==null){
+                devices = deviceRepository.findByModel(model);
+            } else {
+                devices=deviceRepository.findByCsaAndModel(csa, model);
+            }
+        } else {
+            if(csa==null) {
+                devices = deviceRepository.findByModelAndSernumContainingIgnoreCase(model, filterSN);
+            } else{
+                devices= deviceRepository.findByCsaAndModelAndSernumContainingIgnoreCase(csa, model, filterSN);
+            }
+        }
+        List<JSONDeviceDTO> jsonDeviceDTOList= new ArrayList<>();
+        for (Device dev:devices){
+            JSONDeviceDTO jsonDeviceDTO=new JSONDeviceDTO();
+            jsonDeviceDTO.setId(dev.getId());
+            jsonDeviceDTO.setType(dev.getModel().getType().getType());
+            jsonDeviceDTO.setModel(dev.getModel().getName());
+            jsonDeviceDTO.setInvnum(dev.getInvnum());
+            jsonDeviceDTO.setSernum(dev.getSernum());
+            jsonDeviceDTO.setCsa(dev.getCsa().getNum());
+            jsonDeviceDTOList.add(jsonDeviceDTO);
+        }
+        System.out.println("devices:= "+devices);
+        System.out.println("jsonDeviceDTOList:= "+jsonDeviceDTOList);
+        Gson gson = new Gson();
+        String jsonDevices = gson.toJson(jsonDeviceDTOList);
+        return  ResponseEntity.ok(jsonDevices);
+    }
+
     @GetMapping("/anchDevice")
     public String anchDevice(Model model) {
         System.out.println("GET:/anchDevice...");
