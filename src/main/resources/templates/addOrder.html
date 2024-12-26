@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/style-form.css">
 	<script src="js/jquery-3.7.1.js"></script>
+	<script src="js/moment.js"></script>
 </head>
 
 <header>
@@ -17,99 +18,95 @@
 
 <body>
 	<div class="container">
-
-		<form id="addOrder" class="forms-child"
+		<form id="addOrder" class="forms-operation"
 			  th:method="post"
 			  th:action="@{/addOrder/Add}"
 			  th:object="${ordersDTO}">
+			<div class="container-addOrder">
+				<div  style="text-align:center" th:if="${success}" role="alert">
+					<h3>Заявка создана!</h3>
+				</div>
+				<div style="text-align:center" th:if="!${success}">
+					<h3>Создать заявку </h3>
+				</div>
 
-			<div th:if="${success}" class="" role="alert">
-				<strong>Заявка создана!</strong>
+				<div class ="tbl-div">
+					<input id ="idCSA" type="hidden" th:value="${idCSA}" th:field="*{idCSA}">
+					<input id ="idDevice" type="hidden" th:value="${idDevice}" th:field="*{idDevice}">
+					<table class="table" id="tblOrder">
+						<tr>
+							<td style=" font-weight: 600">Дата</td>
+							<td class="AlignCenter">
+								<input id="orderData" type="date" th:value="${date}" th:field="*{date}"/>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td style=" font-weight: 600">Заявка №</td>
+							<td class="AlignCenter">
+								<input type="text" id="orderNum" name="orderNum" th:value="${num}" th:field="*{num}"/>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td style=" font-weight: 600">КСА</td>
+							<td class="AlignCenter">
+								<label id="lblOrderCSA" for="orderCSA" th:text="${ordersDTO.csa.num}+', '+${ordersDTO.csa.address}"></label>
+								<input type="hidden" id="orderCSA" th:value="${csa}" th:field="*{csa}">
+							</td>
+							<td><button sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')" id="btnSelCSA" type="submit" class="a-btn">Выбрать КСА</button></td>
+
+						</tr>
+						<tr>
+							<td style=" font-weight: 600">Техническое средство</td>
+							<td class="AlignCenter">
+								<label id="lblOrderDevice"  for="orderDevice"
+									   th:text="${ordersDTO.device.model.type.type} + ': ' +
+												${ordersDTO.device.model.name}"></label>
+								<input type="hidden" id="orderDevice" th:value="${device}" th:field="*{device}">
+							</td>
+							<td>
+								<button id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button>
+							</td>
+						</tr>
+						<td>Серийный №</td>
+						<td class="AlignCenter">
+							<label id="lblOrderDeviceSN"  for="orderDevice"
+								   th:text="${ordersDTO.device.sernum} "></label>
+						</td>
+						<td></td>
+						</tr>
+						<tr>
+							<td>Инвентарный №</td>
+							<td class="AlignCenter">
+								<label id="lblOrderDeviceIN"  for="orderDevice"
+									   th:text="${ordersDTO.device.invnum}"></label>
+								<input type="hidden" id="orderDeviceIN" th:value="${device}" th:field="*{device}">
+							</td>
+							<td></td>
+						<tr>
+							<td style=" font-weight: 600">Статус</td>
+							<td class="AlignCenter">
+								<label id="lblOrderStatus" for="orderStatus" th:text="${ordersDTO.status}"></label>
+								<input type="hidden" id="orderStatus" name="orderStatus" th:field="*{status}"/>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td style=" font-weight: 600">Описание</td>
+							<td class="AlignCenter">
+								<input type="text" id="orderDescription" style="width:99%;text-align:center" name="orderDescription"  th:value="${description}" th:field="*{description}"/>
+							</td>
+							<td></td>
+						</tr>
+
+					</table>
+				</div>
 			</div>
-			<span>
-				<h3>Создать заявку </h3>
-			</span>
-
-			<div class ="tbl-div">
-				<input id ="idCSA" type="hidden" th:value="${idCSA}" th:field="*{idCSA}">
-				<input id ="idDevice" type="hidden" th:value="${idDevice}" th:field="*{idDevice}">
-				<table class="table" id="tblOrder">
-					<tr>
-						<td style=" font-weight: 600">Дата</td>
-						<td class="AlignCenter">
-							<input id="orderData" type="date" th:value="${date}" th:field="*{date}"/>
-						</td>
-						<td></td>
-					</tr>
-					<tr>
-						<td style=" font-weight: 600">Заявка №</td>
-						<td class="AlignCenter">
-							<input type="text" id="orderNum" name="orderNum" th:value="${num}" th:field="*{num}"/>
-						</td>
-						<td></td>
-					</tr>
-					<tr>
-						<td style=" font-weight: 600">КСА</td>
-						<td class="AlignCenter">
-							<label id="lblOrderCSA" for="orderCSA" th:text="${ordersDTO.csa.num}+', '+${ordersDTO.csa.address}"></label>
-							<input type="hidden" id="orderCSA" th:value="${csa}" th:field="*{csa}">
-						</td>
-						<td><button sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')" id="btnSelCSA" type="submit" class="a-btn">Выбрать КСА</button></td>
-
-					</tr>
-					<tr>
-						<td style=" font-weight: 600">Техническое средство</td>
-						<td class="AlignCenter">
-							<label id="lblOrderDevice"  for="orderDevice"
-								   th:text="${ordersDTO.device.model.type.type} + ': ' +
-								   			${ordersDTO.device.model.name}"></label>
-							<input type="hidden" id="orderDevice" th:value="${device}" th:field="*{device}">
-						</td>
-						<td>
-							<button id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button>
-							<!-- <button sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')" id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button>
-							<button sec:authorize="hasRole('ROLE_CSA')" id="btnSelDevCSA" type="submit" class="a-btn">Выбрать ТС КСА</button> -->
-						</td>
-					</tr>
-					<td>Серийный №</td>
-					<td class="AlignCenter">
-						<label id="lblOrderDeviceSN"  for="orderDevice"
-							   th:text="${ordersDTO.device.sernum} "></label>
-					</td>
-					<td></td>
-					</tr>
-					<tr>
-						<td>Инвентарный №</td>
-						<td class="AlignCenter">
-							<label id="lblOrderDeviceIN"  for="orderDevice"
-								   th:text="${ordersDTO.device.invnum}"></label>
-							<input type="hidden" id="orderDeviceIN" th:value="${device}" th:field="*{device}">
-						</td>
-						<td></td>
-					<tr>
-						<td style=" font-weight: 600">Статус</td>
-						<td class="AlignCenter">
-							<label id="lblOrderStatus" for="orderStatus" th:text="${ordersDTO.status}"></label>
-							<input type="hidden" id="orderStatus" name="orderStatus" th:field="*{status}"/>
-						</td>
-						<td></td>
-					</tr>
-					<tr>
-						<td style=" font-weight: 600">Описание</td>
-						<td class="AlignCenter">
-							<input type="text" id="orderDescription" name="orderDescription"  th:value="${description}" th:field="*{description}"/>
-						</td>
-						<td></td>
-					</tr>
-
-				</table>
-			</div>
-
 			<span style="margin:20px 5px 5px 5px">
 				<button type="submit" class="a-btn">Добавить</button>
 				<a href="/Orders" class="a-btn">Назад</a>
 			</span>
-
 		</form>
 	</div>
 	<script>
@@ -119,7 +116,13 @@
         function initEvent() {
             $('#btnSelCSA').bind('click', selCSA);
             $('#btnSelDev').bind('click', selDev);
-            $('#btnSelDev').bind('click', selDevCSA);
+            $('#orderData').bind('change', setOrderNumDate);
+        }
+
+        function setOrderNumDate(){
+			var orderDate=moment($('#orderData').val()).format('YYYYMMDD');
+			console.log("orderDate:= "+orderDate);
+			$('#orderNum').val(orderDate+$('#orderNum').val());
         }
 		function selCSA(){
 			var orderNum=$('#orderNum').val();
@@ -129,13 +132,6 @@
 		function selDev(){
 			console.log("selDev...");
 			$('#addOrder').attr("action","/selDevice")
-		}
-		function selDevCSA(){
-			console.log("selDevCSA...");
-			console.log("selDevCSA...");
-			console.log("selDevCSA...");
-			console.log("selDevCSA...");
-			console.log("selDevCSA...");
 		}
 
 	</script>

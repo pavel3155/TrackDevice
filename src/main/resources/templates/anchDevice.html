@@ -50,6 +50,10 @@
 					<input id="idDev"  type="hidden" th:value="${id}" th:field="*{id}">
 					<input id="SerNo" type="hidden" th:value="${sernum}" th:field="*{sernum}">
 					<input id="InvNo" type="hidden" th:value="${invnum}" th:field="*{invnum}">
+					<input id="prevTypeDev" type="hidden" th:value="${deviceDTO.modelDevice.type.type}">
+					<input id="prevModelDev" type="hidden" th:value="${deviceDTO.modelDevice.name}">
+
+
 				</div>
 				<div class ="tbl-div">
 					<table class="table" id="tblDevice">
@@ -72,9 +76,16 @@
 
 			</div>
 			<script>
+				$(document).ready(setPrevTypeDev);
 				$(document).ready(loadSelectDevModel);
-				<!--$(document).ready(eventSelModelDev);-->
 				$(document).ready(initEvent);
+
+				function setPrevTypeDev(){
+					var prevTypeDev=$('#prevTypeDev').val();
+					console.log("prevTypeDev:= "+prevTypeDev);
+                	$('#selTypeDev option:contains(\''+ prevTypeDev + '\')').prop('selected',true);
+				}
+
 
                 function initEvent() {
                     $('#selTypeDev').bind('change', loadSelectDevModel);
@@ -83,6 +94,7 @@
                 }
 
                 function loadSelectDevModel() {
+
                 		var selTypeIndex=$('#selTypeDev').val();
 						var selTypeText=$('#selTypeDev option:selected').text();
                     	$.getJSON('/device/model' + selTypeText)
@@ -95,9 +107,21 @@
 							$.each(models, function(i,item) {
     							$('#selModelDev').append('<option value="' + models[i].id+ '">' + models[i].name + '</option>');
 							});
-							$('#selModelDev option[value=0]').prop('selected',true);
+
+
+
+							/** $('#selModelDev option[value=0]').prop('selected',true); **/
+
+							var prevModelDev=$('#prevModelDev').val();
+							console.log("prevModelDev:= "+prevModelDev);
+                			$('#selModelDev option:contains(\''+ prevModelDev + '\')').prop('selected',true);
+
 							var selModelIndex=$('#selModelDev').val();
 							var filterSN=$('#filtrSN').val();
+
+
+
+
 							loadTableDevice(selModelIndex,filterSN);
                        });
 

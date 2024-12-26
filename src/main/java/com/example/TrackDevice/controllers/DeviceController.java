@@ -132,6 +132,8 @@ public class DeviceController {
         List<CSA> csas = csaRepository.findAll();
         model.addAttribute("csas",csas);
         DeviceDTO deviceDTO = new DeviceDTO();
+        ModelDevice modelDevice=modelDeviceRepository.getById(1);
+        deviceDTO.setModelDevice(modelDevice);
         model.addAttribute(deviceDTO);
         return "anchDevice";
     }
@@ -141,10 +143,16 @@ public class DeviceController {
         System.out.println("POST:/anchDevice...");
         System.out.println("deviceDTO:= "+deviceDTO);
         deviceService.saveDevice(deviceDTO);
-//        System.out.println("device:= "+device);
-//        device.setCsa(deviceDTO.getCsa());
+
+        List<TypeDevice> types = typeDeviceRepository.findAll();
+        types.remove(0);
+        model.addAttribute("types",types);
+
+        List<CSA> csas = csaRepository.findAll();
+        model.addAttribute("csas",csas);
+
         model.addAttribute("deviceDTO",deviceDTO);
-        return "redirect:/anchDevice";
+        return "anchDevice";
     }
 
     @GetMapping("/selDevice")
