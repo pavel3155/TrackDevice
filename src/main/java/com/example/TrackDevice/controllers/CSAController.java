@@ -134,7 +134,8 @@ public class CSAController {
     @PostMapping("/selCSA")
     public String selCsa(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
                          BindingResult result, RedirectAttributes atrRedirect){
-        System.out.println("POST_selCSA_ordersDTO:= "+ordersDTO);
+        System.out.println("POST:/selCSA...");
+        System.out.println("ordersDTO:= "+ordersDTO);
         model.addAttribute("ordersDTO",ordersDTO);
         atrRedirect.addFlashAttribute("ordersDTO",ordersDTO);
         return "redirect:/selCSA";

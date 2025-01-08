@@ -26,5 +26,14 @@ public class Order {
     @JoinColumn (name="dev_id")
     private Device device;
     private String status;
+    @ManyToOne (fetch = FetchType.EAGER)
+    @JoinColumn (name="user_id", nullable = false)
+    private User executor;
+    @ManyToOne (fetch = FetchType.EAGER)
+    @JoinColumn (name="restore_id", nullable = false)
+    private Restore restore;
+
+
+
 
 }

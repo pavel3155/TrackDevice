@@ -20,9 +20,9 @@
 			  th:action="@{/addOrder}"
 			  th:object="${ordersDTO}">
 			<span class="margin-t">
-				<label for="selCodeCSA">Вуберите код региона: </label>
-				<select  id="selCodeCSA" class="select">
-					<option th:each="code : ${codes}" th:value="${code}" th:text="${code}"></option>
+				<label for="selExecOrder">Вуберите исполнителя заявки: </label>
+				<select  id="selExecOrder" class="select" th:field="*{executor}">
+					<option th:each="exec : ${execs}" th:value="${exec}" th:text="${exec}"></option>
 				</select>
 				<script>
 					$('#selCodeCSA option[value="02"]').prop('selected',true);
@@ -34,8 +34,6 @@
 				<input id ="idDevice" type="hidden" th:value="${idDevice}" th:field="*{idDevice}">
 				<input type="hidden" th:value="${status}" th:field="*{status}">
 				<input type="hidden" th:value="${description}" th:field="*{description}">
-				<input type="hidden" th:value="${executor}" th:field="*{executor}">
-				<input type="hidden" th:value="${restore}" th:field="*{restore}">
 			</span>
 
 			<div class ="tbl-div">

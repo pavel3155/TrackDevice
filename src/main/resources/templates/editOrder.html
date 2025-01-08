@@ -39,14 +39,20 @@
 						<tr>
 							<td style=" font-weight: 600">Дата</td>
 							<td class="AlignCenter">
-								<input id="orderData" type="date" th:value="${date}" th:field="*{date}"/>
+								<input sec:authorize="hasRole('ROLE_CSA') or hasRole('ROLE_SERV')"
+									   id="orderData" type="date" th:value="${date}" th:field="*{date}"/>
+								<input sec:authorize="hasRole('ROLE_EXECDEV')"
+									   id="orderDataText" type="text" th:value="${date}" th:field="*{date}" readonly/>
 							</td>
 							<td></td>
 						</tr>
 						<tr>
 							<td style=" font-weight: 600">Заявка №</td>
 							<td class="AlignCenter">
-								<input type="text" id="orderNum" name="orderNum" th:value="${num}" th:field="*{num}"/>
+								<input sec:authorize="hasRole('ROLE_CSA') or hasRole('ROLE_SERV')"
+									   type="text" id="orderNum" name="orderNum" th:value="${num}" th:field="*{num}"/>
+								<input sec:authorize="hasRole('ROLE_EXECDEV')"
+									   type="text" id="orderNumText" name="orderNum" th:value="${num}" th:field="*{num}"/>
 							</td>
 							<td></td>
 						</tr>
@@ -66,7 +72,8 @@
 												${ordersDTO.device.model.name}"></label>
 								<input type="hidden" id="orderDevice" th:value="${device}" th:field="*{device}">
 							</td>
-							<td><button id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button></td>
+							<td><button  sec:authorize="hasRole('ROLE_CSA') or hasRole('ROLE_SERV')"
+										 id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button></td>
 						</tr>
 						<tr>
 							<td>Серийный №</td>
@@ -101,6 +108,56 @@
 							<td></td>
 						</tr>
 
+						<tr>
+							<td style=" font-weight: 600">Исполнитель</td>
+							<td class="AlignCenter">
+								<!-- <label id="lblOrderExecutor"  for="orderExecutor"
+									   th:text="${ordersDTO.executor.email}"></label> -->
+
+								<!-- <input type="hidden" id="orderExecutor" style="width:99%;text-align:center" name="orderExec"  th:value="${executor}" th:field="*{executor}"/> -->
+								<select
+										 id="selExecOrder"
+										 class="select"
+										 th:field="*{executor}">
+									<option th:each="exec : ${execs}"
+											th:value="${exec.id}"
+											th:text="${exec.email}"
+											th:selected="${exec.id == ordersDTO.executor.id}">
+									</option>
+								</select>
+							</td>
+							<td></td>
+						</tr>
+						<tr >
+							<td  style=" font-weight: 600">Восстановление КСА</td>
+							<td  class="AlignCenter">
+								<!-- <label id="lblOrderExecutor"  for="orderExecutor"
+									   th:text="${ordersDTO.executor.email}"></label> -->
+
+								<!-- <input type="hidden" id="orderExecutor" style="width:99%;text-align:center" name="orderExec"  th:value="${executor}" th:field="*{executor}"/> sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')"-->
+								<select  sec:authorize="!hasRole('ROLE_CSA')"
+										 id="selRestore"
+										 class="select"
+										 th:field="*{restore}">
+									<option th:each="restore : ${restoreMethods}"
+											th:value="${restore.id}"
+											th:text="${restore.method}"
+											th:selected="${restore.id == ordersDTO.restore.id}">
+									</option>
+								</select>
+								<input sec:authorize="hasRole('ROLE_CSA')"
+									   id ="textRestore"
+									   type="hidden"
+									   th:value="${restore}"
+									   th:field="*{restore}">
+								<label sec:authorize="hasRole('ROLE_CSA')"
+									   id="lblRestore"
+									   for="orderStatus"
+									   th:text="${ordersDTO.restore.method}">
+								</label>
+							</td>
+							<td></td>
+						</tr>
 					</table>
 				</div>
 			</div>

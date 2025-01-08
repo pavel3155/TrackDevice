@@ -5,7 +5,9 @@ import com.example.TrackDevice.model.*;
 import com.example.TrackDevice.repo.*;
 import com.example.TrackDevice.service.OrdersService;
 import jakarta.validation.Valid;
+import org.hibernate.mapping.Array;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -15,7 +17,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class OrderController {
@@ -31,6 +35,8 @@ public class OrderController {
     UserRepository userRepository;
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    RestoreRepository restoreRepository;
 
     /**
      * Метод обрабатывает запрос GET при преходе на сраницу Orders
@@ -40,21 +46,42 @@ public class OrderController {
      */
     @GetMapping("/Orders")
     public String Orders(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        System.out.println("GET:/Orders...");
         System.out.println("UserName:= "+userDetails.getUsername());
         System.out.println("Role:= "+userDetails.getAuthorities());
 
-        Roles roleCSA =roleRepository.findByType("CSA");
-        System.out.println("roleCSA:= "+roleCSA);
+        Object[] arrRoles=userDetails.getAuthorities().stream().toArray();
+        System.out.println("arrRoles[0]= "+arrRoles[0]);
+        Object role=arrRoles[0].toString();
+        System.out.println("arrRoles[0].toString()="+role);
         List<Order> orders;
-        if(userDetails.getAuthorities().contains(roleCSA)){
+        if(role.equals("ROLE_CSA")){
+            System.out.println("role.getType()==\"CSA\"");
             User user = userRepository.findByEmail(userDetails.getUsername());
-            System.out.println("user:="+user);
             CSA csa = user.getCsa();
-            System.out.println("csa:= "+csa);
             orders = orderRepository.getByCsa(csa);
-        } else{
+
+        }else if(role.equals("ROLE_EXECDEV")){
+            System.out.println("role.getType()==\"EXECDEV\"");
+            User executor = userRepository.findByEmail(userDetails.getUsername());
+            orders=orderRepository.getByExecutor(executor);
+        } else {
+            System.out.println("role.getType()==\"SERV, ADMIN\"");
             orders = orderRepository.findAll();
         }
+
+//        Roles roleCSA =roleRepository.findByType("CSA");
+//        System.out.println("roleCSA:= "+roleCSA);
+//        List<Order> orders;
+//        if(userDetails.getAuthorities().contains(roleCSA)){
+//            User user = userRepository.findByEmail(userDetails.getUsername());
+//            System.out.println("user:="+user);
+//            CSA csa = user.getCsa();
+//            System.out.println("csa:= "+csa);
+//            orders = orderRepository.getByCsa(csa);
+//        } else{
+//            orders = orderRepository.findAll();
+//        }
 
         List<CSA> csas = csaRepository.findAll();
         System.out.println("orders:= "+orders);
@@ -102,8 +129,10 @@ public class OrderController {
 
         return "Orders";
     }
+
     @GetMapping("/addOrder")
-    public String Order(@ModelAttribute OrdersDTO ordersDTO,@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String Order(@ModelAttribute OrdersDTO ordersDTO,
+                        @AuthenticationPrincipal UserDetails userDetails, Model model) {
         System.out.println("GET:/addOrder....");
         System.out.println("ordersDTO:= "+ordersDTO);
 
@@ -131,15 +160,57 @@ public class OrderController {
                 ordersDTO.setIdCSA(1);
             }
         }
+
         if (ordersDTO.getDevice() ==null){
             System.out.println("ordersDTO.getDevice()==null....");
-            Device device=deviceRepository.getById(1);
+            Device device=deviceRepository.getById(92);
             ordersDTO.setDevice(device);
-            ordersDTO.setIdDevice(1);
+            ordersDTO.setIdDevice(92);
         }
+
         if (ordersDTO.getStatus() ==null){
             ordersDTO.setStatus("открыта");
         }
+
+        if(ordersDTO.getExecutor()==null){
+            System.out.println("ordersDTO.getExecutor()==null....");
+            Roles role=roleRepository.findByRole("ROLE_SERV");
+            System.out.println("role:= "+role);
+            List<User> execs =userRepository.findByRole(role);
+            System.out.println("execs:= "+execs);
+            User exec = execs.get(0);
+            System.out.println("exec:= "+exec);
+            ordersDTO.setExecutor(exec);
+
+            model.addAttribute("execs", execs);
+            System.out.println("ordersDTO.getExecutor():= "+ordersDTO.getExecutor());
+        }
+
+
+        if(userDetails.getAuthorities().contains(roleRepository.findByType("EXECDEV"))) {
+            List<User> execs = new ArrayList<>();
+            execs.add(userRepository.findByEmail(userDetails.getUsername()));
+            System.out.println("user: EXECDEV...");
+            System.out.println("execs:= " +execs);
+            model.addAttribute("execs", execs);
+        }
+
+        if(userDetails.getAuthorities().contains(roleRepository.findByType("SERV"))) {
+            List<Roles> roles = new ArrayList<>();
+            roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
+            roles.add(roleRepository.findByRole("ROLE_SERV"));
+            List<User> execs = userRepository.findByRoleIn(roles);
+            System.out.println("execs:= " +execs);
+            model.addAttribute("execs", execs);
+        }
+
+        if (ordersDTO.getRestore()==null){
+            ordersDTO.setRestore(restoreRepository.getByMethod("---"));
+        }
+        List<Restore> restoreMethods=restoreRepository.findAll();
+
+        System.out.println("ordersDTO:= " +ordersDTO);
+        model.addAttribute("restoreMethods", restoreMethods);
         model.addAttribute("ordersDTO", ordersDTO);
         return "addOrder";
     }
@@ -161,6 +232,9 @@ public class OrderController {
     }
 
 
+    /** метод выполняется при нажатии на кнопку "Добавить" на странице addOrder
+     *
+     */
     @PostMapping("/addOrder/Add")
     public String addOrder(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
                            BindingResult result, RedirectAttributes atrRedirect) {
@@ -198,11 +272,25 @@ public class OrderController {
     public String editOrder(@ModelAttribute OrdersDTO ordersDTO, Model model) {
         System.out.println("GET:/editOrder....");
         System.out.println("ordersDTO:= "+ordersDTO);
+
+        List<Roles> roles = new ArrayList<>();
+        roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
+        roles.add(roleRepository.findByRole("ROLE_SERV"));
+        List<User> execs =userRepository.findByRoleIn(roles);
+        System.out.println("execs:= " +execs);
+        System.out.println("ordersDTO:= " +ordersDTO);
+        List<Restore> restoreMethods=restoreRepository.findAll();
+        model.addAttribute("restoreMethods", restoreMethods);
+        model.addAttribute("execs", execs);
         model.addAttribute("ordersDTO", ordersDTO);
         return "editOrder";
     }
+
+    /** метод выполняется при нажатии на кнопку Редактировать на странице Orders
+     * метод принимает id заявки, загружает страницу editOrder
+     */
     @GetMapping("/editOrder{id}")
-    public String editOrder(@PathVariable long id, Model model) {
+    public String editOrder(@PathVariable long id, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         System.out.println("GET:/editOrder{id}....");
         Order order = orderRepository.getById(id);
         System.out.println("order:= "+order);
@@ -216,6 +304,38 @@ public class OrderController {
         ordersDTO.setIdDevice(order.getDevice().getId());
         ordersDTO.setDescription(order.getDescription());
         ordersDTO.setStatus(order.getStatus());
+        ordersDTO.setExecutor(order.getExecutor());
+        ordersDTO.setRestore(order.getRestore());
+
+        Object[] arrRoles=userDetails.getAuthorities().stream().toArray();
+        Object role=arrRoles[0].toString();
+        List<User> execs;
+        List<Roles> roles = new ArrayList<>();
+
+//        if(role.equals("ROLE_CSA")){
+//            roles.add(roleRepository.findByRole("ROLE_SERV"));
+//            execs =userRepository.findByRoleIn(roles);
+//        }else if(role.equals("ROLE_EXECDEV")){
+//            User executor = userRepository.findByEmail(userDetails.getUsername());
+//            execs=new ArrayList<>();
+//            execs.add(executor);
+//        }
+
+        if(role.equals("ROLE_SERV")){
+            roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
+            roles.add(roleRepository.findByRole("ROLE_SERV"));
+            execs =userRepository.findByRoleIn(roles);
+        } else {
+            execs=new ArrayList<>();
+            execs.add(ordersDTO.getExecutor());
+        }
+
+        List<Restore> restoreMethods=restoreRepository.findAll();
+        model.addAttribute("restoreMethods", restoreMethods);
+
+        System.out.println("execs:= " + execs);
+        System.out.println("ordersDTO:= " +ordersDTO);
+        model.addAttribute("execs", execs);
         model.addAttribute("ordersDTO", ordersDTO);
         return "editOrder";
     }
@@ -228,6 +348,13 @@ public class OrderController {
         }
         try {
             ordersService.save(ordersDTO);
+            List<Roles> roles = new ArrayList<>();
+            roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
+            roles.add(roleRepository.findByRole("ROLE_SERV"));
+            List<User> execs =userRepository.findByRoleIn(roles);
+            List<Restore> restoreMethods=restoreRepository.findAll();
+            model.addAttribute("restoreMethods", restoreMethods);
+            model.addAttribute("execs", execs);
             model.addAttribute("success",true);
             model.addAttribute("ordersDTO",ordersDTO);
         } catch (Exception ex) {

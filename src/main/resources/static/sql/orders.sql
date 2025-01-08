@@ -21,3 +21,7 @@ create table orders
 
 alter table orders add constraint fk_dev FOREIGN KEY(dev_id) REFERENCES device(id) ON DELETE SET DEFAULT ON UPDATE CASCADE;
 
+alter table orders add users_id integer default 1;
+alter table orders add constraint fk_user FOREIGN KEY(users_id) REFERENCES users(id) ON DELETE SET DEFAULT ON UPDATE CASCADE;
+
+

@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "roles")
-public class Roles implements GrantedAuthority {
+public class Roles implements GrantedAuthority  {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private long id;

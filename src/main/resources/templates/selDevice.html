@@ -31,6 +31,8 @@
 				<input id ="idDevice" type="hidden" th:value="${idDevice}" th:field="*{idDevice}">
 				<input type="hidden" th:value="${status}" th:field="*{status}">
 				<input type="hidden" th:value="${description}" th:field="*{description}">
+				<input type="hidden" th:value="${executor}" th:field="*{executor}">
+				<input type="hidden" th:value="${restore}" th:field="*{restore}">
 
 				<label for="selTypeDev">Тип: </label>
 				<select  id="selTypeDev"  change="loadSelectDevModel()">
@@ -67,7 +69,6 @@
 			<input type="submit" id="btnSend" style="display:none;">
 			<script>
 				$(document).ready(loadSelectDevModel);
-				<!--$(document).ready(eventSelModelDev);-->
 				$(document).ready(initEvent);
 
                 function initEvent() {

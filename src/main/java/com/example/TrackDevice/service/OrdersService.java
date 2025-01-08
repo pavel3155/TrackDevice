@@ -18,6 +18,8 @@ public class OrdersService {
       order.setDevice(ordersDTO.getDevice());
       order.setDescription(ordersDTO.getDescription());
       order.setStatus(ordersDTO.getStatus());
+      order.setExecutor(ordersDTO.getExecutor());
+      order.setRestore(ordersDTO.getRestore());
       return orderRepository.save(order);
     }
     public Order save(OrdersDTO ordersDTO){
@@ -29,6 +31,8 @@ public class OrdersService {
         order.setDevice(ordersDTO.getDevice());
         order.setDescription(ordersDTO.getDescription());
         order.setStatus(ordersDTO.getStatus());
+        order.setExecutor(ordersDTO.getExecutor());
+        order.setRestore(ordersDTO.getRestore());
         return orderRepository.save(order);
     }
 }

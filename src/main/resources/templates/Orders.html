@@ -45,27 +45,33 @@
 				<div class ="tbl-div">
 					<table class="table" id="tblDevice">
 						<tr>
-							<th class ="dev-col-num">№</th>
+							<!-- <th class ="dev-col-num">№</th> -->
 							<th>Дата</th>
 							<th>№заявки</th>
 							<th>КСА</th>
 							<th>Техническое средство</th>
 							<th>Описание</th>
 							<th>Статус</th>
+							<th>Исполнитель</th>
 							<th>Действие</th>
 						</tr>
-						<tr th:each="order : ${orders}">
-							<td th:text="${order.id}" class ="col-num"></td>
+						<tr style="text-align:center" th:each="order : ${orders}">
+							<!-- <td th:text="${order.id}" class ="col-num"></td> -->
 							<td th:text="${order.date}"></td>
 							<td th:text="${order.num}"></td>
 							<td th:text="${order.csa.num}"></td>
 							<td th:text="${order.device.model.name}"></td>
 							<td th:text="${order.description}"></td>
 							<td th:text="${order.status}"></td>
+							<td th:text="${order.executor.email}"></td>
 							<td>
 								<span class="tbl-td-span-inline">
-									<a href="/editOrder" th:href="@{/editOrder{order}(order=${order.id})}"
+									<a sec:authorize="hasRole('ROLE_CSA') or hasRole('ROLE_SERV')"
+									   href="/editOrder" th:href="@{/editOrder{order}(order=${order.id})}"
 									   class="a-btn a-btn-tbl">Редактировать</a>
+									<a sec:authorize="hasRole('ROLE_EXECDEV')"
+									   href="/editOrder" th:href="@{/editOrder{order}(order=${order.id})}"
+									   class="a-btn a-btn-tbl">Открыть</a>
 								</span>
 							</td>
 						</tr>
@@ -79,7 +85,7 @@
 
 		</form>
 	</div>
-	<script>
+	<script sec:authorize="hasRole('ROLE_CSA') or hasRole('ROLE_SERV')">
 		$(document).ready(loadOrders);
 
         function loadOrders() {

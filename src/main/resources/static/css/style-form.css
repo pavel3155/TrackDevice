@@ -64,7 +64,9 @@
     margin-top:15px;
     margin-bottom:20px;
  }
-
+ .table tr{
+    text-align:center;
+ }
  .table th {
       background: #f9f9f9;
       font-size: 12pt;
