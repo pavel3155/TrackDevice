@@ -3,6 +3,7 @@ package com.example.TrackDevice.controllers;
 import com.example.TrackDevice.DTO.*;
 import com.example.TrackDevice.model.*;
 import com.example.TrackDevice.repo.*;
+import com.example.TrackDevice.service.FileService;
 import com.example.TrackDevice.service.OrdersService;
 import jakarta.validation.Valid;
 import org.hibernate.mapping.Array;
@@ -15,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
@@ -37,6 +39,8 @@ public class OrderController {
     RoleRepository roleRepository;
     @Autowired
     RestoreRepository restoreRepository;
+    @Autowired
+    private FileService fileService;
 
     /**
      * Метод обрабатывает запрос GET при преходе на сраницу Orders
@@ -236,11 +240,14 @@ public class OrderController {
      *
      */
     @PostMapping("/addOrder/Add")
-    public String addOrder(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
+    public String addOrder(@RequestParam("files") MultipartFile[] files,
+                           Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
                            BindingResult result, RedirectAttributes atrRedirect) {
         System.out.println("POST:/addOrder/Add...");
         System.out.println("ordersDTO:= "+ordersDTO);
-
+        for (MultipartFile file : files) {
+            fileService.saveFile(file);
+        }
         if (result.hasErrors()) {
             return "addOrder";
         }

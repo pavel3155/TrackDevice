@@ -18,7 +18,7 @@
 
 <body>
 	<div class="container">
-		<form id="addOrder" class="forms-operation"
+		<form id="addOrder" class="forms-operation" enctype="multipart/form-data"
 			  th:method="post"
 			  th:action="@{/addOrder/Add}"
 			  th:object="${ordersDTO}">
@@ -140,14 +140,28 @@
 							</td>
 							<td></td>
 						</tr>
+						<tr>
+							<td  style="font-weight: 600">Добавить фото</td>
+							<td>
+
+								<input type="file" id="file" name="files" multiple/>
+
+								<!-- <form method="post" enctype="multipart/form-data">
+									<input type="file" id="file" name="file" multiple />
+									<input type="submit" id="btnAddFile" style="display:none;">
+								</form> -->
+							</td>
+							<td>
+								<!-- <button type="button" class="a-btn">Добавить</button> -->
+							</td>
+						</tr>
+
 
 
 					</table>
+
+
 				</div>
-
-
-
-
 			</div>
 			<span style="margin:20px 5px 5px 5px">
 				<button type="submit" class="a-btn">Добавить</button>
@@ -186,6 +200,5 @@
 		}
 
 	</script>
-
 </body>
 </html>
