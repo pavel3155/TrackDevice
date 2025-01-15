@@ -134,6 +134,15 @@ public class OrderController {
         return "Orders";
     }
 
+    /**
+     * Метод отрабатывает переход на страницу 'addOrder' :
+     *  -при нажатии 'Создать заявку' на странице Orders
+     *  -при выполнении "redirect:/addOrder" - @PostMapping("/addOrder")
+     * @param ordersDTO
+     * @param userDetails
+     * @param model
+     * @return
+     */
     @GetMapping("/addOrder")
     public String Order(@ModelAttribute OrdersDTO ordersDTO,
                         @AuthenticationPrincipal UserDetails userDetails, Model model) {
@@ -147,6 +156,7 @@ public class OrderController {
             System.out.println("ordersDTO==null");
             ordersDTO=new OrdersDTO();
         }
+
         if (ordersDTO.getCsa()==null){
             System.out.println("ordersDTO.getCsa()==null....");
 
@@ -159,7 +169,7 @@ public class OrderController {
                 ordersDTO.setCsa(csa);
                 ordersDTO.setIdCSA(csa.getId());
             }else{
-                CSA csa = csaRepository.getById(1);
+                CSA csa = csaRepository.getById(1); // получаем csa '---'
                 ordersDTO.setCsa(csa);
                 ordersDTO.setIdCSA(1);
             }
@@ -167,9 +177,10 @@ public class OrderController {
 
         if (ordersDTO.getDevice() ==null){
             System.out.println("ordersDTO.getDevice()==null....");
-            Device device=deviceRepository.getById(92);
+            List<Device> devices = deviceRepository.findBySernum("---");
+            Device device=devices.get(0);
             ordersDTO.setDevice(device);
-            ordersDTO.setIdDevice(92);
+            ordersDTO.setIdDevice(device.getId());
         }
 
         if (ordersDTO.getStatus() ==null){
@@ -236,8 +247,14 @@ public class OrderController {
     }
 
 
-    /** метод выполняется при нажатии на кнопку "Добавить" на странице addOrder
-     *
+    /**
+     * метод выполняется при нажатии на кнопку "Добавить" на странице addOrder
+     * @param files
+     * @param model
+     * @param ordersDTO
+     * @param result
+     * @param atrRedirect
+     * @return
      */
     @PostMapping("/addOrder/Add")
     public String addOrder(@RequestParam("files") MultipartFile[] files,
@@ -246,7 +263,7 @@ public class OrderController {
         System.out.println("POST:/addOrder/Add...");
         System.out.println("ordersDTO:= "+ordersDTO);
         for (MultipartFile file : files) {
-            fileService.saveFile(file);
+            fileService.saveFile(file,ordersDTO.getNum());
         }
         if (result.hasErrors()) {
             return "addOrder";
@@ -261,7 +278,6 @@ public class OrderController {
         return "redirect:/addOrder";
     }
 
-
     @GetMapping("/addOrder/selCSA")
     public String selCSA(@RequestParam(value ="idCSA") long csa_id, Model model){
         System.out.println("idCSA= "+csa_id);
@@ -275,6 +291,7 @@ public class OrderController {
         model.addAttribute("ordersDTO",ordersDTO);
         return "redirect:/addOrder";
     }
+
     @GetMapping("/editOrder")
     public String editOrder(@ModelAttribute OrdersDTO ordersDTO, Model model) {
         System.out.println("GET:/editOrder....");

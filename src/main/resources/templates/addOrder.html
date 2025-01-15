@@ -143,24 +143,16 @@
 						<tr>
 							<td  style="font-weight: 600">Добавить фото</td>
 							<td>
-
-								<input type="file" id="file" name="files" multiple/>
-
-								<!-- <form method="post" enctype="multipart/form-data">
-									<input type="file" id="file" name="file" multiple />
-									<input type="submit" id="btnAddFile" style="display:none;">
-								</form> -->
+								<span id="ListFiles"></span>
 							</td>
 							<td>
-								<!-- <button type="button" class="a-btn">Добавить</button> -->
+								<input type="file" id="inFile" name="files" multiple/>
 							</td>
 						</tr>
 
 
 
 					</table>
-
-
 				</div>
 			</div>
 			<span style="margin:20px 5px 5px 5px">
@@ -178,7 +170,26 @@
             $('#btnSelDev').bind('click', selDev);
             $('#btnSelExec').bind('click', selExec);
             $('#orderData').bind('change', setOrderNumDate);
+            $('#inFile').bind('change', CreateNewListFiles);
         }
+
+		function CreateNewListFiles(){
+			console.log('CreateNewListFiles()...');
+			var dt = new DataTransfer();
+			$('#inFile').empty();
+			$('#ListFiles').empty();
+
+			for(var i = 0; i < this.files.length; i++){
+				console.log('files.item(i).name:= '+this.files.item(i).name);
+				let file = '<div>' +
+					'<span>' + this.files.item(i).name + '</span>' +
+					'<a href="#" onclick="removeFilesItem(this); return false;">x</a>' +
+					'</div>';
+				$('#ListFiles').append(file);
+				dt.items.add(this.files.item(i));
+			};
+			this.files = dt.files;
+		}
 
         function setOrderNumDate(){
 			var orderDate=moment($('#orderData').val()).format('YYYYMMDD');
@@ -200,5 +211,6 @@
 		}
 
 	</script>
+
 </body>
 </html>
