@@ -180,12 +180,12 @@
 			$('#ListFiles').empty();
 
 			for(var i = 0; i < this.files.length; i++){
-				console.log('files.item(i).name:= '+this.files.item(i).name);
-				let file = '<div>' +
-					'<span>' + this.files.item(i).name + '</span>' +
-					'<a href="#" onclick="removeFilesItem(this); return false;">x</a>' +
-					'</div>';
-				$('#ListFiles').append(file);
+				let file_item = '<div>'+
+								 '<span><a href="/addOrder/download/pic?file=' + this.files.item(i).name">' + this.files.item(i).name + '</a></span>' +
+								 '<span><a href="#" onclick="removeFilesItem(this); return false;">x</a></span>'+
+						   '</div>';
+
+				$('#ListFiles').append(file_item);
 				dt.items.add(this.files.item(i));
 			};
 			this.files = dt.files;

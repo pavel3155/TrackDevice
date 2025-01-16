@@ -8,6 +8,8 @@ import com.example.TrackDevice.service.OrdersService;
 import jakarta.validation.Valid;
 import org.hibernate.mapping.Array;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -277,6 +279,15 @@ public class OrderController {
         }
         return "redirect:/addOrder";
     }
+
+
+    @GetMapping("/addOrder/download/pic{file}")
+    public String  picDownload(@PathVariable MultipartFile file) {
+        System.out.println("GET:/addOrder/download/pic/{file}...");
+        System.out.println("file:= "+file);
+        return "";
+    }
+
 
     @GetMapping("/addOrder/selCSA")
     public String selCSA(@RequestParam(value ="idCSA") long csa_id, Model model){
