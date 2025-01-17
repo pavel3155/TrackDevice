@@ -141,12 +141,24 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td  style="font-weight: 600">Добавить фото</td>
+							<td  style="font-weight: 600">Прикрепленные фото</td>
 							<td>
-								<span id="ListFiles"></span>
+								<span id="idListSaveFiles" th:each="file : ${files}">
+									<div>
+										<a th:href="@{'/download/' + ${file}}" th:text="${file}"></a>
+									</div>
+								</span>
+							</td>
+							<td></td>
+						</tr>
+
+						<tr>
+							<td  style="font-weight: 600">Добавить новые фото</td>
+							<td>
+								<span id="idListInputFiles"></span>
 							</td>
 							<td>
-								<input type="file" id="inFile" name="files" multiple/>
+								<input type="file" id="idInputFile" name="files" multiple/>
 							</td>
 						</tr>
 
@@ -163,52 +175,91 @@
 	</div>
 	<script>
 
-        $(document).ready(initEvent);
+                $(document).ready(initEvent);
 
-        function initEvent() {
-            $('#btnSelCSA').bind('click', selCSA);
-            $('#btnSelDev').bind('click', selDev);
-            $('#btnSelExec').bind('click', selExec);
-            $('#orderData').bind('change', setOrderNumDate);
-            $('#inFile').bind('change', CreateNewListFiles);
-        }
+                function initEvent() {
+                    $('#btnSelCSA').bind('click', selCSA);
+                    $('#btnSelDev').bind('click', selDev);
+                    $('#btnSelExec').bind('click', selExec);
+                    $('#orderData').bind('change', setOrderNumDate);
+                    $('#idInputFile').bind('change', CreateNewListFiles);
+                }
 
-		function CreateNewListFiles(){
-			console.log('CreateNewListFiles()...');
-			var dt = new DataTransfer();
-			$('#inFile').empty();
-			$('#ListFiles').empty();
+                function CreateNewListFiles(){
+                    console.log('CreateNewListFiles()...');
+					var dt = new DataTransfer();
+                    $('#idInputFile').empty();
+                    $('#idListInputFiles').empty();
 
-			for(var i = 0; i < this.files.length; i++){
-				let file_item = '<div>'+
-								 '<span><a href="/addOrder/download/pic?file=' + this.files.item(i).name">' + this.files.item(i).name + '</a></span>' +
-								 '<span><a href="#" onclick="removeFilesItem(this); return false;">x</a></span>'+
-						   '</div>';
+                    for(var i = 0; i < this.files.length; i++){
+                        let new_file_item = '<div class="input-file-list-item">' +
+                                            '<span class="input-file-list-name">' + this.files.item(i).name + '</span>' +
+                                            '<a href="#" onclick="removeFilesItem(this); return false;" class="input-file-list-remove">x</a>' +
+                                            '</div>';
+                        $('#idListInputFiles').append(new_file_item);
+                        dt.items.add(this.files.item(i));
+                    };
+                    this.files = dt.files;
+                    for(var i = 0; i < dt.files.length; i++) {
+                        console.log("dt.files.item(i).name:= "+dt.files.item(i).name);
+                    };
 
-				$('#ListFiles').append(file_item);
-				dt.items.add(this.files.item(i));
-			};
-			this.files = dt.files;
-		}
+                }
 
-        function setOrderNumDate(){
-			var orderDate=moment($('#orderData').val()).format('YYYYMMDD');
-			console.log("orderDate:= "+orderDate);
-			$('#orderNum').val(orderDate+$('#orderNum').val());
-        }
-		function selCSA(){
-			var orderNum=$('#orderNum').val();
-			console.log("orderNum:= "+orderNum);
-			$('#addOrder').attr("action","/selCSA")
-		}
-		function selDev(){
-			console.log("selDev...");
-			$('#addOrder').attr("action","/selDevice")
-		}
-		function selExec(){
-			console.log("selExec...");
-			$('#addOrder').attr("action","/selExec")
-		}
+                function removeFilesItem(target){
+                    console.log('removeFilesItem()...');
+                    var dt = new DataTransfer();
+                    let name = $(target).prev().text();
+                    console.log("name = " + name);
+
+                    let input = $(target).closest('.input-file-row').find('input[type=file]');
+                    $(target).closest('.input-file-list-item').remove();
+
+                    /* for(let i = 0; i < dt.items.length; i++){
+                        if(name === dt.items[i].getAsFile().name){
+                            dt.items.remove(i);
+                        }
+                    } */
+
+                     for(let i = 0; i < $('#idInputFile')[0].files.length; i++){
+                        if(name !== $('#idInputFile')[0].files.item(i).name){
+
+                           console.log("(#idInputFile')[0].files.item(i).name:= "+$('#idInputFile')[0].files.item(i).name);
+                           dt.items.add($('#idInputFile')[0].files.item(i));
+                        }
+                    };
+
+                    for(var i = 0; i < dt.files.length; i++) {
+                        console.log("dt.files.item(i).name:= "+dt.files.item(i).name);
+                    };
+					$('#idInputFile').val(null);
+                    $('#idInputFile')[0].files = dt.files;
+
+
+                }
+
+                function setOrderNumDate(){
+                	console.log('setOrderNumDate()...');
+                    var orderDate=moment($('#orderData').val()).format('YYYYMMDD');
+                    console.log("orderDate:= "+orderDate);
+                    $('#orderNum').val(orderDate+$('#orderNum').val());
+                }
+
+                function selCSA(){
+                    var orderNum=$('#orderNum').val();
+                    console.log("orderNum:= "+orderNum);
+                    $('#addOrder').attr("action","/selCSA")
+                }
+
+                function selDev(){
+                    console.log("selDev...");
+                    $('#addOrder').attr("action","/selDevice")
+                }
+
+                function selExec(){
+                    console.log("selExec...");
+                    $('#addOrder').attr("action","/selExec")
+                }
 
 	</script>
 

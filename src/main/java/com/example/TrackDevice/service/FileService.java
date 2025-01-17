@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -37,5 +39,24 @@ public class FileService {
         } catch (Exception ex) {
             throw new RuntimeException("Could not create the directory 'subDir'", ex);
         }
+    }
+    public List<String> getAllFiles(String subDir) {
+        Path Directory =this.fileStorageLocation.resolve(subDir).resolve("pic");
+        System.out.println("getAllFiles...");
+        System.out.println("Directory:= "+Directory);
+        if (Files.exists(Directory)){
+            System.out.println("Directory= "+ Files.exists(Directory));
+
+            try {
+                return Files.walk(Directory, 1)
+                        .filter(path -> !path.equals(Directory))
+                        .map(Directory::relativize)
+                        .map(Path::toString)
+                        .collect(Collectors.toList());
+            } catch (IOException ex) {
+                throw new RuntimeException("Could not list the files!", ex);
+            }
+        } else return null;
+
     }
 }

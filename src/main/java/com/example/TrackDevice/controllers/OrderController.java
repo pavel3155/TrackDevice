@@ -226,7 +226,17 @@ public class OrderController {
         }
         List<Restore> restoreMethods=restoreRepository.findAll();
 
+        List<String> fileNames;
+        if (ordersDTO.getNum()!=null) {
+            System.out.println("ordersDTO.getNum()!=null...");
+            fileNames = fileService.getAllFiles(ordersDTO.getNum());
+        } else {
+            fileNames=new ArrayList<>();
+        }
+
         System.out.println("ordersDTO:= " +ordersDTO);
+        System.out.println("fileNames:= " +fileNames);
+        model.addAttribute("files", fileNames);
         model.addAttribute("restoreMethods", restoreMethods);
         model.addAttribute("ordersDTO", ordersDTO);
         return "addOrder";
