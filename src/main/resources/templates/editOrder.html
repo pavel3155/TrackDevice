@@ -158,6 +158,30 @@
 							</td>
 							<td></td>
 						</tr>
+						<tr>
+							<td  style="font-weight: 600">Прикрепленные фото</td>
+							<td>
+								<span id="idListSaveFiles" th:each="file : ${files}" >
+									<div>
+										<!-- <a  th:href="@{/addOrder/loadPicture{direc}(direc=${ditectory})&{fileName}(fileName= ${file})}" th:text="${file}"></a> -->
+										<a th:href="@{/addOrder/loadPicture(direc=${directory}, fileName=${file})}" th:text="${file}"></a>
+
+									</div>
+								</span>
+							</td>
+							<td></td>
+						</tr>
+						<!-- <a th:href="@{/addOrder/loadPicture{directory}(directory=${directory})&${file}}" th:text="${file}"></a> -->
+						<!-- <a th:href="@{'/download/' + ${file}}" th:text="${file}"></a> -->
+						<tr>
+							<td  style="font-weight: 600">Добавить новые фото</td>
+							<td>
+								<span id="idListInputFiles"></span>
+							</td>
+							<td>
+								<input type="file" id="idInputFile" name="files" multiple/>
+							</td>
+						</tr>
 					</table>
 				</div>
 			</div>
@@ -176,6 +200,53 @@
             $('#btnSelDev').bind('click', selDev);
             $('#orderData').bind('change', setOrderNumDate);
         }
+
+		function CreateNewListFiles(){
+            console.log('CreateNewListFiles()...');
+			var dt = new DataTransfer();
+            $('#idInputFile').empty();
+            $('#idListInputFiles').empty();
+
+             for(var i = 0; i < this.files.length; i++){
+                        let new_file_item = '<div class="input-file-list-item">' +
+                                            '<span class="input-file-list-name">' + this.files.item(i).name + '</span>' +
+                                            '<a href="#" onclick="removeFilesItem(this); return false;" class="input-file-list-remove">x</a>' +
+                                            '</div>';
+                        $('#idListInputFiles').append(new_file_item);
+                        dt.items.add(this.files.item(i));
+             };
+                    this.files = dt.files;
+             for(var i = 0; i < dt.files.length; i++) {
+                        console.log("dt.files.item(i).name:= "+dt.files.item(i).name);
+             };
+
+        }
+
+                function removeFilesItem(target){
+                    console.log('removeFilesItem()...');
+                    var dt = new DataTransfer();
+                    let name = $(target).prev().text();
+                    console.log("name = " + name);
+
+                    let input = $(target).closest('.input-file-row').find('input[type=file]');
+                    $(target).closest('.input-file-list-item').remove();
+
+                     for(let i = 0; i < $('#idInputFile')[0].files.length; i++){
+                        if(name !== $('#idInputFile')[0].files.item(i).name){
+
+                           console.log("(#idInputFile')[0].files.item(i).name:= "+$('#idInputFile')[0].files.item(i).name);
+                           dt.items.add($('#idInputFile')[0].files.item(i));
+                        }
+                    };
+
+                    for(var i = 0; i < dt.files.length; i++) {
+                        console.log("dt.files.item(i).name:= "+dt.files.item(i).name);
+                    };
+					$('#idInputFile').val(null);
+                    $('#idInputFile')[0].files = dt.files;
+                }
+
+
 
         function setOrderNumDate(){
 			var orderDate=moment($('#orderData').val()).format('YYYYMMDD');

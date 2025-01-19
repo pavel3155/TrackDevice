@@ -225,17 +225,21 @@ public class OrderController {
             ordersDTO.setRestore(restoreRepository.getByMethod("---"));
         }
         List<Restore> restoreMethods=restoreRepository.findAll();
-
         List<String> fileNames;
+        String directory;
         if (ordersDTO.getNum()!=null) {
             System.out.println("ordersDTO.getNum()!=null...");
             fileNames = fileService.getAllFiles(ordersDTO.getNum());
+            directory=ordersDTO.getNum();
+            System.out.println("directory:="+directory);
         } else {
             fileNames=new ArrayList<>();
+            directory="";
         }
 
         System.out.println("ordersDTO:= " +ordersDTO);
         System.out.println("fileNames:= " +fileNames);
+        model.addAttribute("directory", directory);
         model.addAttribute("files", fileNames);
         model.addAttribute("restoreMethods", restoreMethods);
         model.addAttribute("ordersDTO", ordersDTO);
@@ -257,7 +261,6 @@ public class OrderController {
         }
     return "redirect:/addOrder";
     }
-
 
     /**
      * метод выполняется при нажатии на кнопку "Добавить" на странице addOrder
@@ -290,7 +293,6 @@ public class OrderController {
         return "redirect:/addOrder";
     }
 
-
     @GetMapping("/addOrder/download/pic{file}")
     public String  picDownload(@PathVariable MultipartFile file) {
         System.out.println("GET:/addOrder/download/pic/{file}...");
@@ -298,6 +300,14 @@ public class OrderController {
         return "";
     }
 
+    @GetMapping("/addOrder/loadPicture")
+    public String loadPicture(@RequestParam String direc, @RequestParam String fileName,  Model model) {
+        System.out.println("GET:/addOrder/loadPicture...");
+        System.out.println("directory:= "+direc);
+        System.out.println("fileName:= "+fileName);
+        // Логика обработки
+        return "";
+    }
 
     @GetMapping("/addOrder/selCSA")
     public String selCSA(@RequestParam(value ="idCSA") long csa_id, Model model){
@@ -357,15 +367,6 @@ public class OrderController {
         List<User> execs;
         List<Roles> roles = new ArrayList<>();
 
-//        if(role.equals("ROLE_CSA")){
-//            roles.add(roleRepository.findByRole("ROLE_SERV"));
-//            execs =userRepository.findByRoleIn(roles);
-//        }else if(role.equals("ROLE_EXECDEV")){
-//            User executor = userRepository.findByEmail(userDetails.getUsername());
-//            execs=new ArrayList<>();
-//            execs.add(executor);
-//        }
-
         if(role.equals("ROLE_SERV")){
             roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
             roles.add(roleRepository.findByRole("ROLE_SERV"));
@@ -378,8 +379,24 @@ public class OrderController {
         List<Restore> restoreMethods=restoreRepository.findAll();
         model.addAttribute("restoreMethods", restoreMethods);
 
+        List<String> fileNames;
+        String directory;
+        if (ordersDTO.getNum()!=null) {
+            System.out.println("ordersDTO.getNum()!=null...");
+            fileNames = fileService.getAllFiles(ordersDTO.getNum());
+            directory=ordersDTO.getNum();
+        } else {
+            fileNames=new ArrayList<>();
+            directory="";
+        }
+
+        System.out.println("directory:="+directory);
+        System.out.println("fileNames:= " +fileNames);
         System.out.println("execs:= " + execs);
         System.out.println("ordersDTO:= " +ordersDTO);
+
+        model.addAttribute("directory", directory);
+        model.addAttribute("files", fileNames);
         model.addAttribute("execs", execs);
         model.addAttribute("ordersDTO", ordersDTO);
         return "editOrder";

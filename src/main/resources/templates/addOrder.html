@@ -145,7 +145,9 @@
 							<td>
 								<span id="idListSaveFiles" th:each="file : ${files}">
 									<div>
-										<a th:href="@{'/download/' + ${file}}" th:text="${file}"></a>
+										<a th:href="@{/addOrder/loadPicture{directory}{fileName}(directory=${directory})(fileName= ${file})}" th:text="${file}"></a>
+										<!-- <a th:href="@{/addOrder/loadPicture{directory}(directory=${directory})&${file}}" th:text="${file}"></a> -->
+										<!-- <a th:href="@{'/download/' + ${file}}" th:text="${file}"></a> -->
 									</div>
 								</span>
 							</td>
@@ -215,12 +217,6 @@
                     let input = $(target).closest('.input-file-row').find('input[type=file]');
                     $(target).closest('.input-file-list-item').remove();
 
-                    /* for(let i = 0; i < dt.items.length; i++){
-                        if(name === dt.items[i].getAsFile().name){
-                            dt.items.remove(i);
-                        }
-                    } */
-
                      for(let i = 0; i < $('#idInputFile')[0].files.length; i++){
                         if(name !== $('#idInputFile')[0].files.item(i).name){
 
@@ -234,8 +230,6 @@
                     };
 					$('#idInputFile').val(null);
                     $('#idInputFile')[0].files = dt.files;
-
-
                 }
 
                 function setOrderNumDate(){
