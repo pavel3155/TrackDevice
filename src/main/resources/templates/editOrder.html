@@ -19,7 +19,7 @@
 <body>
 	<div class="container">
 
-		<form id="addOrder" class="forms-operation"
+		<form id="addOrder" class="forms-operation" enctype="multipart/form-data"
 			  th:method="post"
 			  th:action="@{/editOrder}"
 			  th:object="${ordersDTO}">
@@ -49,6 +49,9 @@
 						<tr>
 							<td style=" font-weight: 600">Заявка №</td>
 							<td class="AlignCenter">
+								<div class="div_error">
+									<p th:if="${#fields.hasErrors('num')}"  th:errors="*{num}"></p>
+								</div>
 								<input sec:authorize="hasRole('ROLE_CSA') or hasRole('ROLE_SERV')"
 									   type="text" id="orderNum" name="orderNum" th:value="${num}" th:field="*{num}"/>
 								<input sec:authorize="hasRole('ROLE_EXECDEV')"
@@ -199,6 +202,7 @@
             $('#btnSelCSA').bind('click', selCSA);
             $('#btnSelDev').bind('click', selDev);
             $('#orderData').bind('change', setOrderNumDate);
+            $('#idInputFile').bind('change', CreateNewListFiles);
         }
 
 		function CreateNewListFiles(){

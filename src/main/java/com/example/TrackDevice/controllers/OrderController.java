@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import org.hibernate.mapping.Array;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -301,13 +303,31 @@ public class OrderController {
     }
 
     @GetMapping("/addOrder/loadPicture")
-    public String loadPicture(@RequestParam String direc, @RequestParam String fileName,  Model model) {
+    public ResponseEntity<Resource> loadPicture(@RequestParam String direc, @RequestParam String fileName,  Model model) {
         System.out.println("GET:/addOrder/loadPicture...");
-        System.out.println("directory:= "+direc);
-        System.out.println("fileName:= "+fileName);
-        // Логика обработки
-        return "";
+        System.out.println("directory:= " + direc);
+        System.out.println("fileName:= " + fileName);
+
+        Resource resource = fileService.loadFile(direc, fileName);
+        String encFileName = fileService.encodeFile(fileName);
+        if (!encFileName.isEmpty()) {
+            System.out.println("encFileName= " + encFileName);
+            String contentDisposition = String.format("attachment; filename*=UTF-8''%s", encFileName);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                    .body(resource);
+        } else return ResponseEntity.internalServerError().build();
+
     }
+
+//        return ResponseEntity.ok()
+//                .contentType(MediaType.IMAGE_JPEG)
+//                .body(resource);
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+//                .body(resource);
+//
+
 
     @GetMapping("/addOrder/selCSA")
     public String selCSA(@RequestParam(value ="idCSA") long csa_id, Model model){
@@ -402,10 +422,31 @@ public class OrderController {
         return "editOrder";
     }
     @PostMapping("/editOrder")
-    public String editOrder(@Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result,Model model) {
+    public String editOrder(@RequestParam("files") MultipartFile[] files,
+                            @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result,Model model) {
         System.out.println("POST:/editOrder...");
         System.out.println("ordersDTO:= "+ordersDTO);
+        List<String> fileNames=new ArrayList<>();
+        System.out.println("files:= "+files);
+        for (MultipartFile file : files) {
+            System.out.println("file:= "+file);
+            fileService.saveFile(file,ordersDTO.getNum());
+            fileNames.add(file.getOriginalFilename());
+        }
+
         if (result.hasErrors()) {
+            List<Roles> roles = new ArrayList<>();
+            roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
+            roles.add(roleRepository.findByRole("ROLE_SERV"));
+            List<User> execs =userRepository.findByRoleIn(roles);
+            List<Restore> restoreMethods=restoreRepository.findAll();
+            model.addAttribute("directory", ordersDTO.getNum());
+            model.addAttribute("files", fileNames);
+            model.addAttribute("restoreMethods", restoreMethods);
+            model.addAttribute("execs", execs);
+            model.addAttribute("success",false);
+            model.addAttribute("ordersDTO",ordersDTO);
+
             return "editOrder";
         }
         try {
@@ -415,15 +456,29 @@ public class OrderController {
             roles.add(roleRepository.findByRole("ROLE_SERV"));
             List<User> execs =userRepository.findByRoleIn(roles);
             List<Restore> restoreMethods=restoreRepository.findAll();
+
+            model.addAttribute("directory", ordersDTO.getNum());
+            model.addAttribute("files", fileNames);
             model.addAttribute("restoreMethods", restoreMethods);
             model.addAttribute("execs", execs);
             model.addAttribute("success",true);
             model.addAttribute("ordersDTO",ordersDTO);
         } catch (Exception ex) {
-            result.addError(new FieldError("ordersDTO", "name", ex.getMessage()));
+            result.addError(new FieldError("ordersDTO", "num", ex.getMessage()));
         }
         return "/editOrder";
     }
 
+    public List<String> getNameFilesToOrder(String subDir){
+        List<String> fileNames;
+        if (!subDir.isEmpty()) {
+            System.out.println("getNameFilesToOrder(String subDir)...");
+            System.out.println("subDir:= "+ subDir);
+            fileNames = fileService.getAllFiles(subDir);
+        } else {
+            fileNames=new ArrayList<>();
+        }
+        return fileNames;
+    }
 }
 
