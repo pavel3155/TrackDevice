@@ -59,7 +59,17 @@ public class FileService {
              return "Ошибка кодирования имени файла";
          }
      }
-
+    public void delFile(String subDir,String fileName) {
+        try {
+            Path subDirectory =this.fileStorageLocation.resolve(subDir).resolve("pic");
+            Path filePath = subDirectory.resolve(fileName).normalize();
+            System.out.println("delFile(String subDir,String fileName)...");
+            System.out.println("filePath:="+filePath);
+            Files.delete(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public void saveFile(MultipartFile file, String subDir) {
         System.out.println("saveFile(MultipartFile file, String subDir...");
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());

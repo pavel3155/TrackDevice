@@ -18,17 +18,16 @@
 
 <body>
 	<div class="container">
-
 		<form id="addOrder" class="forms-operation" enctype="multipart/form-data"
 			  th:method="post"
 			  th:action="@{/editOrder}"
 			  th:object="${ordersDTO}">
 			<div class="container-addOrder">
 				<div  style="text-align:center" th:if="${success}" role="alert">
-					<h3>Заявка успешно сохранена!</h3>
+					<h3>Изменения в заявку внесены!</h3>
 				</div>
 				<div style="text-align:center" th:if="!${success}">
-					<h3>Создать заявку </h3>
+					<h3>Заявка </h3>
 				</div>
 
 				<div class ="tbl-div">
@@ -96,7 +95,7 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td style=" font-weight: 600">Статус</td>
+							<td style="font-weight: 600">Статус</td>
 							<td class="AlignCenter">
 								<label id="lblOrderStatus" for="orderStatus" th:text="${ordersDTO.status}"></label>
 								<input type="hidden" id="orderStatus" name="orderStatus" th:field="*{status}"/>
@@ -165,10 +164,10 @@
 							<td  style="font-weight: 600">Прикрепленные фото</td>
 							<td>
 								<span id="idListSaveFiles" th:each="file : ${files}" >
-									<div>
-										<!-- <a  th:href="@{/addOrder/loadPicture{direc}(direc=${ditectory})&{fileName}(fileName= ${file})}" th:text="${file}"></a> -->
-										<a th:href="@{/addOrder/loadPicture(direc=${directory}, fileName=${file})}" th:text="${file}"></a>
-
+									<div class="attached-pictures">
+										<a th:href="@{/addOrder/loadPicture(direc=${directory}, fileName=${file})}" target="_blank" th:text="${file}"></a>
+										<a th:href="@{/addOrder/deletPicture(direc=${directory}, fileName=${file})}" class="input-file-remove" onclick="removeAttachedPictures()">x</a>
+										<a th:href="@{/addOrder/downloadPicture(direc=${directory}, fileName=${file})}" class="input-file-download">>></a>
 									</div>
 								</span>
 							</td>
@@ -250,7 +249,8 @@
                     $('#idInputFile')[0].files = dt.files;
                 }
 
-
+		function removeAttachedPictures(){
+		}
 
         function setOrderNumDate(){
 			var orderDate=moment($('#orderData').val()).format('YYYYMMDD');

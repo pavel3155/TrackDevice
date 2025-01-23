@@ -6,6 +6,7 @@ import com.example.TrackDevice.model.Restore;
 import com.example.TrackDevice.model.User;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -14,6 +15,7 @@ public class OrdersDTO {
     @NotNull
     private String date;
     @NotEmpty
+    @Size(min = 11, message = "Мин количетсво сим 11")
     private String num;
     private String description;
     private CSA csa;

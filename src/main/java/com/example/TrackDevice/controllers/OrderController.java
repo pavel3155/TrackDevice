@@ -156,6 +156,7 @@ public class OrderController {
         System.out.println("Username:= "+userDetails.getUsername());
         System.out.println("Role:= "+userDetails.getAuthorities());
 
+
         if (ordersDTO==null){
             System.out.println("ordersDTO==null");
             ordersDTO=new OrdersDTO();
@@ -248,10 +249,10 @@ public class OrderController {
         return "addOrder";
     }
 
-    @PostMapping("/addOrder")
+    @PostMapping("/addOrder/Prop")
     public String Order(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
                            BindingResult result, RedirectAttributes atrRedirect) {
-        System.out.println("POST:/addOrder...");
+        System.out.println("POST:/addOrder/Prop...");
         System.out.println("ordersDTO:= "+ordersDTO);
         ordersDTO.setCsa(csaRepository.getById(ordersDTO.getIdCSA()));
         ordersDTO.setDevice(deviceRepository.getById(ordersDTO.getIdDevice()));
@@ -270,30 +271,76 @@ public class OrderController {
      * @param model
      * @param ordersDTO
      * @param result
-     * @param atrRedirect
      * @return
      */
-    @PostMapping("/addOrder/Add")
+
+    @PostMapping("/addOrder")
     public String addOrder(@RequestParam("files") MultipartFile[] files,
                            Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
-                           BindingResult result, RedirectAttributes atrRedirect) {
+                           BindingResult result) {
         System.out.println("POST:/addOrder/Add...");
         System.out.println("ordersDTO:= "+ordersDTO);
-        for (MultipartFile file : files) {
-            fileService.saveFile(file,ordersDTO.getNum());
-        }
+
+        List<String> fileNames=new ArrayList<>();
+
+        List<Roles> roles = new ArrayList<>();
+        roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
+        roles.add(roleRepository.findByRole("ROLE_SERV"));
+        List<User> execs =userRepository.findByRoleIn(roles);
+        List<Restore> restoreMethods=restoreRepository.findAll();
+
+        model.addAttribute("restoreMethods", restoreMethods);
+        model.addAttribute("execs", execs);
+        model.addAttribute("ordersDTO",ordersDTO);
+
         if (result.hasErrors()) {
+            model.addAttribute("directory", "");
+            model.addAttribute("files", fileNames);
+            model.addAttribute("success",false);
             return "addOrder";
         }
         try {
             ordersService.add(ordersDTO);
-            atrRedirect.addFlashAttribute("success",true);
-            atrRedirect.addFlashAttribute("ordersDTO",ordersDTO);
+            for (MultipartFile file : files) {
+                fileService.saveFile(file,ordersDTO.getNum());
+                fileNames.add(file.getOriginalFilename());
+            }
+            model.addAttribute("files", fileNames);
+            model.addAttribute("directory", ordersDTO.getNum());
+            model.addAttribute("success",true);
         } catch (Exception ex) {
-            result.addError(new FieldError("ordersDTO", "name", ex.getMessage()));
+            result.addError(new FieldError("ordersDTO", "num", ex.getMessage()));
         }
-        return "redirect:/addOrder";
+        return "addOrder";
     }
+//    @PostMapping("/addOrder/Add")
+//    public String addOrder(@RequestParam("files") MultipartFile[] files,
+//                           Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
+//                           BindingResult result, RedirectAttributes atrRedirect) {
+//        System.out.println("POST:/addOrder/Add...");
+//        System.out.println("ordersDTO:= "+ordersDTO);
+//        Boolean success;
+//        if (result.hasErrors()) {
+//            success=false;
+//            atrRedirect.addFlashAttribute("result",result);
+//            atrRedirect.addFlashAttribute("success",success);
+//            atrRedirect.addFlashAttribute("ordersDTO",ordersDTO);
+//            return "redirect:/addOrder";
+//        }
+//        try {
+//            ordersService.add(ordersDTO);
+//            for (MultipartFile file : files) {
+//                fileService.saveFile(file,ordersDTO.getNum());
+//            }
+//            success=true;
+//            atrRedirect.addFlashAttribute("result",result);
+//            atrRedirect.addFlashAttribute("success",success);
+//            atrRedirect.addFlashAttribute("ordersDTO",ordersDTO);
+//        } catch (Exception ex) {
+//            result.addError(new FieldError("ordersDTO", "name", ex.getMessage()));
+//        }
+//        return "redirect:/addOrder";
+//    }
 
     @GetMapping("/addOrder/download/pic{file}")
     public String  picDownload(@PathVariable MultipartFile file) {
@@ -302,9 +349,9 @@ public class OrderController {
         return "";
     }
 
-    @GetMapping("/addOrder/loadPicture")
-    public ResponseEntity<Resource> loadPicture(@RequestParam String direc, @RequestParam String fileName,  Model model) {
-        System.out.println("GET:/addOrder/loadPicture...");
+    @GetMapping("/addOrder/downloadPicture")
+    public ResponseEntity<Resource> downloadPicture(@RequestParam String direc, @RequestParam String fileName,  Model model) {
+        System.out.println("GET:/addOrder/downloadPicture...");
         System.out.println("directory:= " + direc);
         System.out.println("fileName:= " + fileName);
 
@@ -320,9 +367,53 @@ public class OrderController {
 
     }
 
-//        return ResponseEntity.ok()
-//                .contentType(MediaType.IMAGE_JPEG)
-//                .body(resource);
+
+    @GetMapping("/addOrder/loadPicture")
+    public ResponseEntity<Resource> loadPicture(@RequestParam String direc, @RequestParam String fileName) {
+        System.out.println("GET:/addOrder/loadPicture...");
+        System.out.println("directory:= " + direc);
+        System.out.println("fileName:= " + fileName);
+
+        Resource resource = fileService.loadFile(direc, fileName);
+        if (resource!=null) {
+            String fileExtension = getFileExtencion(fileName);
+            if (fileExtension.equals("jpg")){
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(resource);
+            } else  if (fileExtension.equals("pdf")){
+                return ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_PDF)
+                        .body(resource);
+            } else {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.ALL)
+                        .body(resource);
+                }
+        } else return ResponseEntity.internalServerError().build();
+
+    }
+    private String getFileExtencion(String fileName){
+        if (fileName==null){
+            return  null;
+        }
+        int dotIndex = fileName.lastIndexOf(".");
+        if(dotIndex>=0){
+            return fileName.substring(dotIndex+1);
+        }
+        return "";
+    }
+
+    @GetMapping("/addOrder/delPicture")
+    public void delPicture(@RequestParam String direc, @RequestParam String fileName) {
+        System.out.println("GET:/addOrder/delPicture...");
+        System.out.println("directory:= " + direc);
+        System.out.println("fileName:= " + fileName);
+        fileService.delFile(direc, fileName);
+    }
+
+
+
 //        return ResponseEntity.ok()
 //                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
 //                .body(resource);
@@ -426,43 +517,34 @@ public class OrderController {
                             @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result,Model model) {
         System.out.println("POST:/editOrder...");
         System.out.println("ordersDTO:= "+ordersDTO);
+
         List<String> fileNames=new ArrayList<>();
-        System.out.println("files:= "+files);
-        for (MultipartFile file : files) {
-            System.out.println("file:= "+file);
-            fileService.saveFile(file,ordersDTO.getNum());
-            fileNames.add(file.getOriginalFilename());
-        }
+
+        List<Roles> roles = new ArrayList<>();
+        roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
+        roles.add(roleRepository.findByRole("ROLE_SERV"));
+        List<User> execs =userRepository.findByRoleIn(roles);
+        List<Restore> restoreMethods=restoreRepository.findAll();
+
+        model.addAttribute("directory", ordersDTO.getNum());
+        model.addAttribute("files", fileNames);
+        model.addAttribute("restoreMethods", restoreMethods);
+        model.addAttribute("execs", execs);
+//        model.addAttribute("success",false);
+        model.addAttribute("ordersDTO",ordersDTO);
 
         if (result.hasErrors()) {
-            List<Roles> roles = new ArrayList<>();
-            roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
-            roles.add(roleRepository.findByRole("ROLE_SERV"));
-            List<User> execs =userRepository.findByRoleIn(roles);
-            List<Restore> restoreMethods=restoreRepository.findAll();
-            model.addAttribute("directory", ordersDTO.getNum());
-            model.addAttribute("files", fileNames);
-            model.addAttribute("restoreMethods", restoreMethods);
-            model.addAttribute("execs", execs);
             model.addAttribute("success",false);
-            model.addAttribute("ordersDTO",ordersDTO);
-
             return "editOrder";
         }
         try {
             ordersService.save(ordersDTO);
-            List<Roles> roles = new ArrayList<>();
-            roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
-            roles.add(roleRepository.findByRole("ROLE_SERV"));
-            List<User> execs =userRepository.findByRoleIn(roles);
-            List<Restore> restoreMethods=restoreRepository.findAll();
-
-            model.addAttribute("directory", ordersDTO.getNum());
+            for (MultipartFile file : files) {
+               fileService.saveFile(file,ordersDTO.getNum());
+               fileNames.add(file.getOriginalFilename());
+            }
             model.addAttribute("files", fileNames);
-            model.addAttribute("restoreMethods", restoreMethods);
-            model.addAttribute("execs", execs);
             model.addAttribute("success",true);
-            model.addAttribute("ordersDTO",ordersDTO);
         } catch (Exception ex) {
             result.addError(new FieldError("ordersDTO", "num", ex.getMessage()));
         }

@@ -50,6 +50,7 @@ public class UserController {
             result.addError(new FieldError("registerDTO",
                                                 "confirmPassword",
                                         "Пароль не сходится!"));
+            return "regUser";
         }
 
         // если пользователь с введенным email уже существует, то добавляеся ошибка в result
@@ -58,6 +59,7 @@ public class UserController {
             result.addError((new FieldError("registerDTO",
                                                   "email",
                                           "Данный Email уже занят!")));
+            return "regUser";
         }
         //если ошибки есть
         if(result.hasErrors()){

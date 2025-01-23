@@ -32,7 +32,7 @@
     flex-direction:column;
     align-items:center;
   }
-  .margin-t{
+  .margin-t {
     margin-top:20px;
   }
   .container-inner{
@@ -64,7 +64,7 @@
     margin-top:15px;
     margin-bottom:20px;
  }
- .table tr{
+ .table tr {
     text-align:center;
  }
  .table th {
@@ -115,7 +115,7 @@
 
 .notMarginAndPadding {
     margin:0;
-    padding0;
+    padding:0;
 }
 
 .tbl-td-input-text{
@@ -143,3 +143,22 @@
   .tbl-td-span-inline{
     display:flex;
   }
+  .input-file-remove {
+    font-family: 'Comic Sans MS', sans-serif;
+    font-weight: 500;
+  	color: red;
+  	text-decoration: none;
+  	display: inline-block;
+  	margin-left: 5px;
+  }
+   .input-file-download {
+        font-family: 'Comic Sans MS', sans-serif;
+        letter-spacing: -0.25em;
+        font-weight: 800;
+      	color: #1f12b0;
+      	text-decoration: none;
+      	margin-left: 5px;
+      	display: inline-block;
+
+
+   }

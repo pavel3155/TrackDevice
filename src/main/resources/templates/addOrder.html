@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>(З)Заявки</title>
-    <link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" href="css/style-form.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css"  href="css/style-form.css">
 	<script src="js/jquery-3.7.1.js"></script>
 	<script src="js/moment.js"></script>
 </head>
@@ -20,7 +20,7 @@
 	<div class="container">
 		<form id="addOrder" class="forms-operation" enctype="multipart/form-data"
 			  th:method="post"
-			  th:action="@{/addOrder/Add}"
+			  th:action="@{/addOrder}"
 			  th:object="${ordersDTO}">
 			<div class="container-addOrder">
 				<div  style="text-align:center" th:if="${success}" role="alert">
@@ -45,6 +45,9 @@
 						<tr>
 							<td style=" font-weight: 600">Заявка №</td>
 							<td class="AlignCenter">
+								<div class="div_error">
+									<p th:if="${#fields.hasErrors('num')}"  th:errors="*{num}"></p>
+								</div>
 								<input type="text" id="orderNum" name="orderNum" th:value="${num}" th:field="*{num}"/>
 							</td>
 							<td></td>
@@ -86,7 +89,7 @@
 							</td>
 							<td></td>
 						<tr>
-							<td style=" font-weight: 600">Статус</td>
+							<td style="font-weight: 600">Статус</td>
 							<td class="AlignCenter">
 								<label id="lblOrderStatus" for="orderStatus" th:text="${ordersDTO.status}"></label>
 								<input type="hidden" id="orderStatus" name="orderStatus" th:field="*{status}"/>
@@ -143,11 +146,9 @@
 						<tr>
 							<td  style="font-weight: 600">Прикрепленные фото</td>
 							<td>
-								<span id="idListSaveFiles" th:each="file : ${files}">
+								 <span id="idListSaveFiles" th:each="file : ${files}">
 									<div>
-										<a th:href="@{/addOrder/loadPicture{directory}{fileName}(directory=${directory})(fileName= ${file})}" th:text="${file}"></a>
-										<!-- <a th:href="@{/addOrder/loadPicture{directory}(directory=${directory})&${file}}" th:text="${file}"></a> -->
-										<!-- <a th:href="@{'/download/' + ${file}}" th:text="${file}"></a> -->
+										<a th:href="@{/addOrder/loadPicture(direc=${directory}, fileName=${file})}" th:text="${file}"></a>
 									</div>
 								</span>
 							</td>
@@ -163,9 +164,6 @@
 								<input type="file" id="idInputFile" name="files" multiple/>
 							</td>
 						</tr>
-
-
-
 					</table>
 				</div>
 			</div>
@@ -175,8 +173,11 @@
 			</span>
 		</form>
 	</div>
-	<script>
 
+	<script src="js/jquery-3.7.1.js"></script>
+	<script src="js/moment.js"></script>
+
+	<script>
                 $(document).ready(initEvent);
 
                 function initEvent() {
