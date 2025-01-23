@@ -70,20 +70,24 @@ public class FileService {
             throw new RuntimeException(e);
         }
     }
-    public void saveFile(MultipartFile file, String subDir) {
+    public Boolean saveFile(MultipartFile file, String subDir) {
         System.out.println("saveFile(MultipartFile file, String subDir...");
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         System.out.println("fileName:= " +fileName);
-        try {
-            Path subDirectory =this.fileStorageLocation.resolve(subDir).resolve("pic");
-            Files.createDirectories(subDirectory);
-            Path targetLocation = subDirectory.resolve(fileName);
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException ex) {
-            throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
-        } catch (Exception ex) {
-            throw new RuntimeException("Could not create the directory 'subDir'", ex);
+        if (!fileName.isEmpty()){
+            try {
+                Path subDirectory =this.fileStorageLocation.resolve(subDir).resolve("pic");
+                Files.createDirectories(subDirectory);
+                Path targetLocation = subDirectory.resolve(fileName);
+                Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+                return true;
+            } catch (IOException ex) {
+                throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
+            } catch (Exception ex) {
+                throw new RuntimeException("Could not create the directory 'subDir'", ex);
+            }
         }
+        return false;
     }
     public List<String> getAllFiles(String subDir) {
         Path Directory =this.fileStorageLocation.resolve(subDir).resolve("pic");

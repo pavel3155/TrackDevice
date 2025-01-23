@@ -100,20 +100,7 @@ public class OrderController {
 
     @PostMapping("/Orders")
     public String Orders(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result) {
-        //если пароль не совпадает, то  добавляеся ошибка в result
-//        if(!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
-//            result.addError(new FieldError("registerDTO",
-//                    "confirmPassword",
-//                    "Пароль не сходится!"));
-//        }
-//
-//        // если пользователь с введенным email уже существует, то добавляеся ошибка в result
-//        User user = userRepository.findByEmail(registerDTO.getEmail());
-//        if(user != null){
-//            result.addError((new FieldError("registerDTO",
-//                    "email",
-//                    "Данный Email уже занят!")));
-//        }
+
         //если ошибки есть
         if (result.hasErrors()) {
             List<CSA> csas = csaRepository.findAll();
@@ -202,8 +189,8 @@ public class OrderController {
             System.out.println("exec:= "+exec);
             ordersDTO.setExecutor(exec);
 
-            model.addAttribute("execs", execs);
-            System.out.println("ordersDTO.getExecutor():= "+ordersDTO.getExecutor());
+//            model.addAttribute("execs", exec);
+//            System.out.println("ordersDTO.getExecutor():= "+ordersDTO.getExecutor());
         }
 
 
@@ -519,6 +506,7 @@ public class OrderController {
         System.out.println("ordersDTO:= "+ordersDTO);
 
         List<String> fileNames=new ArrayList<>();
+        fileNames = fileService.getAllFiles(ordersDTO.getNum());
 
         List<Roles> roles = new ArrayList<>();
         roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
@@ -539,9 +527,12 @@ public class OrderController {
         }
         try {
             ordersService.save(ordersDTO);
+            System.out.println("ordersService.save(ordersDTO) - выполнено успешно");
+
             for (MultipartFile file : files) {
-               fileService.saveFile(file,ordersDTO.getNum());
-               fileNames.add(file.getOriginalFilename());
+               if (fileService.saveFile(file,ordersDTO.getNum())){
+                   fileNames.add(file.getOriginalFilename());
+               }
             }
             model.addAttribute("files", fileNames);
             model.addAttribute("success",true);

@@ -106,12 +106,15 @@
 						<tr>
 							<td style=" font-weight: 600">Исполнитель</td>
 							<td class="AlignCenter">
-								<!-- <label id="lblOrderExecutor"  for="orderExecutor"
-									   th:text="${ordersDTO.executor.email}"></label> -->
-
-								<!-- <input type="hidden" id="orderExecutor" style="width:99%;text-align:center" name="orderExec"  th:value="${executor}" th:field="*{executor}"/> sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')"-->
-								<select  id="selExecOrder"
-										 class="select"
+								<span sec:authorize="hasRole('ROLE_EXECDEV') or hasRole('ROLE_CSA')">
+									<label id="lblOrderExecutor"  for="orderExecutor"
+										   th:text="${ordersDTO.executor.email}"></label>
+									<input type="hidden" id="orderExecutor"
+										   style="width:99%;text-align:center" name="orderExec"
+										   th:value="${executor}" th:field="*{executor}"/>
+								</span>
+								<select  sec:authorize="hasRole('ROLE_SERV') or hasRole('ROLE_ADMIN')"
+										 id="selExecOrder" class="select"
 										 th:field="*{executor}">
 									<option th:each="exec : ${execs}"
 											th:value="${exec.id}"
@@ -119,18 +122,12 @@
 											th:selected="${exec.id == ordersDTO.executor.id}">
 									</option>
 								</select>
-
-
 							</td>
 							<td></td>
 						</tr>
 						<tr sec:authorize="!hasRole('ROLE_CSA')">
 							<td  style=" font-weight: 600">Восстановление КСА</td>
 							<td  class="AlignCenter">
-								<!-- <label id="lblOrderExecutor"  for="orderExecutor"
-									   th:text="${ordersDTO.executor.email}"></label> -->
-
-								<!-- <input type="hidden" id="orderExecutor" style="width:99%;text-align:center" name="orderExec"  th:value="${executor}" th:field="*{executor}"/> sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')"-->
 								<select  id="selRestore"
 										 class="select"
 										 th:field="*{restore}">

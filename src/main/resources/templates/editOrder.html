@@ -113,11 +113,14 @@
 						<tr>
 							<td style=" font-weight: 600">Исполнитель</td>
 							<td class="AlignCenter">
-								<!-- <label id="lblOrderExecutor"  for="orderExecutor"
-									   th:text="${ordersDTO.executor.email}"></label> -->
-
-								<!-- <input type="hidden" id="orderExecutor" style="width:99%;text-align:center" name="orderExec"  th:value="${executor}" th:field="*{executor}"/> -->
-								<select
+								<span sec:authorize="hasRole('ROLE_EXECDEV') or hasRole('ROLE_CSA')">
+									<label id="lblOrderExecutor"  for="orderExecutor"
+										   th:text="${ordersDTO.executor.email}"></label>
+									<input type="hidden" id="orderExecutor"
+										   style="width:99%;text-align:center" name="orderExec"
+										   th:value="${executor}" th:field="*{executor}"/>
+								</span>
+								<select sec:authorize="hasRole('ROLE_SERV') or hasRole('ROLE_ADMIN')"
 										 id="selExecOrder"
 										 class="select"
 										 th:field="*{executor}">
