@@ -289,8 +289,9 @@ public class OrderController {
         try {
             ordersService.add(ordersDTO);
             for (MultipartFile file : files) {
-                fileService.saveFile(file,ordersDTO.getNum());
-                fileNames.add(file.getOriginalFilename());
+                if (fileService.saveFile(file,ordersDTO.getNum())){
+                    fileNames.add(file.getOriginalFilename());
+                }
             }
             model.addAttribute("files", fileNames);
             model.addAttribute("directory", ordersDTO.getNum());
@@ -329,12 +330,12 @@ public class OrderController {
 //        return "redirect:/addOrder";
 //    }
 
-    @GetMapping("/addOrder/download/pic{file}")
-    public String  picDownload(@PathVariable MultipartFile file) {
-        System.out.println("GET:/addOrder/download/pic/{file}...");
-        System.out.println("file:= "+file);
-        return "";
-    }
+//    @GetMapping("/addOrder/download/pic{file}")
+//    public String  picDownload(@PathVariable MultipartFile file) {
+//        System.out.println("GET:/addOrder/download/pic/{file}...");
+//        System.out.println("file:= "+file);
+//        return "";
+//    }
 
     @GetMapping("/addOrder/downloadPicture")
     public ResponseEntity<Resource> downloadPicture(@RequestParam String direc, @RequestParam String fileName,  Model model) {
@@ -391,20 +392,14 @@ public class OrderController {
         return "";
     }
 
-    @GetMapping("/addOrder/delPicture")
-    public void delPicture(@RequestParam String direc, @RequestParam String fileName) {
+    @GetMapping("/addOrder/deletPicture{direc}&{fileName}")
+    public ResponseEntity<String> delPicture(@PathVariable String direc, @PathVariable String fileName) {
         System.out.println("GET:/addOrder/delPicture...");
         System.out.println("directory:= " + direc);
         System.out.println("fileName:= " + fileName);
         fileService.delFile(direc, fileName);
+        return ResponseEntity.ok("Файл удален");
     }
-
-
-
-//        return ResponseEntity.ok()
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-//                .body(resource);
-//
 
 
     @GetMapping("/addOrder/selCSA")

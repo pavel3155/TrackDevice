@@ -143,9 +143,10 @@
 						<tr>
 							<td  style="font-weight: 600">Прикрепленные фото</td>
 							<td>
-								 <span id="idListSaveFiles" th:each="file : ${files}">
-									<div>
-										<a th:href="@{/addOrder/loadPicture(direc=${directory}, fileName=${file})}" th:text="${file}"></a>
+								<span id="idListSaveFiles" th:each="file : ${files}" >
+									<div class="attached-pictures">
+										<a th:href="@{/addOrder/loadPicture(direc=${directory}, fileName=${file})}" target="_blank" th:text="${file}"></a>
+										<a th:href="@{/addOrder/downloadPicture(direc=${directory}, fileName=${file})}" class="input-file-download">>></a>
 									</div>
 								</span>
 							</td>

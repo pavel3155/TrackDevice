@@ -169,7 +169,8 @@
 								<span id="idListSaveFiles" th:each="file : ${files}" >
 									<div class="attached-pictures">
 										<a th:href="@{/addOrder/loadPicture(direc=${directory}, fileName=${file})}" target="_blank" th:text="${file}"></a>
-										<a th:href="@{/addOrder/deletPicture(direc=${directory}, fileName=${file})}" class="input-file-remove" onclick="removeAttachedPictures()">x</a>
+										<a href="#" class="input-file-remove" th:onclick="removeAttachedPictures(event, [[${directory}]], [[${file}]])">x</a>
+										<!-- <a th:href="@{/addOrder/deletPicture(direc=${directory}, fileName=${file})}" class="input-file-remove" th:onclick="removeAttachedPictures(event, [[${directory}]], [[${file}]])">x</a> -->
 										<a th:href="@{/addOrder/downloadPicture(direc=${directory}, fileName=${file})}" class="input-file-download">>></a>
 									</div>
 								</span>
@@ -228,7 +229,7 @@
 
         }
 
-                function removeFilesItem(target){
+        function removeFilesItem(target){
                     console.log('removeFilesItem()...');
                     var dt = new DataTransfer();
                     let name = $(target).prev().text();
@@ -250,9 +251,25 @@
                     };
 					$('#idInputFile').val(null);
                     $('#idInputFile')[0].files = dt.files;
-                }
+        }
 
-		function removeAttachedPictures(){
+		function removeAttachedPictures(e,dir,fName){
+			console.log("dir="+dir);
+			console.log("fName="+fName);
+			const target = e.target;
+			let fileName = $(target).prev().text();
+			console.log("removeAttachedPictures()...");
+			console.log("direc...");
+			console.log("fileName= "+fileName);
+			$(target).closest('.attached-pictures').remove();
+			$.get('/addOrder/deletPicture' + dir+'&'+fName);
+
+
+
+
+
+
+
 		}
 
         function setOrderNumDate(){

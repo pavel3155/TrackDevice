@@ -60,14 +60,17 @@ public class FileService {
          }
      }
     public void delFile(String subDir,String fileName) {
-        try {
-            Path subDirectory =this.fileStorageLocation.resolve(subDir).resolve("pic");
-            Path filePath = subDirectory.resolve(fileName).normalize();
-            System.out.println("delFile(String subDir,String fileName)...");
-            System.out.println("filePath:="+filePath);
-            Files.delete(filePath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        System.out.println("delFile(String subDir,String fileName)...");
+        System.out.println("fileName:= " +fileName);
+        if (!fileName.isEmpty()) {
+            try {
+                Path subDirectory = this.fileStorageLocation.resolve(subDir).resolve("pic");
+                Path filePath = subDirectory.resolve(fileName).normalize();
+                System.out.println("filePath:=" + filePath);
+                Files.delete(filePath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
     public Boolean saveFile(MultipartFile file, String subDir) {
