@@ -14,7 +14,7 @@ public class ActDevDTO {
     @NotNull
     private String date;
     @NotNull
-    private ActTypes types;
+    private ActTypes actType;
     @NotNull
     private CSA fromCSA;
     @NotNull

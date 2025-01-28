@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,16 +44,17 @@ public class ActDevController {
     /** метод выполняется при нажатии на кнопку "Открыть" на странице "ActsDev"
      * метод принимает id акта, загружает страницу "ActDev"
      */
-    @GetMapping("/ActDev{id}")
-    public String getActDev(@PathVariable long id, Model model) {
+    @GetMapping("/Acts/ActDev")
+    public String getActDev(@RequestParam long id, Model model) {
         System.out.println("GET:/ActDev{id}....");
         ActDev actDev = actDevRepository.getById(id);
         System.out.println("actDev:= "+actDev);
+
         ActDevDTO actDevDTO = new ActDevDTO();
         actDevDTO.setId(actDev.getId());
         actDevDTO.setDate(actDev.getDate().toString());
         actDevDTO.setNum(actDev.getNum());
-        actDevDTO.setTypes(actDev.getTypes());
+        actDevDTO.setActType(actDev.getTypes());
         actDevDTO.setDevice(actDev.getDevice());
         actDevDTO.setIdDevice(actDev.getDevice().getId());
         actDevDTO.setFromCSA(actDev.getFromCSA());

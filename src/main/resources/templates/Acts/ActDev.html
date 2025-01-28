@@ -50,105 +50,101 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td style=" font-weight: 600">Заявка №</td>
+							<td style=" font-weight: 600">Акт</td>
 							<td class="AlignCenter">
-								<div class="div_error">
-									<p th:if="${#fields.hasErrors('num')}"  th:errors="*{num}"></p>
-								</div>
-								<input type="text" id="orderNum" name="orderNum" th:value="${num}" th:field="*{num}"/>
+								<select  id="selActTypes" class="select"
+										 th:field="*{actType}">
+									<option th:each="type : ${types}"
+											th:value="${type.id}"
+											th:text="${type.type}"
+											th:selected="${type.id == ActDevDTO.actType.id}">
+									</option>
+								</select>
 							</td>
 							<td></td>
 						</tr>
-						<tr>
-							<td style=" font-weight: 600">КСА</td>
-							<td class="AlignCenter">
-								<label id="lblOrderCSA" for="orderCSA" th:text="${ordersDTO.csa.num}+', '+${ordersDTO.csa.address}"></label>
-								<input type="hidden" id="orderCSA" th:value="${csa}" th:field="*{csa}">
-							</td>
-							<td><button sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')" id="btnSelCSA" type="submit" class="a-btn">Выбрать КСА</button></td>
 
-						</tr>
 						<tr>
 							<td style=" font-weight: 600">Техническое средство</td>
 							<td class="AlignCenter">
-								<label id="lblOrderDevice"  for="orderDevice"
-									   th:text="${ordersDTO.device.model.type.type} + ': ' +
-												${ordersDTO.device.model.name}"></label>
-								<input type="hidden" id="orderDevice" th:value="${device}" th:field="*{device}">
+								<label id="lblActDevice"  for="actDevice"
+									   th:text="${ActDevDTO.device.model.type.type} + ': ' +
+												${ActDevDTO.device.model.name}"></label>
+								<input type="hidden" id="actDevice" th:value="${device}" th:field="*{device}">
 							</td>
 							<td>
 								<button id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button>
 							</td>
 						</tr>
-						<td>Серийный №</td>
-						<td class="AlignCenter">
-							<label id="lblOrderDeviceSN"  for="orderDevice"
-								   th:text="${ordersDTO.device.sernum} "></label>
-						</td>
-						<td></td>
+						<tr>
+							<td>Серийный №</td>
+							<td class="AlignCenter">
+								<label id="lblActDeviceSN"  for="actDevice"
+									   th:text="${ActDevDTO.device.sernum} "></label>
+							</td>
+							<td></td>
 						</tr>
+
 						<tr>
 							<td>Инвентарный №</td>
 							<td class="AlignCenter">
-								<label id="lblOrderDeviceIN"  for="orderDevice"
-									   th:text="${ordersDTO.device.invnum}"></label>
-								<input type="hidden" id="orderDeviceIN" th:value="${device}" th:field="*{device}">
-							</td>
-							<td></td>
-						<tr>
-							<td style="font-weight: 600">Статус</td>
-							<td class="AlignCenter">
-								<label id="lblOrderStatus" for="orderStatus" th:text="${ordersDTO.status}"></label>
-								<input type="hidden" id="orderStatus" name="orderStatus" th:field="*{status}"/>
+								<label id="lblActDeviceInvN"  for="actDevice"
+									   th:text="${ActDevDTO.device.invnum}"></label>
 							</td>
 							<td></td>
 						</tr>
+
 						<tr>
-							<td style=" font-weight: 600">Описание</td>
+							<td style=" font-weight: 600">Откуда</td>
 							<td class="AlignCenter">
-								<input type="text" id="orderDescription" style="width:99%;text-align:center" name="orderDescription"  th:value="${description}" th:field="*{description}"/>
-							</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td style=" font-weight: 600">Исполнитель</td>
-							<td class="AlignCenter">
-								<span sec:authorize="hasRole('ROLE_EXECDEV') or hasRole('ROLE_CSA')">
-									<label id="lblOrderExecutor"  for="orderExecutor"
-										   th:text="${ordersDTO.executor.email}"></label>
-									<input type="hidden" id="orderExecutor"
-										   style="width:99%;text-align:center" name="orderExec"
-										   th:value="${executor}" th:field="*{executor}"/>
-								</span>
-								<select  sec:authorize="hasRole('ROLE_SERV') or hasRole('ROLE_ADMIN')"
-										 id="selExecOrder" class="select"
-										 th:field="*{executor}">
-									<option th:each="exec : ${execs}"
-											th:value="${exec.id}"
-											th:text="${exec.email}"
-											th:selected="${exec.id == ordersDTO.executor.id}">
+								<select  id="selFromCSA" class="select"
+										 th:field="*{fromCSA}">
+									<option th:each="csa : ${csas}"
+											th:value="${csa.id}"
+											th:text="${csa.num}"
+											th:selected="${csa.id == ActDevDTO.fromCSA.id}">
 									</option>
 								</select>
 							</td>
 							<td></td>
 						</tr>
-						<tr sec:authorize="!hasRole('ROLE_CSA')">
-							<td  style=" font-weight: 600">Восстановление КСА</td>
-							<td  class="AlignCenter">
-								<select  id="selRestore"
-										 class="select"
-										 th:field="*{restore}">
-									<option th:each="restore : ${restoreMethods}"
-											th:value="${restore.id}"
-											th:text="${restore.method}"
-											th:selected="${restore.id == ordersDTO.restore.id}">
+
+						<tr>
+							<td style=" font-weight: 600">Куда</td>
+							<td class="AlignCenter">
+								<select  id="selToCSA" class="select"
+										 th:field="*{toCSA}">
+									<option th:each="csa : ${csas}"
+											th:value="${csa.id}"
+											th:text="${csa.num}"
+											th:selected="${csa.id == ActDevDTO.toCSA.id}">
 									</option>
 								</select>
 							</td>
 							<td></td>
 						</tr>
+
 						<tr>
-							<td  style="font-weight: 600">Прикрепленные фото</td>
+							<td style=" font-weight: 600">Заявка №</td>
+							<td class="AlignCenter">
+								<label id="lblActDevOrderNum"  for="ActDevOrderNum"
+									   th:text="${ActDevDTO.order.num}"></label>
+								<input type="text" id="ActDevOrderNum" name="orderNum" th:value="${order}" th:field="*{order}"/>
+							</td>
+							<td></td>
+						</tr>
+
+
+						<tr>
+							<td style=" font-weight: 600">Примечание</td>
+							<td class="AlignCenter">
+								<input type="text" id="ActDevNote" style="width:99%;text-align:center" name="note"  th:value="${note}" th:field="*{note}"/>
+							</td>
+							<td></td>
+						</tr>
+
+						<tr>
+							<td  style="font-weight: 600">Прикрепленные документы</td>
 							<td>
 								<span id="idListSaveFiles" th:each="file : ${files}" >
 									<div class="attached-pictures">
@@ -161,12 +157,12 @@
 						</tr>
 
 						<tr>
-							<td  style="font-weight: 600">Добавить новые фото</td>
+							<td  style="font-weight: 600">Добавить новые документы</td>
 							<td>
 								<span id="idListInputFiles"></span>
 							</td>
 							<td>
-								<input type="file" id="idInputFile" name="files" multiple/>
+
 							</td>
 						</tr>
 					</table>
@@ -179,16 +175,13 @@
 		</form>
 	</div>
 
-	<script src="js/jquery-3.7.1.js"></script>
-	<script src="js/moment.js"></script>
-
 	<script>
                 $(document).ready(initEvent);
 
                 function initEvent() {
-                    $('#btnSelCSA').bind('click', selCSA);
+
                     $('#btnSelDev').bind('click', selDev);
-                    $('#btnSelExec').bind('click', selExec);
+
                     $('#orderData').bind('change', setOrderNumDate);
                     $('#idInputFile').bind('change', CreateNewListFiles);
                 }
