@@ -16,11 +16,11 @@ public class ActDev {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String act_num;
-    private LocalDate act_date;
+    private String num;
+    private LocalDate date;
     @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn (name="type_id", nullable = false)
-    private ActTypes actTypes;
+    private ActTypes types;
     @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn (name="csa_from_id", nullable = false)
     private CSA fromCSA;

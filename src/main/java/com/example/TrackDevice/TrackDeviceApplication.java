@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.CacheEvict;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 
 @SpringBootApplication
@@ -28,8 +29,18 @@ public class TrackDeviceApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		ActDev actDev=actDevRepository.getById(1);
 		System.out.println("actDev= "+actDev);
-		LocalDate date = actDev.getAct_date();
+
+		LocalDate date = actDev.getDate();
 		System.out.println("date= "+date);
+
+		String strDate=date.toString();
+		System.out.println("strDate= "+strDate);
+
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//		String dateString = "2025-01-28";
+//		LocalDate localDate = LocalDate.parse(dateString, formatter);
+//		actDevService.add(localDate); // Вызываем метод add() после запуска приложения
+
 
 	}
 }

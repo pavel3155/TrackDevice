@@ -236,6 +236,16 @@ public class OrderController {
         return "addOrder";
     }
 
+    /**
+     * Технический метод, используется  для добавления объектов CSA на странице "/selCSA" и
+     * Device  на странице "/selDevice" в объект ordersDTO и дальнейшей передачи его в формы
+     * страниц "/addOrder" и "/editOrder"
+     * @param model
+     * @param ordersDTO
+     * @param result
+     * @param atrRedirect
+     * @return
+     */
     @PostMapping("/addOrder/Prop")
     public String Order(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
                            BindingResult result, RedirectAttributes atrRedirect) {
@@ -260,7 +270,6 @@ public class OrderController {
      * @param result
      * @return
      */
-
     @PostMapping("/addOrder")
     public String addOrder(@RequestParam("files") MultipartFile[] files,
                            Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
@@ -301,42 +310,14 @@ public class OrderController {
         }
         return "addOrder";
     }
-//    @PostMapping("/addOrder/Add")
-//    public String addOrder(@RequestParam("files") MultipartFile[] files,
-//                           Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
-//                           BindingResult result, RedirectAttributes atrRedirect) {
-//        System.out.println("POST:/addOrder/Add...");
-//        System.out.println("ordersDTO:= "+ordersDTO);
-//        Boolean success;
-//        if (result.hasErrors()) {
-//            success=false;
-//            atrRedirect.addFlashAttribute("result",result);
-//            atrRedirect.addFlashAttribute("success",success);
-//            atrRedirect.addFlashAttribute("ordersDTO",ordersDTO);
-//            return "redirect:/addOrder";
-//        }
-//        try {
-//            ordersService.add(ordersDTO);
-//            for (MultipartFile file : files) {
-//                fileService.saveFile(file,ordersDTO.getNum());
-//            }
-//            success=true;
-//            atrRedirect.addFlashAttribute("result",result);
-//            atrRedirect.addFlashAttribute("success",success);
-//            atrRedirect.addFlashAttribute("ordersDTO",ordersDTO);
-//        } catch (Exception ex) {
-//            result.addError(new FieldError("ordersDTO", "name", ex.getMessage()));
-//        }
-//        return "redirect:/addOrder";
-//    }
 
-//    @GetMapping("/addOrder/download/pic{file}")
-//    public String  picDownload(@PathVariable MultipartFile file) {
-//        System.out.println("GET:/addOrder/download/pic/{file}...");
-//        System.out.println("file:= "+file);
-//        return "";
-//    }
-
+    /**
+     * метод выполняет скачивание с сервера прикрепленных к заявке изображений  на локальный диск
+     * @param direc
+     * @param fileName
+     * @param model
+     * @return
+     */
     @GetMapping("/addOrder/downloadPicture")
     public ResponseEntity<Resource> downloadPicture(@RequestParam String direc, @RequestParam String fileName,  Model model) {
         System.out.println("GET:/addOrder/downloadPicture...");
@@ -355,7 +336,12 @@ public class OrderController {
 
     }
 
-
+    /**
+     * метод выполняет функцию просмотра прикрепленных к заявке изображений  на локальный диск
+     * @param direc
+     * @param fileName
+     * @return
+     */
     @GetMapping("/addOrder/loadPicture")
     public ResponseEntity<Resource> loadPicture(@RequestParam String direc, @RequestParam String fileName) {
         System.out.println("GET:/addOrder/loadPicture...");
@@ -392,6 +378,12 @@ public class OrderController {
         return "";
     }
 
+    /**
+     * метод выполняет удаление с сервера прикрепленных к заявке изображений
+     * @param direc
+     * @param fileName
+     * @return
+     */
     @GetMapping("/addOrder/deletPicture{direc}&{fileName}")
     public ResponseEntity<String> delPicture(@PathVariable String direc, @PathVariable String fileName) {
         System.out.println("GET:/addOrder/delPicture...");

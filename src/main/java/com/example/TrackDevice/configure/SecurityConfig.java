@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/csa").permitAll()
                         .requestMatchers("/addOrder/*").permitAll()
                         .requestMatchers("/addOrder/Add").permitAll()
+                        .requestMatchers("/Acts/*").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
