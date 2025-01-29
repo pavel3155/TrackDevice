@@ -58,7 +58,9 @@
 								<label id="lblOrderCSA" for="orderCSA" th:text="${ordersDTO.csa.num}+', '+${ordersDTO.csa.address}"></label>
 								<input type="hidden" id="orderCSA" th:value="${csa}" th:field="*{csa}">
 							</td>
-							<td><button sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')" id="btnSelCSA" type="submit" class="a-btn">Выбрать КСА</button></td>
+							<td>
+								<button sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')" id="btnSelCSA" type="submit" class="a-btn">Выбрать КСА</button>
+							</td>
 
 						</tr>
 						<tr>
@@ -162,6 +164,8 @@
 								<input type="file" id="idInputFile" name="files" multiple/>
 							</td>
 						</tr>
+
+
 					</table>
 				</div>
 			</div>

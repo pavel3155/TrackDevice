@@ -21,7 +21,7 @@
 		<form id="addOrder" class="forms-operation" enctype="multipart/form-data"
 			  th:method="post"
 			  th:action="@{/ActDev}"
-			  th:object="${ActDevDTO}">
+			  th:object="${actDevDTO}">
 			<div class="container-addOrder">
 				<div  style="text-align:center" th:if="${success}" role="alert">
 					<h3>Заявка создана!</h3>
@@ -45,7 +45,7 @@
 						<tr>
 							<td style=" font-weight: 600">Акт №</td>
 							<td class="AlignCenter">
-								<input id="actNo" type="date" th:value="${num}" th:field="*{num}"/>
+								<input id="actNo" type="text" th:value="${num}" th:field="*{num}"/>
 							</td>
 							<td></td>
 						</tr>
@@ -57,7 +57,7 @@
 									<option th:each="type : ${types}"
 											th:value="${type.id}"
 											th:text="${type.type}"
-											th:selected="${type.id == ActDevDTO.actType.id}">
+											th:selected="${type.id == actDevDTO.actType.id}">
 									</option>
 								</select>
 							</td>
@@ -68,8 +68,8 @@
 							<td style=" font-weight: 600">Техническое средство</td>
 							<td class="AlignCenter">
 								<label id="lblActDevice"  for="actDevice"
-									   th:text="${ActDevDTO.device.model.type.type} + ': ' +
-												${ActDevDTO.device.model.name}"></label>
+									   th:text="${actDevDTO.device.model.type.type} + ': ' +
+												${actDevDTO.device.model.name}"></label>
 								<input type="hidden" id="actDevice" th:value="${device}" th:field="*{device}">
 							</td>
 							<td>
@@ -80,7 +80,7 @@
 							<td>Серийный №</td>
 							<td class="AlignCenter">
 								<label id="lblActDeviceSN"  for="actDevice"
-									   th:text="${ActDevDTO.device.sernum} "></label>
+									   th:text="${actDevDTO.device.sernum} "></label>
 							</td>
 							<td></td>
 						</tr>
@@ -89,7 +89,7 @@
 							<td>Инвентарный №</td>
 							<td class="AlignCenter">
 								<label id="lblActDeviceInvN"  for="actDevice"
-									   th:text="${ActDevDTO.device.invnum}"></label>
+									   th:text="${actDevDTO.device.invnum}"></label>
 							</td>
 							<td></td>
 						</tr>
@@ -102,7 +102,7 @@
 									<option th:each="csa : ${csas}"
 											th:value="${csa.id}"
 											th:text="${csa.num}"
-											th:selected="${csa.id == ActDevDTO.fromCSA.id}">
+											th:selected="${csa.id == actDevDTO.fromCSA.id}">
 									</option>
 								</select>
 							</td>
@@ -117,7 +117,7 @@
 									<option th:each="csa : ${csas}"
 											th:value="${csa.id}"
 											th:text="${csa.num}"
-											th:selected="${csa.id == ActDevDTO.toCSA.id}">
+											th:selected="${csa.id == actDevDTO.toCSA.id}">
 									</option>
 								</select>
 							</td>
@@ -128,8 +128,8 @@
 							<td style=" font-weight: 600">Заявка №</td>
 							<td class="AlignCenter">
 								<label id="lblActDevOrderNum"  for="ActDevOrderNum"
-									   th:text="${ActDevDTO.order.num}"></label>
-								<input type="text" id="ActDevOrderNum" name="orderNum" th:value="${order}" th:field="*{order}"/>
+									   th:text="${actDevDTO.order.num}"></label>
+								<input type="hidden" id="ActDevOrderNum" name="orderNum" th:value="${order}" th:field="*{order}"/>
 							</td>
 							<td></td>
 						</tr>
@@ -170,7 +170,7 @@
 			</div>
 			<span style="margin:20px 5px 5px 5px">
 				<button type="submit" class="a-btn">Добавить</button>
-				<a href="/Orders" class="a-btn">Назад</a>
+				<a href="/Acts/ActsDev" class="a-btn">Назад</a>
 			</span>
 		</form>
 	</div>

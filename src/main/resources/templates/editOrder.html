@@ -188,6 +188,24 @@
 								<input type="file" id="idInputFile" name="files" multiple/>
 							</td>
 						</tr>
+
+						<tr  sec:authorize="hasRole('ROLE_SERV') or hasRole('ROLE_ADMIN')">
+							<td  style="font-weight: 600">Создать акт</td>
+							<td>
+								<select
+										 id="selActDev" class="select"
+										 th:field="*{actTypes}">
+									<option th:each="actType : ${actTypes}"
+											th:value="${actType.id}"
+											th:text="${actType.email}">
+									</option>
+								</select>
+							</td>
+							<td>
+								<button id="btnCreateActDev" type="submit" class="a-btn">Создать</button><
+							</td>
+						</tr>
+
 					</table>
 				</div>
 			</div>
@@ -204,6 +222,7 @@
         function initEvent() {
             $('#btnSelCSA').bind('click', selCSA);
             $('#btnSelDev').bind('click', selDev);
+            $('#btnCreateActDev').bind('click', сreateActDev);
             $('#orderData').bind('change', setOrderNumDate);
             $('#idInputFile').bind('change', CreateNewListFiles);
         }
@@ -264,12 +283,6 @@
 			$(target).closest('.attached-pictures').remove();
 			$.get('/addOrder/deletPicture' + dir+'&'+fName);
 
-
-
-
-
-
-
 		}
 
         function setOrderNumDate(){
@@ -287,7 +300,10 @@
 			console.log("selDev...");
 			$('#addOrder').attr("action","/selDevice")
 		}
-
+		function сreateActDev(){
+			console.log("сreateActDev...");
+			$('#addOrder').attr("action","/Acts/ActDev")
+		}
 	</script>
 
 </body>

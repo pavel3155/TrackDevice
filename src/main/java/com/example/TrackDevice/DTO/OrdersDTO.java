@@ -1,9 +1,6 @@
 package com.example.TrackDevice.DTO;
 
-import com.example.TrackDevice.model.CSA;
-import com.example.TrackDevice.model.Device;
-import com.example.TrackDevice.model.Restore;
-import com.example.TrackDevice.model.User;
+import com.example.TrackDevice.model.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -25,4 +22,5 @@ public class OrdersDTO {
     private String status;
     private User executor;
     private Restore restore;
+    private ActTypes actTypes;
 }

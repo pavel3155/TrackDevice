@@ -44,6 +44,8 @@ public class OrderController {
     @Autowired
     RestoreRepository restoreRepository;
     @Autowired
+    ActTypesRepository actTypesRepository;
+    @Autowired
     private FileService fileService;
 
     /**
@@ -475,11 +477,14 @@ public class OrderController {
             directory="";
         }
 
+        List<ActTypes> actTypes = actTypesRepository.findAll();
+
         System.out.println("directory:="+directory);
         System.out.println("fileNames:= " +fileNames);
         System.out.println("execs:= " + execs);
         System.out.println("ordersDTO:= " +ordersDTO);
 
+        model.addAttribute("actTypes", actTypes);
         model.addAttribute("directory", directory);
         model.addAttribute("files", fileNames);
         model.addAttribute("execs", execs);
