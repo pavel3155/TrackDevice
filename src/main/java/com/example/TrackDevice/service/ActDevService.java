@@ -23,15 +23,15 @@ public class ActDevService {
     @Autowired
     OrderRepository orderRepository;
 
-    public ActDev add(LocalDate localDate){
+    public ActDev add(String num, LocalDate localDate){
         ActDev actDev = new ActDev();
         actDev.setTypes(actTypesRepository.getById((2)));
-        actDev.setNum("ТС-02/002-Р-25");
+        actDev.setNum(num);
         actDev.setDate(localDate);
-        actDev.setFromCSA(csaRepository.getById(6));
-        actDev.setToCSA(csaRepository.getById(2));
-        actDev.setDevice(deviceRepository.getById(3));
-        actDev.setOrder(orderRepository.getById(5));
+        actDev.setFromCSA(csaRepository.getById(9));
+        actDev.setToCSA(csaRepository.getById(5));
+        actDev.setDevice(deviceRepository.getById(63));
+        actDev.setOrder(orderRepository.getById(11));
         actDev.setNote("dddddddd");
         return actDevRepository.save(actDev);
     }

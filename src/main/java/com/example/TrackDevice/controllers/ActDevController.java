@@ -3,10 +3,7 @@ package com.example.TrackDevice.controllers;
 import com.example.TrackDevice.DTO.ActDevDTO;
 import com.example.TrackDevice.DTO.OrdersDTO;
 import com.example.TrackDevice.model.*;
-import com.example.TrackDevice.repo.ActDevRepository;
-import com.example.TrackDevice.repo.ActTypesRepository;
-import com.example.TrackDevice.repo.CSARepository;
-import com.example.TrackDevice.repo.DeviceRepository;
+import com.example.TrackDevice.repo.*;
 import com.example.TrackDevice.service.ActDevService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,8 @@ public class ActDevController {
     DeviceRepository deviceRepository;
     @Autowired
     ActTypesRepository actTypesRepository;
-
+    @Autowired
+    OrderRepository orderRepository;
 
 
 
@@ -94,8 +92,8 @@ public class ActDevController {
 
         String num = ordersDTO.getActTypes().getType().substring(13,15)+"-"+
                 ordersDTO.getCsa().getNum().substring(0,2)+"/__-"+
-                ordersDTO.getActTypes().getType().substring(1,2)+
-                String.valueOf(date.getYear()).substring(1);
+                ordersDTO.getActTypes().getType().substring(1,2)+"-"+
+                String.valueOf(date.getYear()).substring(2);
         System.out.println("num:="+num);
         actDevDTO.setNum(num);
 
@@ -109,6 +107,17 @@ public class ActDevController {
             actDevDTO.setToCSA(csaRepository.getByNum("02C001"));
             actDevDTO.setDevice(ordersDTO.getDevice());
         }
+        actDevDTO.setOrder(orderRepository.getById(ordersDTO.getId()));
+        actDevDTO.setNote("");
+
+        System.out.println("actDevDTO:= "+actDevDTO);
+        List<CSA> csas = csaRepository.findAll();
+        List<ActTypes> types =actTypesRepository.findAll();
+
+        model.addAttribute("types", types);
+        model.addAttribute("csas", csas);
+        model.addAttribute("actDevDTO", actDevDTO);
+
 
         return "Acts/ActDev";
         }

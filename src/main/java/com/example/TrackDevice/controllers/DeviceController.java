@@ -34,6 +34,8 @@ public class DeviceController {
     DeviceCSARepository deviceCSARepository;
     @Autowired
     CSARepository csaRepository;
+    @Autowired
+    ActTypesRepository actTypesRepository;
 
     @GetMapping("/device")
     public String newDevice(Model model) {
@@ -165,7 +167,6 @@ public class DeviceController {
         model.addAttribute("ordersDTO",ordersDTO);
         return "selDevice";
     }
-
     @PostMapping("/selDevice")
     public String selDevice(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO,
                          BindingResult result, RedirectAttributes atrRedirect){
@@ -175,7 +176,6 @@ public class DeviceController {
         atrRedirect.addFlashAttribute("ordersDTO",ordersDTO);
         return "redirect:/selDevice";
     }
-
     @GetMapping("/selDeviceCSA")
     public String selDeviceCSA(@ModelAttribute OrdersDTO ordersDTO, Model model) {
         System.out.println("Get:/selDeviceCSA...");
