@@ -20,11 +20,11 @@
 	<div class="container">
 		<form id="addOrder" class="forms-operation" enctype="multipart/form-data"
 			  th:method="post"
-			  th:action="@{/ActDev}"
+			  th:action="@{/Acts/addActDev}"
 			  th:object="${actDevDTO}">
 			<div class="container-addOrder">
 				<div  style="text-align:center" th:if="${success}" role="alert">
-					<h3>Заявка создана!</h3>
+					<h3>Акт создана!</h3>
 				</div>
 				<div style="text-align:center" th:if="!${success}">
 					<h3>Акт приема-передачи ТС </h3>
@@ -245,7 +245,7 @@
 
                 function selDev(){
                     console.log("selDev...");
-                    $('#addOrder').attr("action","/selDevSC")
+                    $('#addOrder').attr("action","/Acts/selDevSC")
                 }
 
 

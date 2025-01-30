@@ -1,5 +1,6 @@
 package com.example.TrackDevice.service;
 
+import com.example.TrackDevice.DTO.ActDevDTO;
 import com.example.TrackDevice.DTO.OrdersDTO;
 import com.example.TrackDevice.model.ActDev;
 import com.example.TrackDevice.model.ActTypes;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class ActDevService {
@@ -23,16 +25,20 @@ public class ActDevService {
     @Autowired
     OrderRepository orderRepository;
 
-    public ActDev add(String num, LocalDate localDate){
+    public ActDev add(ActDevDTO actDevDTO){
         ActDev actDev = new ActDev();
-        actDev.setTypes(actTypesRepository.getById((2)));
-        actDev.setNum(num);
+        actDev.setTypes(actDevDTO.getActType());
+        actDev.setNum(actDevDTO.getNum());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate localDate = LocalDate.parse(actDevDTO.getDate(), formatter);
         actDev.setDate(localDate);
-        actDev.setFromCSA(csaRepository.getById(9));
-        actDev.setToCSA(csaRepository.getById(5));
-        actDev.setDevice(deviceRepository.getById(63));
-        actDev.setOrder(orderRepository.getById(11));
-        actDev.setNote("dddddddd");
+
+        actDev.setFromCSA(actDevDTO.getFromCSA());
+        actDev.setToCSA(actDevDTO.getToCSA());
+        actDev.setDevice(actDevDTO.getDevice());
+        actDev.setOrder(actDevDTO.getOrder());
+        actDev.setNote(actDevDTO.getNote());
         return actDevRepository.save(actDev);
     }
 

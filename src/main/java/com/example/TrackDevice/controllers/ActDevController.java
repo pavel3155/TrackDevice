@@ -12,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -65,6 +67,7 @@ public class ActDevController {
         actDevDTO.setIdSelDev(actDev.getDevice().getId());
         actDevDTO.setFromCSA(actDev.getFromCSA());
         actDevDTO.setIdFromCSA(actDev.getFromCSA().getId());
+        actDevDTO.setIdFromCSA(actDev.getFromCSA().getId());
         actDevDTO.setToCSA(actDev.getToCSA());
         actDevDTO.setOrder(actDev.getOrder());
         actDevDTO.setNote(actDev.getNote());
@@ -82,7 +85,7 @@ public class ActDevController {
     }
 
     @PostMapping("/ActDev")
-    public String createActDev(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO){
+    public String createActDev(Model model, @ModelAttribute OrdersDTO ordersDTO){
         System.out.println("POST:/ActDev...");
         System.out.println("createActDev...");
         System.out.println("ordersDTO:= "+ordersDTO);
@@ -101,12 +104,15 @@ public class ActDevController {
         actDevDTO.setNum(num);
 
         if (ordersDTO.getActTypes().getType().substring(1,2).equals("Р")) {
-            actDevDTO.setFromCSA(csaRepository.getByNum("02C001"));
+            CSA fromCSA =csaRepository.getByNum("02C001");
+            actDevDTO.setFromCSA(fromCSA);
+            actDevDTO.setIdFromCSA(fromCSA.getId());
             actDevDTO.setToCSA(ordersDTO.getCsa());
             actDevDTO.setDevice(deviceRepository.findBySernum("---").get(0));
 
         } else if(ordersDTO.getActTypes().getType().substring(1,2).equals("П")){
             actDevDTO.setFromCSA(ordersDTO.getCsa());
+            actDevDTO.setIdFromCSA(ordersDTO.getCsa().getId());
             actDevDTO.setToCSA(csaRepository.getByNum("02C001"));
             actDevDTO.setDevice(ordersDTO.getDevice());
         }
@@ -123,7 +129,30 @@ public class ActDevController {
 
         return "Acts/ActDev";
     }
+    @PostMapping("/addActDev")
+    public String addActDev(Model model, @Valid @ModelAttribute ActDevDTO actDevDTO, BindingResult result){
+        System.out.println("POST:/addActDev...");
+        System.out.println("actDevDTO:= "+actDevDTO);
 
+
+        try {
+            actDevService.add(actDevDTO);
+
+            List<CSA> csas = csaRepository.findAll();
+            List<ActTypes> types =actTypesRepository.findAll();
+
+            model.addAttribute("types", types);
+            model.addAttribute("csas", csas);
+            model.addAttribute("actDevDTO", actDevDTO);
+            model.addAttribute("success",true);
+        } catch (Exception ex) {
+            result.addError(new FieldError("ordersDTO", "num", ex.getMessage()));
+        }
+
+
+
+        return "Acts/ActDev";
+    }
 
     @PostMapping("/selDevSC")
     public String devSelect(Model model, @Valid @ModelAttribute ActDevDTO actDevDTO){
@@ -136,11 +165,12 @@ public class ActDevController {
         return "Acts/DevSC";
     }
     @PostMapping("/trDevSC")
-    public String devTransfer(Model model, @Valid @ModelAttribute ActDevDTO actDevDTO){
+    public String devTransfer(Model model, @ModelAttribute ActDevDTO actDevDTO){
         System.out.println("POST:/trDevSC...");
         System.out.println("actDevDTO:= "+actDevDTO);
 
-
+        Device selDev=deviceRepository.getById(actDevDTO.getIdSelDev());
+        actDevDTO.setDevice(selDev);
         List<CSA> csas = csaRepository.findAll();
         List<ActTypes> types =actTypesRepository.findAll();
 
