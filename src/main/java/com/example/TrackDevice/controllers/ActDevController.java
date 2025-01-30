@@ -34,7 +34,8 @@ public class ActDevController {
     ActTypesRepository actTypesRepository;
     @Autowired
     OrderRepository orderRepository;
-
+    @Autowired
+    TypeDeviceRepository typeDeviceRepository;
 
 
     @GetMapping("/ActsDev")
@@ -61,8 +62,9 @@ public class ActDevController {
         actDevDTO.setNum(actDev.getNum());
         actDevDTO.setActType(actDev.getTypes());
         actDevDTO.setDevice(actDev.getDevice());
-        actDevDTO.setIdDevice(actDev.getDevice().getId());
+        actDevDTO.setIdSelDev(actDev.getDevice().getId());
         actDevDTO.setFromCSA(actDev.getFromCSA());
+        actDevDTO.setIdFromCSA(actDev.getFromCSA().getId());
         actDevDTO.setToCSA(actDev.getToCSA());
         actDevDTO.setOrder(actDev.getOrder());
         actDevDTO.setNote(actDev.getNote());
@@ -75,6 +77,7 @@ public class ActDevController {
         model.addAttribute("types", types);
         model.addAttribute("csas", csas);
         model.addAttribute("actDevDTO", actDevDTO);
+
         return "Acts/ActDev";
     }
 
@@ -118,11 +121,35 @@ public class ActDevController {
         model.addAttribute("csas", csas);
         model.addAttribute("actDevDTO", actDevDTO);
 
+        return "Acts/ActDev";
+    }
+
+
+    @PostMapping("/selDevSC")
+    public String devSelect(Model model, @Valid @ModelAttribute ActDevDTO actDevDTO){
+        System.out.println("POST:/DevSC...");
+        System.out.println("actDevDTO:= "+actDevDTO);
+        List<TypeDevice> types = typeDeviceRepository.findAll();
+        types.remove(0);
+        model.addAttribute("types",types);
+        model.addAttribute("actDevDTO",actDevDTO);
+        return "Acts/DevSC";
+    }
+    @PostMapping("/trDevSC")
+    public String devTransfer(Model model, @Valid @ModelAttribute ActDevDTO actDevDTO){
+        System.out.println("POST:/trDevSC...");
+        System.out.println("actDevDTO:= "+actDevDTO);
+
+
+        List<CSA> csas = csaRepository.findAll();
+        List<ActTypes> types =actTypesRepository.findAll();
+
+        model.addAttribute("types", types);
+        model.addAttribute("csas", csas);
+        model.addAttribute("actDevDTO", actDevDTO);
 
         return "Acts/ActDev";
-        }
-
-
+    }
 
 
 //        model.addAttribute("ordersDTO",ordersDTO);

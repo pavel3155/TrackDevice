@@ -25,6 +25,7 @@ public class ActDevDTO {
     private Order order;
     @NotNull
     private String note;
-    private long idDevice;
+    private long idSelDev;
+    private  long idFromCSA;
 
 }
