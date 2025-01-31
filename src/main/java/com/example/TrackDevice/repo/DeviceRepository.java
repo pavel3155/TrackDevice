@@ -13,6 +13,7 @@ public interface DeviceRepository extends JpaRepository<Device,Long> {
     List<Device> findBySernum(String sernum);
     @CacheEvict
     List<Device> findByModel(ModelDevice modelDevice);
+    List<Device> findByCsa(CSA csa);
     List<Device> findByCsaAndModel(CSA csa, ModelDevice modelDevice);
     List<Device> findByCsaAndModelAndSernumContainingIgnoreCase(CSA csa, ModelDevice modelDevice, String sernum);
     List<Device> findByModelAndSernumContainingIgnoreCase(ModelDevice modelDevice, String sernum);

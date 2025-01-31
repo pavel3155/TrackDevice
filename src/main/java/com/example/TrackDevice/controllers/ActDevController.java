@@ -84,7 +84,7 @@ public class ActDevController {
         return "Acts/ActDev";
     }
 
-    @PostMapping("/ActDev")
+    @PostMapping("/crActDev")
     public String createActDev(Model model, @ModelAttribute OrdersDTO ordersDTO){
         System.out.println("POST:/ActDev...");
         System.out.println("createActDev...");
@@ -134,10 +134,8 @@ public class ActDevController {
         System.out.println("POST:/addActDev...");
         System.out.println("actDevDTO:= "+actDevDTO);
 
-
         try {
             actDevService.add(actDevDTO);
-
             List<CSA> csas = csaRepository.findAll();
             List<ActTypes> types =actTypesRepository.findAll();
 
@@ -149,21 +147,28 @@ public class ActDevController {
             result.addError(new FieldError("ordersDTO", "num", ex.getMessage()));
         }
 
-
-
         return "Acts/ActDev";
     }
 
-    @PostMapping("/selDevSC")
-    public String devSelect(Model model, @Valid @ModelAttribute ActDevDTO actDevDTO){
-        System.out.println("POST:/DevSC...");
+    @PostMapping("/selDev")
+    public String devSelect(Model model, @ModelAttribute ActDevDTO actDevDTO){
+        System.out.println("POST:/selDev...");
         System.out.println("actDevDTO:= "+actDevDTO);
         List<TypeDevice> types = typeDeviceRepository.findAll();
         types.remove(0);
         model.addAttribute("types",types);
         model.addAttribute("actDevDTO",actDevDTO);
+
+        if (!"02C001".equals(actDevDTO.getFromCSA().getNum())){
+            System.out.println("02C001...");
+            List<Device> devices = deviceRepository.findByCsa(actDevDTO.getFromCSA());
+            model.addAttribute("devices",devices);
+            return "Acts/DevCSA";
+        }
+
         return "Acts/DevSC";
     }
+
     @PostMapping("/trDevSC")
     public String devTransfer(Model model, @ModelAttribute ActDevDTO actDevDTO){
         System.out.println("POST:/trDevSC...");
