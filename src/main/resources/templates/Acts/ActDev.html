@@ -24,10 +24,13 @@
 			  th:object="${actDevDTO}">
 			<div class="container-addOrder">
 				<div  style="text-align:center" th:if="${success}" role="alert">
-					<h3>Акт создана!</h3>
+					<h3>Акт создан!</h3>
 				</div>
 				<div style="text-align:center" th:if="!${success}">
 					<h3>Акт приема-передачи ТС </h3>
+				</div>
+				<div class="div_error">
+					<p th:if="${#fields.hasErrors('err')}"  th:errors="*{err}"></p>
 				</div>
 
 				<div class ="tbl-div">
@@ -45,12 +48,15 @@
 						<tr>
 							<td style=" font-weight: 600">Акт №</td>
 							<td class="AlignCenter">
-								<input id="actNo" type="text" th:value="${num}" th:field="*{num}"/>
+								<div class="div_error">
+									<p th:if="${#fields.hasErrors('num')}"  th:errors="*{num}"></p>
+								</div>
+								<input id="actNo" type="text" th:value="${actDevDTO.num}" th:field="*{num}"/>
 							</td>
 							<td></td>
 						</tr>
 						<tr>
-							<td style=" font-weight: 600">Акт</td>
+							<td style=" font-weight: 600">Тип акта</td>
 							<td class="AlignCenter">
 								<select  id="selActTypes" class="select"
 										 th:field="*{actType}">
@@ -67,6 +73,9 @@
 						<tr>
 							<td style=" font-weight: 600">Техническое средство</td>
 							<td class="AlignCenter">
+								<div class="div_error">
+									<p th:if="${#fields.hasErrors('device')}"  th:errors="*{device}"></p>
+								</div>
 								<label id="lblActDevice"  for="actDevice"
 									   th:text="${actDevDTO.device.model.type.type} + ': ' +
 												${actDevDTO.device.model.name}"></label>
@@ -97,14 +106,20 @@
 						<tr>
 							<td style=" font-weight: 600">Откуда</td>
 							<td class="AlignCenter">
-								<select  id="selFromCSA" class="select"
+								<!-- <select  id="selFromCSA" class="select"
 										 th:field="*{fromCSA}">
 									<option th:each="csa : ${csas}"
 											th:value="${csa.id}"
 											th:text="${csa.num}"
 											th:selected="${csa.id == actDevDTO.fromCSA.id}">
 									</option>
-								</select>
+								</select> -->
+
+								<input id ="txtFromCSA" type="hidden" th:value="${fromCSA}" th:field="*{fromCSA}">
+								<label id="lblFromCSA"  for="actDevice"
+									   th:text="${actDevDTO.fromCSA.num} +', '+ ${actDevDTO.fromCSA.address}">
+								</label>
+
 							</td>
 							<td></td>
 						</tr>
@@ -112,14 +127,19 @@
 						<tr>
 							<td style=" font-weight: 600">Куда</td>
 							<td class="AlignCenter">
-								<select  id="selToCSA" class="select"
+								<!-- <select  id="selToCSA" class="select"
 										 th:field="*{toCSA}">
 									<option th:each="csa : ${csas}"
 											th:value="${csa.id}"
 											th:text="${csa.num}"
 											th:selected="${csa.id == actDevDTO.toCSA.id}">
 									</option>
-								</select>
+								</select> -->
+								<input id ="txtToCSA" type="hidden" th:value="${toCSA}" th:field="*{toCSA}">
+								<label id="lblToCSA"  for="actDevice"
+									   th:text="${actDevDTO.toCSA.num} +', '+ ${actDevDTO.toCSA.address}">
+								</label>
+
 							</td>
 							<td></td>
 						</tr>
@@ -177,14 +197,32 @@
 
 	<script>
                 $(document).ready(initEvent);
+                $(document).ready(btnSelDev);
 
                 function initEvent() {
-
                     $('#btnSelDev').bind('click', selDev);
                     $('#orderData').bind('change', setOrderNumDate);
                     $('#idInputFile').bind('change', CreateNewListFiles);
+                    $('#selActTypes').bind('click', btnSelDev);
                 }
 
+ 				function btnSelDev(){
+ 					console.log("btnSelDev...");
+ 					var actType=$('#selActTypes').val();
+ 					console.log("actType= "+actType);
+ 					if($('#selActTypes option:selected').text()==='(П) движение ТС (КСА >> СЦ)'){
+ 						console.log("(П) движение ТС (КСА >> СЦ)...");
+ 						$('#btnSelDev').hide();
+ 					} else {
+ 						console.log("else...");
+ 						$('#btnSelDev').show();
+ 					}
+
+
+
+
+
+ 				}
                 function CreateNewListFiles(){
                     console.log('CreateNewListFiles()...');
 					var dt = new DataTransfer();

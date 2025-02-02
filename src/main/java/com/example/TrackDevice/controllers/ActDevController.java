@@ -116,6 +116,8 @@ public class ActDevController {
             actDevDTO.setToCSA(csaRepository.getByNum("02C001"));
             actDevDTO.setDevice(ordersDTO.getDevice());
         }
+
+
         actDevDTO.setOrder(orderRepository.getById(ordersDTO.getId()));
         actDevDTO.setNote("");
 
@@ -134,17 +136,44 @@ public class ActDevController {
         System.out.println("POST:/addActDev...");
         System.out.println("actDevDTO:= "+actDevDTO);
 
+        List<CSA> csas = csaRepository.findAll();
+        List<ActTypes> types =actTypesRepository.findAll();
+        model.addAttribute("types", types);
+        model.addAttribute("csas", csas);
+        model.addAttribute("actDevDTO", actDevDTO);
+
+        // если номер акта используетс в заявке с другим номером, то создается ошибка
+        List<ActDev> lstActsDevNum = actDevRepository.findByNumAndOrderNot(actDevDTO.getNum(),actDevDTO.getOrder());
+        if( !lstActsDevNum.isEmpty()){
+            System.out.println("actDevDTO.getNum():= "+actDevDTO.getNum());
+            result.addError((new FieldError("actDevDTO",
+                    "num",
+                    "Данный номер акта используется в заявке сдругим номером ")));
+            return "Acts/ActDev";
+        }
+
+        // если акт с параметрами: номер заявка, откуда, ТС существует, то создается ошибка
+        List<ActDev> lstActsDevFromCSA = actDevRepository.findByNumAndOrderAndFromCSAAndDevice(actDevDTO.getNum(),
+                                                                                               actDevDTO.getOrder(),
+                                                                                               actDevDTO.getFromCSA(),
+                                                                                               actDevDTO.getDevice());
+        // если акт с параметрами: номер заявка, куда, ТС существует, то создается ошибка
+        List<ActDev> lstActsDevToCSA = actDevRepository.findByNumAndOrderAndToCSAAndDevice(actDevDTO.getNum(),
+                                                                                           actDevDTO.getOrder(),
+                                                                                           actDevDTO.getToCSA(),
+                                                                                           actDevDTO.getDevice());
+        if( !lstActsDevFromCSA.isEmpty()||!lstActsDevToCSA.isEmpty()){
+            result.addError((new FieldError("actDevDTO",
+                    "device",
+                    "Движение указанного ТС уже существует")));
+            return "Acts/ActDev";
+        }
+
         try {
             actDevService.add(actDevDTO);
-            List<CSA> csas = csaRepository.findAll();
-            List<ActTypes> types =actTypesRepository.findAll();
-
-            model.addAttribute("types", types);
-            model.addAttribute("csas", csas);
-            model.addAttribute("actDevDTO", actDevDTO);
             model.addAttribute("success",true);
         } catch (Exception ex) {
-            result.addError(new FieldError("ordersDTO", "num", ex.getMessage()));
+            result.addError(new FieldError("actDevDTO", "err", ex.getMessage()));
         }
 
         return "Acts/ActDev";

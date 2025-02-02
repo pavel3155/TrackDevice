@@ -2,6 +2,8 @@ package com.example.TrackDevice.repo;
 
 import com.example.TrackDevice.model.ActDev;
 import com.example.TrackDevice.model.CSA;
+import com.example.TrackDevice.model.Device;
+import com.example.TrackDevice.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -9,4 +11,7 @@ import java.util.List;
 public interface ActDevRepository extends JpaRepository<ActDev,Long> {
     List<ActDev> findAll();
     ActDev getById(long id);
+    List<ActDev> findByNumAndOrderNot(String num, Order order);
+    List<ActDev> findByNumAndOrderAndFromCSAAndDevice(String num, Order order, CSA fromCSA, Device device);
+    List<ActDev> findByNumAndOrderAndToCSAAndDevice(String num, Order order, CSA ToCSA, Device device);
 }

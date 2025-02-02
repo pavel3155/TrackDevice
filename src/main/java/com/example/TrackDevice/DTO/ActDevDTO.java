@@ -27,5 +27,6 @@ public class ActDevDTO {
     private String note;
     private long idSelDev;
     private  long idFromCSA;
+    private String err;
 
 }
