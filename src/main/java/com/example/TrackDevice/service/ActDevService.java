@@ -6,6 +6,7 @@ import com.example.TrackDevice.model.ActDev;
 import com.example.TrackDevice.model.ActTypes;
 import com.example.TrackDevice.model.Order;
 import com.example.TrackDevice.repo.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,9 @@ public class ActDevService {
         actDev.setNote(actDevDTO.getNote());
         return actDevRepository.save(actDev);
     }
-
+    @Transactional
+    public void del(ActDev actDev){
+        actDevRepository.delete(actDev);
+    }
 
 }

@@ -84,6 +84,49 @@ public class ActDevController {
         return "Acts/ActDev";
     }
 
+
+    private ActDevDTO newActDevDTO(ActDev actDev){
+        ActDevDTO actDevDTO = new ActDevDTO();
+        actDevDTO.setId(actDev.getId());
+        actDevDTO.setDate(actDev.getDate().toString());
+        actDevDTO.setNum(actDev.getNum());
+        actDevDTO.setActType(actDev.getTypes());
+        actDevDTO.setDevice(actDev.getDevice());
+        actDevDTO.setIdSelDev(actDev.getDevice().getId());
+        actDevDTO.setFromCSA(actDev.getFromCSA());
+        actDevDTO.setIdFromCSA(actDev.getFromCSA().getId());
+        actDevDTO.setIdFromCSA(actDev.getFromCSA().getId());
+        actDevDTO.setToCSA(actDev.getToCSA());
+        actDevDTO.setOrder(actDev.getOrder());
+        actDevDTO.setNote(actDev.getNote());
+        return actDevDTO;
+    }
+    /** метод выполняется при нажатии на кнопку "Удалить" на странице "ActsDev"
+     * метод принимает id акта, загружает страницу "ActDev"
+     */
+    @GetMapping("/ActDevDel")
+    public String delActDev(@RequestParam long id, Model model) {
+        System.out.println("GET:/ActDevDel{id}....");
+        ActDev actDev = actDevRepository.getById(id);
+        System.out.println("actDev:= "+actDev);
+
+        List<ActDev> devActs;
+        devActs = actDevRepository.findAll();
+        System.out.println("devActs ="+devActs);
+        model.addAttribute("devActs", devActs);
+
+
+
+
+        try {
+            actDevService.del(actDev);
+            devActs = actDevRepository.findAll();
+            model.addAttribute("devActs", devActs);
+        } catch (Exception ex) {
+            //result.addError(new FieldError("actDevDTO", "err", ex.getMessage()));
+        }
+        return "/Acts/ActsDev";
+    }
     @PostMapping("/crActDev")
     public String createActDev(Model model, @ModelAttribute OrdersDTO ordersDTO){
         System.out.println("POST:/ActDev...");
