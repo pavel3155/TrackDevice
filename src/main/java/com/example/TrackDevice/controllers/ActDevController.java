@@ -49,6 +49,29 @@ public class ActDevController {
 
     return "/Acts/ActsDev";
     }
+
+    @GetMapping("/filterActsDev")
+    public String filterActDev(@RequestParam String data, @RequestParam String ActNo, Model model) {
+        System.out.println("GET:/filterActsDev?data&ActNo...");
+        System.out.println("data= "+data);
+        System.out.println("ActNo= "+ActNo);
+
+
+        List<ActDev> devActs = actDevRepository.findAll();
+        System.out.println("devActs ="+devActs);
+        model.addAttribute("devActs", devActs);
+        return  "/Acts/ActsDev";
+    }
+    @PostMapping("/moveActsDev")
+    public String moveActDev(@RequestParam long idOrder, Model model) {
+        System.out.println("GET:/moveActsDev?idOrder...");
+        System.out.println("idOrder= "+idOrder);
+        Order order=orderRepository.getById(idOrder);
+        List<ActDev> devActs = actDevRepository.findByOrder(order);
+        System.out.println("devActs ="+devActs);
+        model.addAttribute("devActs", devActs);
+        return  "/Acts/ActsDev";
+    }
     /** метод выполняется при нажатии на кнопку "Открыть" на странице "ActsDev"
      * метод принимает id акта, загружает страницу "ActDev"
      */

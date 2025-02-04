@@ -505,12 +505,13 @@ public class OrderController {
         roles.add(roleRepository.findByRole("ROLE_SERV"));
         List<User> execs =userRepository.findByRoleIn(roles);
         List<Restore> restoreMethods=restoreRepository.findAll();
+        List<ActTypes> actTypes = actTypesRepository.findAll();
 
         model.addAttribute("directory", ordersDTO.getNum());
         model.addAttribute("files", fileNames);
         model.addAttribute("restoreMethods", restoreMethods);
         model.addAttribute("execs", execs);
-//        model.addAttribute("success",false);
+        model.addAttribute("actTypes",actTypes);
         model.addAttribute("ordersDTO",ordersDTO);
 
         if (result.hasErrors()) {

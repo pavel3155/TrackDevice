@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface ActDevRepository extends JpaRepository<ActDev,Long> {
     List<ActDev> findAll();
+    List<ActDev> findByOrder(Order order);
     ActDev getById(long id);
     List<ActDev> findByNumAndOrderNot(String num, Order order);
     List<ActDev> findByNumAndOrderAndFromCSAAndDevice(String num, Order order, CSA fromCSA, Device device);

@@ -25,13 +25,13 @@
 
 			<div class="container-inner">
 				<span class="margin-t">
-					<label for="filtrData">Дата: </label>
-					<input id="filtrData" type="date"/>
+					<label for="filterData">Дата: </label>
+					<input id="filterData" type="date"/>
 
-					<label for="filtrNumOrder">Заявка №: </label>
-					<input type="text" id="filtrNumOrder" name="filtrNumOrder"/>
+					<label for="filterActNo">Акт №: </label>
+					<input type="text" id="filterActNo" name="filterActNo"/>
 
-					<button type="button" id="btnFiltrOrder" class="a-btn">Применить</button>
+					<button type="button" id="btnFilterOrder" class="a-btn" onclick="appFilterToOrder()">Применить</button>
 				</span>
 
 				<div class ="tbl-div">
@@ -77,12 +77,26 @@
 	</div>
 	<script>
 		$(document).ready(loadActsDev);
+		$(document).ready(initEvent);
+
+         function initEvent() {
+         	$('#btnFilterOrder').on('click', appFilterToOrder);
+         }
+
 
         function loadActsDev() {
             console.log("выполняется loadActsDev");
 			$('#link').empty().prop('disabled', false);
             $('#link').append('<a href="/Acts/ActDev" class="a-btn">Создать акт</a>');
         }
+
+		function appFilterToOrder(){
+			console.log("appFilterToOrder...");
+			var data=$('#filterData').val();
+			var ActNo=$('#filterActNo').val();
+			$('#addOrder').attr("action", "/Acts/filterActsDev?data=" + encodeURIComponent(data) + "&ActNo=" + encodeURIComponent(ActNo));
+
+		}
 	</script>
 </body>
 </html>

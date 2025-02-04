@@ -189,7 +189,7 @@
 							</td>
 						</tr>
 
-						<tr  sec:authorize="hasRole('ROLE_SERV') or hasRole('ROLE_ADMIN')">
+						<tr  sec:authorize="!hasRole('ROLE_CSA')">
 							<td  style="font-weight: 600">Создать акт</td>
 							<td>
 								<select
@@ -200,9 +200,20 @@
 											th:text="${actType.type}">
 									</option>
 								</select>
+								<script>
+									$('#selActDev option[value=1]').prop('selected',true);
+								</script>
 							</td>
 							<td>
 								<button id="btnCreateActDev" type="submit" class="a-btn">Создать</button>
+							</td>
+						</tr>
+
+						<tr>
+							<td  style="font-weight: 600">Движение ТС по заявке </td>
+							<td></td>
+							<td>
+								<button id="btnMoveActDev" type="submit" class="a-btn">Перейти</button>
 							</td>
 						</tr>
 
@@ -223,6 +234,7 @@
             $('#btnSelCSA').bind('click', selCSA);
             $('#btnSelDev').bind('click', selDev);
             $('#btnCreateActDev').bind('click', сreateActDev);
+            $('#btnMoveActDev').on('click', moveActDev);
             $('#orderData').bind('change', setOrderNumDate);
             $('#idInputFile').bind('change', CreateNewListFiles);
         }
@@ -303,6 +315,11 @@
 		function сreateActDev(){
 			console.log("сreateActDev...");
 			$('#addOrder').attr("action","/Acts/crActDev")
+		}
+		function moveActDev(){
+			console.log("moveActDev...");
+			var idOrder=$('#idOrder').val();
+			$('#addOrder').attr("action","/Acts/moveActsDev?idOrder="+idOrder);
 		}
 	</script>
 
