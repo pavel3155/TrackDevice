@@ -18,7 +18,7 @@
 <body>
 	<div class="container">
 
-		<form class="forms-operation"
+		<form id = "idActsDev" class="forms-operation"
 			  th:method="get"
 			  th:action="@{/ActsDev}"
 			  th:object="${devActs}">
@@ -69,6 +69,7 @@
 				</div>
 			</div>
 			<div>
+				<input type="submit" id="btnSend" style="display:none;">
 				<span id="link"></span>
 				<span><a href="/" class="a-btn">Назад</a></span>
 			</div>
@@ -94,8 +95,11 @@
 			console.log("appFilterToOrder...");
 			var data=$('#filterData').val();
 			var ActNo=$('#filterActNo').val();
-			$('#addOrder').attr("action", "/Acts/filterActsDev?data=" + encodeURIComponent(data) + "&ActNo=" + encodeURIComponent(ActNo));
+			console.log("data= "+data);
+			console.log("ActNo= "+ActNo);
 
+			$('#idActsDev').attr("action", "/Acts/filterActsDev?data=\\'" + data + "\\'&ActNo=\\'" + ActNo+"\\'");
+			$('#btnSend').click();
 		}
 	</script>
 </body>
