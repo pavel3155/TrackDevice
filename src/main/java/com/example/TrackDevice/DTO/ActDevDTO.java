@@ -11,6 +11,7 @@ public class ActDevDTO {
     private long id;
     @NotNull
     private String num;
+    private String dateStart;
     @NotNull
     private String date;
     @NotNull

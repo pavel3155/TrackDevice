@@ -170,7 +170,6 @@
 									<div class="attached-pictures">
 										<a th:href="@{/addOrder/loadPicture(direc=${directory}, fileName=${file})}" target="_blank" th:text="${file}"></a>
 										<a href="#" class="input-file-remove" th:onclick="removeAttachedPictures(event, [[${directory}]], [[${file}]])">x</a>
-										<!-- <a th:href="@{/addOrder/deletPicture(direc=${directory}, fileName=${file})}" class="input-file-remove" th:onclick="removeAttachedPictures(event, [[${directory}]], [[${file}]])">x</a> -->
 										<a th:href="@{/addOrder/downloadPicture(direc=${directory}, fileName=${file})}" class="input-file-download">>></a>
 									</div>
 								</span>

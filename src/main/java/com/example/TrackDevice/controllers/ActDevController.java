@@ -46,15 +46,20 @@ public class ActDevController {
         List<ActDev> devActs = actDevRepository.findAll();
         System.out.println("devActs ="+devActs);
         model.addAttribute("devActs", devActs);
+        ActDevDTO actDevDTO = new ActDevDTO();
+        model.addAttribute("actDevDTO", actDevDTO);
 
     return "/Acts/ActsDev";
     }
 
-    @GetMapping("/filterActsDev")
-    public String filterActDev(@RequestParam String data, @RequestParam String ActNo, Model model) {
-        System.out.println("GET:/filterActsDev?data&ActNo...");
-        System.out.println("data= "+data);
-        System.out.println("ActNo= "+ActNo);
+    @PostMapping("/FilterActsDev")
+    public String filterActDev(Model model, @ModelAttribute ActDevDTO actDevDTO) {
+        System.out.println("POST:/FilterActsDev...");
+        System.out.println("actDevDTO= "+actDevDTO);
+        String dateStart = actDevDTO.getDateStart();
+        String dateFinish = actDevDTO.getDate();
+
+
 
 
         List<ActDev> devActs = actDevRepository.findAll();
