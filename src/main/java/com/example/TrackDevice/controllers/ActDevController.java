@@ -53,17 +53,38 @@ public class ActDevController {
     }
 
     @PostMapping("/FilterActsDev")
-    public String filterActDev(Model model, @ModelAttribute ActDevDTO actDevDTO) {
+    public String filterActDev(Model model, @ModelAttribute ActDevDTO actDevDTO,BindingResult result) {
         System.out.println("POST:/FilterActsDev...");
         System.out.println("actDevDTO= "+actDevDTO);
-        String dateStart = actDevDTO.getDateStart();
-        String dateFinish = actDevDTO.getDate();
+        List<ActDev> devActs;
 
+        boolean date=false;
+        boolean num=false;
 
+        if (actDevDTO.getDateStart()!=null&&!actDevDTO.getDateStart().isEmpty()&&
+            actDevDTO.getDate()!=null&&!actDevDTO.getDate().isEmpty()){
+            date=true;
+        }
+        if (actDevDTO.getNum()!=null&&!actDevDTO.getNum().isEmpty()){
+            num=true;
+        }
 
-
-        List<ActDev> devActs = actDevRepository.findAll();
-        System.out.println("devActs ="+devActs);
+        System.out.println("date="+date);
+        System.out.println("num="+num);
+        if (date&&num){
+            devActs = actDevRepository.findByDateBetweenAndNum(actDevService.toData(actDevDTO.getDateStart()),
+                                                               actDevService.toData(actDevDTO.getDate()),
+                                                               actDevDTO.getNum());
+        } else if (date){
+                devActs = actDevRepository.findByDateBetween(actDevService.toData(actDevDTO.getDateStart()),
+                                                             actDevService.toData(actDevDTO.getDate()));
+        } else if (num) {
+                devActs = actDevRepository.findByNum(actDevDTO.getNum());
+        } else {
+                result.addError((new FieldError("actDevDTO", "err", "параметры для выборки не заданы")));
+                devActs = actDevRepository.findAll();
+        }
+        System.out.println("devActs="+devActs);
         model.addAttribute("devActs", devActs);
         return  "/Acts/ActsDev";
     }

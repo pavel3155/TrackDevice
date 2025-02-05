@@ -29,6 +29,7 @@ public class ActDevService {
     public LocalDate toData(String date){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);
+        System.out.println("localDate ="+localDate);
         return localDate;
     }
     public ActDev add(ActDevDTO actDevDTO){

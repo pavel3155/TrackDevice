@@ -20,7 +20,7 @@
 
 		<form id = "idActsDev" class="forms-operation"
 			  th:method="post"
-			  th:action="@{/FilterActsDev}"
+			  th:action="@{/Acts/FilterActsDev}"
 			  th:object="${actDevDTO}">
 
 			<div class="container-inner">
@@ -31,8 +31,13 @@
 					<label for="inFilterData">по </label>
 					<input id="inFilterData" type="date" th:value="${dateStart}" th:field="*{dateStart}"/>
 					<label for="inFilterActNo">Акт №: </label>
-					<input type="text" id="inFilterActNo" name="FilterActNo"/>
+					<input type="text" id="inFilterActNo" name="FilterActNo" th:value="${num}" th:field="*{num}">
+
+
 					<button type="submit" id="btnFilterOrder" class="a-btn">Применить</button>
+					<span class="div_error">
+						<p th:if="${#fields.hasErrors('err')}"  th:errors="*{err}"></p>
+					</span>
 				</span>
 
 				<div class ="tbl-div">
@@ -77,7 +82,7 @@
 
 		</form>
 	</div>
-	<script>
+	<!-- <script>
 		$(document).ready(initEvent);
 
          function initEvent() {
@@ -95,6 +100,6 @@
 			$('#idActsDev').attr("action", encodeURI(uri));
 			$('#btnSend').click();
 		}
-	</script>
+	</script> -->
 </body>
 </html>

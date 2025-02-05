@@ -16,6 +16,7 @@ public interface ActDevRepository extends JpaRepository<ActDev,Long> {
     List<ActDev> findByNumAndOrderNot(String num, Order order);
     List<ActDev> findByNumAndOrderAndFromCSAAndDevice(String num, Order order, CSA fromCSA, Device device);
     List<ActDev> findByNumAndOrderAndToCSAAndDevice(String num, Order order, CSA ToCSA, Device device);
-    List<ActDev> findByDataBetween(LocalDate start, LocalDate finish);
-    List<ActDev> findByDataBetweenAndNum(LocalDate start, LocalDate finish,String num);
+    List<ActDev> findByDateBetween(LocalDate start, LocalDate finish);
+    List<ActDev> findByDateBetweenAndNum(LocalDate start, LocalDate finish,String num);
+    List<ActDev> findByNum(String num);
 }
