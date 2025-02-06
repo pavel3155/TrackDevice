@@ -34,15 +34,7 @@ public class ActDevService {
         System.out.println("localDate ="+localDate);
         return localDate;
     }
-//    public Date toData(String strDate){
-//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//        Date date = formatter.parse(strDate,1);
-//
-//
-//
-//        System.out.println("localDate ="+localDate);
-//        return Date;
-//    }
+
     public ActDev add(ActDevDTO actDevDTO){
         ActDev actDev = new ActDev();
         actDev.setTypes(actDevDTO.getActType());
@@ -59,6 +51,7 @@ public class ActDevService {
         actDev.setNote(actDevDTO.getNote());
         return actDevRepository.save(actDev);
     }
+
     @Transactional
     public void del(ActDev actDev){
         actDevRepository.delete(actDev);

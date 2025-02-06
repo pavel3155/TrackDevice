@@ -60,10 +60,27 @@ public class ActDevController {
 
         boolean date=false;
         boolean num=false;
+        boolean between = false;
+
+        if (actDevDTO.getDate().isEmpty()&&
+            actDevDTO.getDateEND().isEmpty()&&
+            actDevDTO.getNum().isEmpty())
+        {
+            devActs = actDevRepository.findAll();
+            model.addAttribute("devActs", devActs);
+            return  "/Acts/ActsDev";
+        }
+
 
         if (actDevDTO.getDate()!=null&&!actDevDTO.getDate().isEmpty()&&
             actDevDTO.getDateEND()!=null&&!actDevDTO.getDateEND().isEmpty()){
             date=true;
+
+            LocalDate start  = actDevService.toLocalData(actDevDTO.getDate());
+            LocalDate end = actDevService.toLocalData(actDevDTO.getDateEND());
+            if (start.isBefore(end)||start.isEqual(end)){
+                between=true;
+            }
         }
         if (actDevDTO.getNum()!=null&&!actDevDTO.getNum().isEmpty()){
             num=true;
@@ -71,28 +88,25 @@ public class ActDevController {
 
         System.out.println("date="+date);
         System.out.println("num="+num);
-        if (date&&num){
+
+        if (date&&num&&between){
             System.out.println("date&&num");
-
-
-            devActs = actDevRepository.findAllByDateBetweenAndNum(actDevService.toLocalData(actDevDTO.getDate()),
+            devActs = actDevRepository.findAllByDateBetweenAndNumContainingIgnoreCase(actDevService.toLocalData(actDevDTO.getDate()),
                                                                actDevService.toLocalData(actDevDTO.getDateEND()),
                                                                actDevDTO.getNum());
-        } else if (date){
+        } else if (date&between){
             System.out.println("date");
-
-
-                devActs = actDevRepository.findAllByDateBetween(actDevService.toLocalData(actDevDTO.getDate()),
-                                                                actDevService.toLocalData(actDevDTO.getDateEND()));
-
-
-            //devActs = actDevRepository.findAllByDateAfter(actDevService.toLocalData(actDevDTO.getDate()));
-
+            devActs = actDevRepository.findAllByDateBetween(actDevService.toLocalData(actDevDTO.getDate()),
+                                                            actDevService.toLocalData(actDevDTO.getDateEND()));
         } else if (num) {
             System.out.println("num");
-                devActs = actDevRepository.findAllByNum(actDevDTO.getNum());
+            devActs = actDevRepository.findAllByNumContainingIgnoreCase(actDevDTO.getNum());
         } else {
+            if (!between){
+                result.addError((new FieldError("actDevDTO", "err", "конечная дата интервала не может быть раньше начала интервала")));
+            } else {
                 result.addError((new FieldError("actDevDTO", "err", "параметры для выборки не заданы")));
+            }
                 devActs = actDevRepository.findAll();
         }
         System.out.println("devActs="+devActs);

@@ -25,19 +25,20 @@
 
 			<div class="container-inner">
 				<span class="margin-t">
-					<label for="inFilterDataStart">Дата: </label>
-					<label for="inFilterDataStart">c </label>
-					<input id="inFilterDataStart" type="date" th:value="${date}" th:field="*{date}"/>
-					<label for="inFilterData">по </label>
-					<input id="inFilterData" type="date" th:value="${dateEND}" th:field="*{dateEND}"/>
-					<label for="inFilterActNo">Акт №: </label>
-					<input type="text" id="inFilterActNo" name="FilterActNo" th:value="${num}" th:field="*{num}">
+					<label for="DateStart">Дата: </label>
+					<label for="DateStart">c </label>
+					<input id="DateStart" type="date" th:value="${date}" th:field="*{date}"/>
+					<label for="DateEnd">по </label>
+					<input id="DateEnd" type="date" th:value="${dateEND}" th:field="*{dateEND}"/>
+					<label for="ActNo">Акт №: </label>
+					<input type="text" id="ActNo" name="FilterActNo" th:value="${num}" th:field="*{num}">
 
-
-					<button type="submit" id="btnFilterOrder" class="a-btn">Применить</button>
 					<span class="div_error">
 						<p th:if="${#fields.hasErrors('err')}"  th:errors="*{err}"></p>
 					</span>
+					<button type="submit" id="btnFilterOrder" class="a-btn">Применить</button>
+					<button type="button" id="btnFilterClear" class="a-btn" onclick="clearFilter">Сбросить</button>
+
 				</span>
 
 				<div class ="tbl-div">
@@ -82,24 +83,23 @@
 
 		</form>
 	</div>
-	<!-- <script>
+	<!--
+
+	-->
+	<script>
 		$(document).ready(initEvent);
 
-         function initEvent() {
-         	$('#btnFilterOrder').bind('click', appFilterToOrder);
-         }
+                 function initEvent() {
+                     $('#btnFilterClear').on('click', FilterClear);
+                 }
 
-		function appFilterToOrder(){
-			console.log("appFilterToOrder...");
-			var d=$('#filterData').val();
-			var ActNo=$('#filterActNo').val();
-			var uri = "/Acts/filterActsDev?d="+d+"&ActNo=" + ActNo
-			console.log("d= "+d);
-			console.log("ActNo= "+ActNo);
-			console.log("uri= "+uri);
-			$('#idActsDev').attr("action", encodeURI(uri));
-			$('#btnSend').click();
-		}
-	</script> -->
+                function FilterClear(){
+                    console.log("FilterClear...");
+                    $('#DateStart').val(null);
+                    $('#DateEnd').val(null);
+                    $('#ActNo').val(null);
+                    $('#btnSend').click();
+                }
+	</script>
 </body>
 </html>

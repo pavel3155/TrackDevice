@@ -18,6 +18,6 @@ public interface ActDevRepository extends JpaRepository<ActDev,Long> {
     List<ActDev> findByNumAndOrderAndToCSAAndDevice(String num, Order order, CSA ToCSA, Device device);
     List<ActDev> findAllByDateBetween(LocalDate start, LocalDate finish);
     List<ActDev> findAllByDateAfter(LocalDate start);
-    List<ActDev> findAllByDateBetweenAndNum(LocalDate start, LocalDate finish,String num);
-    List<ActDev> findAllByNum(String num);
+    List<ActDev> findAllByDateBetweenAndNumContainingIgnoreCase(LocalDate start, LocalDate finish,String num);
+    List<ActDev> findAllByNumContainingIgnoreCase(String num);
 }
