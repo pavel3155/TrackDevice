@@ -10,8 +10,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Service
 public class ActDevService {
@@ -26,12 +28,21 @@ public class ActDevService {
     @Autowired
     OrderRepository orderRepository;
 
-    public LocalDate toData(String date){
+    public LocalDate toLocalData(String date){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);
         System.out.println("localDate ="+localDate);
         return localDate;
     }
+//    public Date toData(String strDate){
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+//        Date date = formatter.parse(strDate,1);
+//
+//
+//
+//        System.out.println("localDate ="+localDate);
+//        return Date;
+//    }
     public ActDev add(ActDevDTO actDevDTO){
         ActDev actDev = new ActDev();
         actDev.setTypes(actDevDTO.getActType());

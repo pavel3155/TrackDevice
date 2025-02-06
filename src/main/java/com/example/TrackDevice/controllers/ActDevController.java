@@ -61,8 +61,8 @@ public class ActDevController {
         boolean date=false;
         boolean num=false;
 
-        if (actDevDTO.getDateStart()!=null&&!actDevDTO.getDateStart().isEmpty()&&
-            actDevDTO.getDate()!=null&&!actDevDTO.getDate().isEmpty()){
+        if (actDevDTO.getDate()!=null&&!actDevDTO.getDate().isEmpty()&&
+            actDevDTO.getDateEND()!=null&&!actDevDTO.getDateEND().isEmpty()){
             date=true;
         }
         if (actDevDTO.getNum()!=null&&!actDevDTO.getNum().isEmpty()){
@@ -72,14 +72,25 @@ public class ActDevController {
         System.out.println("date="+date);
         System.out.println("num="+num);
         if (date&&num){
-            devActs = actDevRepository.findByDateBetweenAndNum(actDevService.toData(actDevDTO.getDateStart()),
-                                                               actDevService.toData(actDevDTO.getDate()),
+            System.out.println("date&&num");
+
+
+            devActs = actDevRepository.findAllByDateBetweenAndNum(actDevService.toLocalData(actDevDTO.getDate()),
+                                                               actDevService.toLocalData(actDevDTO.getDateEND()),
                                                                actDevDTO.getNum());
         } else if (date){
-                devActs = actDevRepository.findByDateBetween(actDevService.toData(actDevDTO.getDateStart()),
-                                                             actDevService.toData(actDevDTO.getDate()));
+            System.out.println("date");
+
+
+                devActs = actDevRepository.findAllByDateBetween(actDevService.toLocalData(actDevDTO.getDate()),
+                                                                actDevService.toLocalData(actDevDTO.getDateEND()));
+
+
+            //devActs = actDevRepository.findAllByDateAfter(actDevService.toLocalData(actDevDTO.getDate()));
+
         } else if (num) {
-                devActs = actDevRepository.findByNum(actDevDTO.getNum());
+            System.out.println("num");
+                devActs = actDevRepository.findAllByNum(actDevDTO.getNum());
         } else {
                 result.addError((new FieldError("actDevDTO", "err", "параметры для выборки не заданы")));
                 devActs = actDevRepository.findAll();
