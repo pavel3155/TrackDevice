@@ -11,6 +11,7 @@ public class OrdersDTO {
     private long id;
     @NotNull
     private String date;
+    private String dateClosingOrder;
     @NotEmpty
     @Size(min = 11, message = "Мин количетсво сим 11")
     private String num;
@@ -23,4 +24,5 @@ public class OrdersDTO {
     private User executor;
     private Restore restore;
     private ActTypes actTypes;
+    private Boolean serviceable;
 }

@@ -25,6 +25,9 @@
 
 			<div class="container-inner">
 				<span class="margin-t">
+					<span class="div_error">
+						<p th:if="${#fields.hasErrors('err')}"  th:errors="*{err}"></p>
+					</span>
 					<label for="DateStart">Дата: </label>
 					<label for="DateStart">c </label>
 					<input id="DateStart" type="date" th:value="${date}" th:field="*{date}"/>
@@ -32,10 +35,6 @@
 					<input id="DateEnd" type="date" th:value="${dateEND}" th:field="*{dateEND}"/>
 					<label for="ActNo">Акт №: </label>
 					<input type="text" id="ActNo" name="FilterActNo" th:value="${num}" th:field="*{num}">
-
-					<span class="div_error">
-						<p th:if="${#fields.hasErrors('err')}"  th:errors="*{err}"></p>
-					</span>
 					<button type="submit" id="btnFilterOrder" class="a-btn">Применить</button>
 					<button type="button" id="btnFilterClear" class="a-btn" onclick="clearFilter">Сбросить</button>
 

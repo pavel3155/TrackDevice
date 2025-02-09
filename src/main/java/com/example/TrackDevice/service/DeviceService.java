@@ -3,6 +3,7 @@ package com.example.TrackDevice.service;
 import com.example.TrackDevice.DTO.DeviceDTO;
 import com.example.TrackDevice.DTO.ModelDeviceDTO;
 import com.example.TrackDevice.DTO.TypeDeviceDTO;
+import com.example.TrackDevice.model.CSA;
 import com.example.TrackDevice.model.Device;
 import com.example.TrackDevice.model.ModelDevice;
 import com.example.TrackDevice.model.TypeDevice;
@@ -39,6 +40,9 @@ public class DeviceService {
         device.setInvnum(deviceDTO.getInvnum());
         device.setCsa(deviceDTO.getCsa());
         //newDevice.setStatus(deviceDTO.getStatus());
+        return deviceRepository.save(device);
+    }
+    public Device saveDevice(Device device){
         return deviceRepository.save(device);
     }
     public TypeDevice saveTypeDevice(TypeDeviceDTO typeDeviceDTO){

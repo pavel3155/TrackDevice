@@ -5,6 +5,7 @@ import com.example.TrackDevice.DTO.OrdersDTO;
 import com.example.TrackDevice.model.*;
 import com.example.TrackDevice.repo.*;
 import com.example.TrackDevice.service.ActDevService;
+import com.example.TrackDevice.service.DeviceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,7 +39,8 @@ public class ActDevController {
     OrderRepository orderRepository;
     @Autowired
     TypeDeviceRepository typeDeviceRepository;
-
+    @Autowired
+    DeviceService deviceService;
 
     @GetMapping("/ActsDev")
     public String ActsDev(Model model) {
@@ -52,6 +54,14 @@ public class ActDevController {
     return "/Acts/ActsDev";
     }
 
+
+    /**
+     * метод осуществляет выборку актов по параметрам, которые передаются в объекте actDevDTO
+     * @param model
+     * @param actDevDTO
+     * @param result
+     * @return
+     */
     @PostMapping("/FilterActsDev")
     public String filterActDev(Model model, @ModelAttribute ActDevDTO actDevDTO,BindingResult result) {
         System.out.println("POST:/FilterActsDev...");
@@ -70,7 +80,6 @@ public class ActDevController {
             model.addAttribute("devActs", devActs);
             return  "/Acts/ActsDev";
         }
-
 
         if (actDevDTO.getDate()!=null&&!actDevDTO.getDate().isEmpty()&&
             actDevDTO.getDateEND()!=null&&!actDevDTO.getDateEND().isEmpty()){
@@ -113,6 +122,13 @@ public class ActDevController {
         model.addAttribute("devActs", devActs);
         return  "/Acts/ActsDev";
     }
+
+    /**
+     * метод осуществляет выборку актов по заявке при переходе из заявки
+     * @param idOrder - принимает параметр,который передается из заявки
+     * @param model
+     * @return
+     */
     @PostMapping("/moveActsDev")
     public String moveActDev(@RequestParam long idOrder, Model model) {
         System.out.println("GET:/moveActsDev?idOrder...");
@@ -121,6 +137,8 @@ public class ActDevController {
         List<ActDev> devActs = actDevRepository.findByOrder(order);
         System.out.println("devActs ="+devActs);
         model.addAttribute("devActs", devActs);
+        ActDevDTO actDevDTO = new ActDevDTO();
+        model.addAttribute("actDevDTO", actDevDTO);
         return  "/Acts/ActsDev";
     }
     /** метод выполняется при нажатии на кнопку "Открыть" на странице "ActsDev"
@@ -188,9 +206,6 @@ public class ActDevController {
         devActs = actDevRepository.findAll();
         System.out.println("devActs ="+devActs);
         model.addAttribute("devActs", devActs);
-
-
-
 
         try {
             actDevService.del(actDev);
@@ -288,6 +303,9 @@ public class ActDevController {
 
         try {
             actDevService.add(actDevDTO);
+            Device device = actDevDTO.getDevice();
+            device.setCsa(actDevDTO.getToCSA());
+            deviceService.saveDevice(device);
             model.addAttribute("success",true);
         } catch (Exception ex) {
             result.addError(new FieldError("actDevDTO", "err", ex.getMessage()));

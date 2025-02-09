@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,7 +16,9 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String date;
+    private String odate;
+    private LocalDate date;
+    private LocalDate date_closing;
     @Column(unique = true,nullable = false)
     private String num;
     private String description;
@@ -32,6 +36,7 @@ public class Order {
     @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn (name="restore_id", nullable = false)
     private Restore restore;
+    private Boolean serviceable;
 
 
 

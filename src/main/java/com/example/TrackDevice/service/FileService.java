@@ -74,9 +74,10 @@ public class FileService {
         }
     }
     public Boolean saveFile(MultipartFile file, String subDir) {
-        System.out.println("saveFile(MultipartFile file, String subDir...");
+        System.out.println("saveFile(MultipartFile file, String subDir)...");
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         System.out.println("fileName:= " +fileName);
+        System.out.println("fileName.isEmpty()= " + fileName.isEmpty());
         if (!fileName.isEmpty()){
             try {
                 Path subDirectory =this.fileStorageLocation.resolve(subDir).resolve("pic");

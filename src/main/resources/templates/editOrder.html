@@ -74,7 +74,7 @@
 												${ordersDTO.device.model.name}"></label>
 								<input type="hidden" id="orderDevice" th:value="${device}" th:field="*{device}">
 							</td>
-							<td><button  sec:authorize="hasRole('ROLE_CSA') or hasRole('ROLE_SERV')"
+							<td><button  th:if="${selDevOrder}" sec:authorize="hasRole('ROLE_CSA') or hasRole('ROLE_SERV')"
 										 id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button></td>
 						</tr>
 						<tr>
@@ -98,7 +98,7 @@
 							<td style="font-weight: 600">Статус</td>
 							<td class="AlignCenter">
 								<label id="lblOrderStatus" for="orderStatus" th:text="${ordersDTO.status}"></label>
-								<input type="hidden" id="orderStatus" name="orderStatus" th:field="*{status}"/>
+								<input type="hidden" id="orderStatus" name="orderStatus" th:value="*{status}" th:field="*{status}"/>
 							</td>
 							<td></td>
 						</tr>
@@ -216,6 +216,26 @@
 							</td>
 						</tr>
 
+						<tr sec:authorize="!hasRole('ROLE_CSA')">
+							<td  style="font-weight: 600">Функционирование КСА</td>
+							<td>
+								<label id="lblServiceable"  for="chServiceable">восстановлено</label>
+							</td>
+							<td>
+								<input id="chServiceable" type="checkbox" th:field="*{serviceable}" th:value="${serviceable}">
+							</td>
+						</tr>
+
+						<tr sec:authorize="!hasRole('ROLE_CSA')">
+							<td  style="font-weight: 600">Закрыть заявку </td>
+							<td>
+								<input id="OrderClosingData" type="date" th:value="${dateClosingOrder}" th:field="*{dateClosingOrder}"/>
+							</td>
+							<td>
+								<button id="btnCloseOrder" type="button" class="a-btn">Закрыть</button>
+							</td>
+						</tr>
+
 					</table>
 				</div>
 			</div>
@@ -232,6 +252,7 @@
         function initEvent() {
             $('#btnSelCSA').bind('click', selCSA);
             $('#btnSelDev').bind('click', selDev);
+            $('#btnCloseOrder').bind('click', closeOrder);
             $('#btnCreateActDev').bind('click', сreateActDev);
             $('#btnMoveActDev').on('click', moveActDev);
             $('#orderData').bind('change', setOrderNumDate);
@@ -301,7 +322,6 @@
 			console.log("orderDate:= "+orderDate);
 			$('#orderNum').val(orderDate+$('#orderNum').val());
         }
-
 		function selCSA(){
 			var orderNum=$('#orderNum').val();
 			console.log("orderNum:= "+orderNum);
@@ -319,6 +339,11 @@
 			console.log("moveActDev...");
 			var idOrder=$('#idOrder').val();
 			$('#addOrder').attr("action","/Acts/moveActsDev?idOrder="+idOrder);
+		}
+		function closeOrder(){
+			console.log("closeOrder...");
+		    /* $('#lblOrderStatus'.text("закрыта"); */
+		    $('#orderStatus').val("закрыта");
 		}
 	</script>
 

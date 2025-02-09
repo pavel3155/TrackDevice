@@ -65,6 +65,7 @@ public class OrderController {
         Object role=arrRoles[0].toString();
         System.out.println("arrRoles[0].toString()="+role);
         List<Order> orders;
+
         if(role.equals("ROLE_CSA")){
             System.out.println("role.getType()==\"CSA\"");
             User user = userRepository.findByEmail(userDetails.getUsername());
@@ -79,19 +80,6 @@ public class OrderController {
             System.out.println("role.getType()==\"SERV, ADMIN\"");
             orders = orderRepository.findAll();
         }
-
-//        Roles roleCSA =roleRepository.findByType("CSA");
-//        System.out.println("roleCSA:= "+roleCSA);
-//        List<Order> orders;
-//        if(userDetails.getAuthorities().contains(roleCSA)){
-//            User user = userRepository.findByEmail(userDetails.getUsername());
-//            System.out.println("user:="+user);
-//            CSA csa = user.getCsa();
-//            System.out.println("csa:= "+csa);
-//            orders = orderRepository.getByCsa(csa);
-//        } else{
-//            orders = orderRepository.findAll();
-//        }
 
         List<CSA> csas = csaRepository.findAll();
         System.out.println("orders:= "+orders);
@@ -190,9 +178,6 @@ public class OrderController {
             User exec = execs.get(0);
             System.out.println("exec:= "+exec);
             ordersDTO.setExecutor(exec);
-
-//            model.addAttribute("execs", exec);
-//            System.out.println("ordersDTO.getExecutor():= "+ordersDTO.getExecutor());
         }
 
 
@@ -425,6 +410,14 @@ public class OrderController {
         model.addAttribute("restoreMethods", restoreMethods);
         model.addAttribute("execs", execs);
         model.addAttribute("ordersDTO", ordersDTO);
+
+        boolean selDevOrder= ordersService.btnSelDeviceDisplay(ordersDTO.getCsa(),ordersDTO.getDevice());
+        model.addAttribute("selDevOrder", selDevOrder);
+
+
+
+
+
         return "editOrder";
     }
 
@@ -436,9 +429,26 @@ public class OrderController {
         System.out.println("GET:/editOrder{id}....");
         Order order = orderRepository.getById(id);
         System.out.println("order:= "+order);
+
+
+        boolean selDevOrder= ordersService.btnSelDeviceDisplay(order.getCsa(),order.getDevice());
+        model.addAttribute("selDevOrder", selDevOrder);
+
+//            if (!order.getCsa().getNum().equals("---")&&!order.getDevice().getSernum().equals("---")){
+//                CSA csaOrder = order.getCsa();
+//                Device device = deviceRepository.getById(order.getDevice().getId());
+//                CSA csaDevice = device.getCsa();
+//                if (csaOrder==csaDevice){
+//                    model.addAttribute("selDevOrder", true);
+//                } else {
+//                    model.addAttribute("selDevOrder", false);
+//                }
+//            }else {
+//                model.addAttribute("selDevOrder", true);
+//            }
         OrdersDTO ordersDTO =new OrdersDTO();
         ordersDTO.setId(order.getId());
-        ordersDTO.setDate(order.getDate());
+        ordersDTO.setDate(order.getDate().toString());
         ordersDTO.setNum(order.getNum());
         ordersDTO.setCsa(order.getCsa());
         ordersDTO.setIdCSA(order.getCsa().getId());
@@ -448,6 +458,12 @@ public class OrderController {
         ordersDTO.setStatus(order.getStatus());
         ordersDTO.setExecutor(order.getExecutor());
         ordersDTO.setRestore(order.getRestore());
+        ordersDTO.setServiceable(order.getServiceable());
+
+        if (order.getDate_closing()!=null){
+            ordersDTO.setDateClosingOrder(order.getDate_closing().toString());
+        }
+
 
         Object[] arrRoles=userDetails.getAuthorities().stream().toArray();
         Object role=arrRoles[0].toString();

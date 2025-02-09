@@ -49,7 +49,9 @@ public class ActDevService {
         actDev.setDevice(actDevDTO.getDevice());
         actDev.setOrder(actDevDTO.getOrder());
         actDev.setNote(actDevDTO.getNote());
-        return actDevRepository.save(actDev);
+        ActDev act =actDevRepository.save(actDev);
+
+        return act;
     }
 
     @Transactional
