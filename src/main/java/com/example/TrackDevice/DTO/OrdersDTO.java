@@ -25,4 +25,5 @@ public class OrdersDTO {
     private Restore restore;
     private ActTypes actTypes;
     private Boolean serviceable;
+    private String err;
 }

@@ -413,11 +413,6 @@ public class OrderController {
 
         boolean selDevOrder= ordersService.btnSelDeviceDisplay(ordersDTO.getCsa(),ordersDTO.getDevice());
         model.addAttribute("selDevOrder", selDevOrder);
-
-
-
-
-
         return "editOrder";
     }
 
@@ -513,8 +508,14 @@ public class OrderController {
         System.out.println("POST:/editOrder...");
         System.out.println("ordersDTO:= "+ordersDTO);
 
-        List<String> fileNames=new ArrayList<>();
-        fileNames = fileService.getAllFiles(ordersDTO.getNum());
+        List<String> fileNames;
+        if(fileService.getAllFiles(ordersDTO.getNum())!=null){
+            fileNames = fileService.getAllFiles(ordersDTO.getNum());
+        } else{
+            fileNames = new ArrayList<>();
+        }
+
+        System.out.println("fileNames="+fileNames);
 
         List<Roles> roles = new ArrayList<>();
         roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
@@ -537,16 +538,19 @@ public class OrderController {
         try {
             ordersService.save(ordersDTO);
             System.out.println("ordersService.save(ordersDTO) - выполнено успешно");
-
+            System.out.println("files.length="+files.length);
+            System.out.println("files="+files);
             for (MultipartFile file : files) {
                if (fileService.saveFile(file,ordersDTO.getNum())){
+                   System.out.println("file.getOriginalFilename()="+file.getOriginalFilename());
                    fileNames.add(file.getOriginalFilename());
+                   System.out.println("fileNames="+fileNames);
                }
             }
             model.addAttribute("files", fileNames);
             model.addAttribute("success",true);
         } catch (Exception ex) {
-            result.addError(new FieldError("ordersDTO", "num", ex.getMessage()));
+            result.addError(new FieldError("ordersDTO", "err", ex.getMessage()));
         }
         return "/editOrder";
     }
