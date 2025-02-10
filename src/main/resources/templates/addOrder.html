@@ -45,10 +45,11 @@
 						<tr>
 							<td style=" font-weight: 600">Заявка №</td>
 							<td class="AlignCenter">
+								<input type="text" id="orderNum" name="orderNum" th:value="${num}" th:field="*{num}"/>
 								<div class="div_error">
 									<p th:if="${#fields.hasErrors('num')}"  th:errors="*{num}"></p>
 								</div>
-								<input type="text" id="orderNum" name="orderNum" th:value="${num}" th:field="*{num}"/>
+
 							</td>
 							<td></td>
 						</tr>
@@ -199,7 +200,7 @@
                     for(var i = 0; i < this.files.length; i++){
                         let new_file_item = '<div class="input-file-list-item">' +
                                             '<span class="input-file-list-name">' + this.files.item(i).name + '</span>' +
-                                            '<a href="#" onclick="removeFilesItem(this); return false;" class="input-file-list-remove">x</a>' +
+                                            '<a href="#" onclick="removeFilesItem(this); return false;" class="input-file-remove">x</a>' +
                                             '</div>';
                         $('#idListInputFiles').append(new_file_item);
                         dt.items.add(this.files.item(i));

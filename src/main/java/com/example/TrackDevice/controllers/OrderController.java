@@ -5,10 +5,12 @@ import com.example.TrackDevice.model.*;
 import com.example.TrackDevice.repo.*;
 import com.example.TrackDevice.service.FileService;
 import com.example.TrackDevice.service.OrdersService;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.hibernate.mapping.Array;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -285,16 +288,19 @@ public class OrderController {
         try {
             ordersService.add(ordersDTO);
             for (MultipartFile file : files) {
-                if (fileService.saveFile(file,ordersDTO.getNum())){
+                if (fileService.saveFile(file, ordersDTO.getNum())) {
                     fileNames.add(file.getOriginalFilename());
                 }
             }
             model.addAttribute("files", fileNames);
             model.addAttribute("directory", ordersDTO.getNum());
-            model.addAttribute("success",true);
+            model.addAttribute("success", true);
+        } catch (DataIntegrityViolationException e) {
+            result.addError(new FieldError("ordersDTO", "num", "заявка с таким номером уже существует"));
         } catch (Exception ex) {
             result.addError(new FieldError("ordersDTO", "num", ex.getMessage()));
         }
+
         return "addOrder";
     }
 
@@ -507,6 +513,9 @@ public class OrderController {
                             @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result, Model model) {
         System.out.println("POST:/editOrder...");
         System.out.println("ordersDTO:= "+ordersDTO);
+
+        boolean selDevOrder= ordersService.btnSelDeviceDisplay(ordersDTO.getCsa(),ordersDTO.getDevice());
+        model.addAttribute("selDevOrder", selDevOrder);
 
         List<String> fileNames;
         if(fileService.getAllFiles(ordersDTO.getNum())!=null){

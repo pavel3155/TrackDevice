@@ -151,6 +151,14 @@
   	display: inline-block;
   	margin-left: 5px;
   }
+  .input-file-list-remove{
+    font-family: 'Comic Sans MS', sans-serif;
+        font-weight: 500;
+      	color: red;
+      	text-decoration: none;
+      	display: inline-block;
+      	margin-left: 5px;
+  }
    .input-file-download {
         font-family: 'Comic Sans MS', sans-serif;
         letter-spacing: -0.25em;
