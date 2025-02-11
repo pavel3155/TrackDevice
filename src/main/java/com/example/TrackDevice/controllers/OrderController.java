@@ -74,8 +74,7 @@ public class OrderController {
             User user = userRepository.findByEmail(userDetails.getUsername());
             CSA csa = user.getCsa();
             orders = orderRepository.getByCsa(csa);
-
-        }else if(role.equals("ROLE_EXECDEV")){
+        } else if(role.equals("ROLE_EXECDEV")){
             System.out.println("role.getType()==\"EXECDEV\"");
             User executor = userRepository.findByEmail(userDetails.getUsername());
             orders=orderRepository.getByExecutor(executor);
@@ -84,10 +83,15 @@ public class OrderController {
             orders = orderRepository.findAll();
         }
 
+        List<String> orderStatus = ordersService.loadStatusOrder();
         List<CSA> csas = csaRepository.findAll();
         System.out.println("orders:= "+orders);
+        model.addAttribute("orderStatus", orderStatus);
         model.addAttribute("csas", csas);
         model.addAttribute("orders",orders);
+        OrdersDTO ordersDTO = new OrdersDTO();
+        model.addAttribute("ordersDTO",ordersDTO);
+
         return "Orders";
     }
 
@@ -205,9 +209,11 @@ public class OrderController {
             ordersDTO.setRestore(restoreRepository.getByMethod("---"));
         }
         List<Restore> restoreMethods=restoreRepository.findAll();
+
+
         List<String> fileNames;
         String directory;
-        if (ordersDTO.getNum()!=null) {
+        if (ordersDTO.getId()!=0) {
             System.out.println("ordersDTO.getNum()!=null...");
             fileNames = fileService.getAllFiles(ordersDTO.getNum());
             directory=ordersDTO.getNum();
@@ -360,6 +366,12 @@ public class OrderController {
         } else return ResponseEntity.internalServerError().build();
 
     }
+
+    /**
+     * метод взвращает расширение файла
+     * @param fileName
+     * @return
+     */
     private String getFileExtencion(String fileName){
         if (fileName==null){
             return  null;
@@ -386,7 +398,12 @@ public class OrderController {
         return ResponseEntity.ok("Файл удален");
     }
 
-
+    /**
+     * метод осуществляет выбор КСА
+     * @param csa_id
+     * @param model
+     * @return
+     */
     @GetMapping("/addOrder/selCSA")
     public String selCSA(@RequestParam(value ="idCSA") long csa_id, Model model){
         System.out.println("idCSA= "+csa_id);
@@ -401,6 +418,12 @@ public class OrderController {
         return "redirect:/addOrder";
     }
 
+    /**
+     * метод загружает страницу editOrder, заполняет ее параметрами
+     * @param ordersDTO
+     * @param model
+     * @return
+     */
     @GetMapping("/editOrder")
     public String editOrder(@ModelAttribute OrdersDTO ordersDTO, Model model) {
         System.out.println("GET:/editOrder....");
@@ -434,32 +457,21 @@ public class OrderController {
 
         boolean selDevOrder= ordersService.btnSelDeviceDisplay(order.getCsa(),order.getDevice());
         model.addAttribute("selDevOrder", selDevOrder);
+        OrdersDTO ordersDTO =ordersService.newOrderDTOtoObject(order);
 
-//            if (!order.getCsa().getNum().equals("---")&&!order.getDevice().getSernum().equals("---")){
-//                CSA csaOrder = order.getCsa();
-//                Device device = deviceRepository.getById(order.getDevice().getId());
-//                CSA csaDevice = device.getCsa();
-//                if (csaOrder==csaDevice){
-//                    model.addAttribute("selDevOrder", true);
-//                } else {
-//                    model.addAttribute("selDevOrder", false);
-//                }
-//            }else {
-//                model.addAttribute("selDevOrder", true);
-//            }
-        OrdersDTO ordersDTO =new OrdersDTO();
-        ordersDTO.setId(order.getId());
-        ordersDTO.setDate(order.getDate().toString());
-        ordersDTO.setNum(order.getNum());
-        ordersDTO.setCsa(order.getCsa());
-        ordersDTO.setIdCSA(order.getCsa().getId());
-        ordersDTO.setDevice(order.getDevice());
-        ordersDTO.setIdDevice(order.getDevice().getId());
-        ordersDTO.setDescription(order.getDescription());
-        ordersDTO.setStatus(order.getStatus());
-        ordersDTO.setExecutor(order.getExecutor());
-        ordersDTO.setRestore(order.getRestore());
-        ordersDTO.setServiceable(order.getServiceable());
+//        OrdersDTO ordersDTO =new OrdersDTO();
+//        ordersDTO.setId(order.getId());
+//        ordersDTO.setDate(order.getDate().toString());
+//        ordersDTO.setNum(order.getNum());
+//        ordersDTO.setCsa(order.getCsa());
+//        ordersDTO.setIdCSA(order.getCsa().getId());
+//        ordersDTO.setDevice(order.getDevice());
+//        ordersDTO.setIdDevice(order.getDevice().getId());
+//        ordersDTO.setDescription(order.getDescription());
+//        ordersDTO.setStatus(order.getStatus());
+//        ordersDTO.setExecutor(order.getExecutor());
+//        ordersDTO.setRestore(order.getRestore());
+//        ordersDTO.setServiceable(order.getServiceable());
 
         if (order.getDate_closing()!=null){
             ordersDTO.setDateClosingOrder(order.getDate_closing().toString());
@@ -495,12 +507,15 @@ public class OrderController {
         }
 
         List<ActTypes> actTypes = actTypesRepository.findAll();
+        List<String> orderStatus = ordersService.loadStatusOrder();
+
 
         System.out.println("directory:="+directory);
         System.out.println("fileNames:= " +fileNames);
         System.out.println("execs:= " + execs);
         System.out.println("ordersDTO:= " +ordersDTO);
 
+        model.addAttribute("orderStatus", orderStatus);
         model.addAttribute("actTypes", actTypes);
         model.addAttribute("directory", directory);
         model.addAttribute("files", fileNames);
@@ -532,7 +547,12 @@ public class OrderController {
         List<User> execs =userRepository.findByRoleIn(roles);
         List<Restore> restoreMethods=restoreRepository.findAll();
         List<ActTypes> actTypes = actTypesRepository.findAll();
+        List<String> orderStatus = new ArrayList<>();
+        orderStatus.add("---");
+        orderStatus.add("открыта");
+        orderStatus.add("закрыта");
 
+        model.addAttribute("orderStatus", orderStatus);
         model.addAttribute("directory", ordersDTO.getNum());
         model.addAttribute("files", fileNames);
         model.addAttribute("restoreMethods", restoreMethods);

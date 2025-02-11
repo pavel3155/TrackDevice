@@ -23,26 +23,28 @@
 			  th:object="${deviceDTO}">
 
 			<div class="container-inner">
-				<div>
-					<label for="selTypeDev">Тип: </label>
-					<select  id="selTypeDev"  change="loadSelectDevModel()">
-						<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
-					</select>
-					<script>
-						$('#selTypeDev option[value=0]').prop('selected',true);
-					</script>
+				<div class="filter">
+					<span>
+						<label for="selTypeDev">Тип: </label>
+						<select  id="selTypeDev"  change="loadSelectDevModel()">
+							<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
+						</select>
+						<script>
+							$('#selTypeDev option[value=0]').prop('selected',true);
+						</script>
 
-					<label for="selModelDev">Модель: </label>
-					<select  id="selModelDev" th:field="*{modelDevice}"></select>
+						<label for="selModelDev">Модель: </label>
+						<select  id="selModelDev" th:field="*{modelDevice}"></select>
 
-					<label for="selCSA">КСА: </label>
-					<select  id="selCSA" th:field="*{csa}">
-						<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
-					</select>
+						<label for="selCSA">КСА: </label>
+						<select  id="selCSA" th:field="*{csa}">
+							<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
+						</select>
 
-					<label for="filtrSN">Серийный номер(фильтр): </label>
-					<input type="text" id="filtrSN" name="filtrSN"/>
-					<button type="button" id="btnFiltrSn" class="a-btn">Применить</button>
+						<label for="filtrSN">Серийный номер(фильтр): </label>
+						<input type="text" id="filtrSN" name="filtrSN"/>
+						<button type="button" id="btnFiltrSn" class="a-btn">Применить</button>
+					</span>
 				</div>
 				<div>
 

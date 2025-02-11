@@ -1,6 +1,7 @@
 package com.example.TrackDevice.service;
 
 import com.example.TrackDevice.DTO.OrdersDTO;
+import com.example.TrackDevice.model.ActTypes;
 import com.example.TrackDevice.model.CSA;
 import com.example.TrackDevice.model.Device;
 import com.example.TrackDevice.model.Order;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OrdersService {
@@ -72,4 +75,30 @@ public class OrdersService {
         }
         return orderRepository.save(order);
     }
+
+    public OrdersDTO newOrderDTOtoObject(Order order){
+        OrdersDTO ordersDTO =new OrdersDTO();
+        ordersDTO.setId(order.getId());
+        ordersDTO.setDate(order.getDate().toString());
+        ordersDTO.setNum(order.getNum());
+        ordersDTO.setCsa(order.getCsa());
+        ordersDTO.setIdCSA(order.getCsa().getId());
+        ordersDTO.setDevice(order.getDevice());
+        ordersDTO.setIdDevice(order.getDevice().getId());
+        ordersDTO.setDescription(order.getDescription());
+        ordersDTO.setStatus(order.getStatus());
+        ordersDTO.setExecutor(order.getExecutor());
+        ordersDTO.setRestore(order.getRestore());
+        ordersDTO.setServiceable(order.getServiceable());
+        return ordersDTO;
+    }
+
+    public List<String> loadStatusOrder() {
+        List<String> orderStatus = new ArrayList<>();
+        orderStatus.add("---");
+        orderStatus.add("открыта");
+        orderStatus.add("закрыта");
+        return orderStatus;
+    }
+
 }

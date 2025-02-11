@@ -97,14 +97,6 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td style="font-weight: 600">Статус</td>
-							<td class="AlignCenter">
-								<label id="lblOrderStatus" for="orderStatus" th:text="${ordersDTO.status}"></label>
-								<input type="hidden" id="orderStatus" name="orderStatus" th:value="*{status}" th:field="*{status}"/>
-							</td>
-							<td></td>
-						</tr>
-						<tr>
 							<td style=" font-weight: 600">Описание</td>
 							<td class="AlignCenter">
 								<input type="text" id="orderDescription" style="width:99%;text-align:center" name="orderDescription"  th:value="${description}" th:field="*{description}"/>
@@ -138,10 +130,6 @@
 						<tr >
 							<td  style=" font-weight: 600">Восстановление КСА</td>
 							<td  class="AlignCenter">
-								<!-- <label id="lblOrderExecutor"  for="orderExecutor"
-									   th:text="${ordersDTO.executor.email}"></label> -->
-
-								<!-- <input type="hidden" id="orderExecutor" style="width:99%;text-align:center" name="orderExec"  th:value="${executor}" th:field="*{executor}"/> sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')"-->
 								<select  sec:authorize="!hasRole('ROLE_CSA')"
 										 id="selRestore"
 										 class="select"
@@ -159,7 +147,7 @@
 									   th:field="*{restore}">
 								<label sec:authorize="hasRole('ROLE_CSA')"
 									   id="lblRestore"
-									   for="orderStatus"
+									   for="textRestore"
 									   th:text="${ordersDTO.restore.method}">
 								</label>
 							</td>
@@ -178,8 +166,6 @@
 							</td>
 							<td></td>
 						</tr>
-						<!-- <a th:href="@{/addOrder/loadPicture{directory}(directory=${directory})&${file}}" th:text="${file}"></a> -->
-						<!-- <a th:href="@{'/download/' + ${file}}" th:text="${file}"></a> -->
 						<tr>
 							<td  style="font-weight: 600">Добавить новые фото</td>
 							<td>
@@ -190,20 +176,57 @@
 							</td>
 						</tr>
 
+
+						<tr sec:authorize="!hasRole('ROLE_CSA')">
+							<td  style="font-weight: 600">Статус заявки</td>
+							<td>
+								<select
+										id="selStatusOrder" class="select"
+										th:field="*{status}">
+									<option th:each="status : ${orderStatus}"
+											th:value="${status}"
+											th:text="${status}"
+											th:selected="${status == ordersDTO.status}">
+									</option>
+								</select>
+							</td>
+							<td>
+							</td>
+						</tr>
+						<tr sec:authorize="!hasRole('ROLE_CSA')">
+							<td  style="font-weight: 600">Функционирование КСА</td>
+							<td>
+								<label id="lblServiceable"  for="chServiceable">восстановлено</label>
+							</td>
+							<td>
+								<input id="chServiceable" type="checkbox" th:field="*{serviceable}" th:value="${serviceable}">
+							</td>
+						</tr>
+						<tr sec:authorize="!hasRole('ROLE_CSA')">
+							<td  style="font-weight: 600">Дата восстановления КСА</td>
+							<td>
+								<input id="OrderClosingData" type="date" th:value="${dateClosingOrder}" th:field="*{dateClosingOrder}"/>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td style="font-weight: 600">Акты движения ТС по заявке</td>
+							<td></td>
+						</tr>
+
+
 						<tr  sec:authorize="!hasRole('ROLE_CSA')">
 							<td  style="font-weight: 600">Создать акт</td>
 							<td>
 								<select
-										 id="selActDev" class="select"
-										 th:field="*{actTypes}">
+										id="selActDev" class="select"
+										th:field="*{actTypes}">
 									<option th:each="actType : ${actTypes}"
 											th:value="${actType.id}"
 											th:text="${actType.type}">
 									</option>
 								</select>
-								<script>
-									$('#selActDev option[value=1]').prop('selected',true);
-								</script>
 							</td>
 							<td>
 								<button id="btnCreateActDev" type="submit" class="a-btn">Создать</button>
@@ -218,25 +241,7 @@
 							</td>
 						</tr>
 
-						<tr sec:authorize="!hasRole('ROLE_CSA')">
-							<td  style="font-weight: 600">Функционирование КСА</td>
-							<td>
-								<label id="lblServiceable"  for="chServiceable">восстановлено</label>
-							</td>
-							<td>
-								<input id="chServiceable" type="checkbox" th:field="*{serviceable}" th:value="${serviceable}">
-							</td>
-						</tr>
 
-						<tr sec:authorize="!hasRole('ROLE_CSA')">
-							<td  style="font-weight: 600">Закрыть заявку </td>
-							<td>
-								<input id="OrderClosingData" type="date" th:value="${dateClosingOrder}" th:field="*{dateClosingOrder}"/>
-							</td>
-							<td>
-								<button id="btnCloseOrder" type="button" class="a-btn">Закрыть</button>
-							</td>
-						</tr>
 
 					</table>
 				</div>
