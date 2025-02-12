@@ -12,6 +12,8 @@ public class OrdersDTO {
     @NotNull
     private String date;
     private String dateClosingOrder;
+    private String startDate;
+    private String endDate;
     @NotEmpty
     @Size(min = 11, message = "Мин количетсво сим 11")
     private String num;

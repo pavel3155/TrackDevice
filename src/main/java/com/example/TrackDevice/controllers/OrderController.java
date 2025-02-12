@@ -1,16 +1,19 @@
 package com.example.TrackDevice.controllers;
 
 import com.example.TrackDevice.DTO.*;
+import com.example.TrackDevice.filter.FilterOrders;
 import com.example.TrackDevice.model.*;
 import com.example.TrackDevice.repo.*;
 import com.example.TrackDevice.service.FileService;
 import com.example.TrackDevice.service.OrdersService;
+import com.example.TrackDevice.specification.OrdersSpecification;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.hibernate.mapping.Array;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,6 +54,8 @@ public class OrderController {
     ActTypesRepository actTypesRepository;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private OrdersSpecification ordersSpecification;
 
     /**
      * Метод обрабатывает запрос GET при преходе на сраницу Orders
@@ -89,8 +95,41 @@ public class OrderController {
         model.addAttribute("orderStatus", orderStatus);
         model.addAttribute("csas", csas);
         model.addAttribute("orders",orders);
-        OrdersDTO ordersDTO = new OrdersDTO();
-        model.addAttribute("ordersDTO",ordersDTO);
+        FilterOrders filterOrders = new FilterOrders();
+        model.addAttribute("filterOrders",filterOrders);
+
+        return "Orders";
+    }
+
+
+    @PostMapping("/FilterOrders")
+    public String filterOrders(Model model, @Valid @ModelAttribute FilterOrders filterOrders) {
+        System.out.println("POST:/FilterOrders...");
+        System.out.println("filterOrders= "+filterOrders);
+
+
+
+
+        Specification<Order> spec = Specification.where(null);
+
+        if (!filterOrders.getStartDate().isEmpty() && !filterOrders.getEndDate().isEmpty()) {
+            LocalDate startDate = ordersService.toLocalData(filterOrders.getStartDate());
+            LocalDate endDate = ordersService.toLocalData(filterOrders.getEndDate());
+            spec = spec.and(ordersSpecification.dateBetween(startDate,endDate));
+        }
+        if (!filterOrders.getNum().isEmpty()) spec = spec.and(ordersSpecification.hasNum(filterOrders.getNum()));
+        if (!"---".equals(filterOrders.getStatus())) spec = spec.and(ordersSpecification.hasStatus(filterOrders.getStatus()));
+        if (!"---".equals(filterOrders.getCsa().getNum())) spec = spec.and(ordersSpecification.hasCSA(filterOrders.getCsa()));
+        var orders = orderRepository.findAll(spec);
+
+        System.out.println("orders= "+orders);
+        List<String> orderStatus = ordersService.loadStatusOrder();
+        List<CSA> csas = csaRepository.findAll();
+
+        model.addAttribute("orderStatus", orderStatus);
+        model.addAttribute("csas", csas);
+        model.addAttribute("orders",orders);
+        model.addAttribute("filterOrders",filterOrders);
 
         return "Orders";
     }

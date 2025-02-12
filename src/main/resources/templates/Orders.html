@@ -19,18 +19,18 @@
 	<div class="container">
 
 		<form class="forms-operation"
-			  th:method="get"
-			  th:action="@{/Orders}"
-			  th:object="${ordersDTO}">
+			  th:method="post"
+			  th:action="@{/FilterOrders}"
+			  th:object="${filterOrders}">
 
 			<div class="container-inner">
 				<div class="filter">
 					<span>
 						<label for="DateStart">Дата: </label>
 						<label for="DateStart">c </label>
-						<input id="DateStart" type="date" th:value="${date}" th:field="*{date}"/>
+						<input id="DateStart" type="date" th:value="${startDate}" th:field="*{startDate}"/>
 						<label for="DateEnd">по </label>
-						<input id="DateEnd" type="date" th:value="${dateClosingOrder}" th:field="*{dateClosingOrder}"/>
+						<input id="DateEnd" type="date" th:value="${endDate}" th:field="*{endDate}"/>
 
 						<label for="filtrNumOrder">Заявка №: </label>
 						<input type="text" id="filtrNumOrder" name="filtrNumOrder" th:value="${num}" th:field="*{num}"/>
@@ -49,7 +49,7 @@
 									th:text="${status}">
 							</option>
 						</select>
-						<button type="button" id="btnFiltrOrder" class="a-btn">Применить</button>
+						<button type="submit" id="btnFiltrOrder" class="a-btn">Применить</button>
 					</span>
 				</div>
 

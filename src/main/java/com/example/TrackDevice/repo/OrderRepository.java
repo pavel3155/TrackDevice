@@ -4,9 +4,11 @@ import com.example.TrackDevice.model.CSA;
 import com.example.TrackDevice.model.Order;
 import com.example.TrackDevice.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
 import java.util.List;
 
-public interface OrderRepository extends JpaRepository<Order,Long> {
+public interface OrderRepository extends JpaRepository<Order,Long>, JpaSpecificationExecutor<Order> {
     List<Order> findAll();
     Order getById(long id);
     List<Order> getByCsa(CSA csa);
