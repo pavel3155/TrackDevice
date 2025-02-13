@@ -107,9 +107,6 @@ public class OrderController {
         System.out.println("POST:/FilterOrders...");
         System.out.println("filterOrders= "+filterOrders);
 
-
-
-
         Specification<Order> spec = Specification.where(null);
 
         if (!filterOrders.getStartDate().isEmpty() && !filterOrders.getEndDate().isEmpty()) {
