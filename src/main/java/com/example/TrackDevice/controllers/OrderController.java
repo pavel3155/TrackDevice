@@ -101,7 +101,12 @@ public class OrderController {
         return "Orders";
     }
 
-
+    /**
+     * метод реализовывает динамический запрос по параметрам объекта filterOrders
+     * @param model
+     * @param filterOrders
+     * @return
+     */
     @PostMapping("/FilterOrders")
     public String filterOrders(Model model, @Valid @ModelAttribute FilterOrders filterOrders) {
         System.out.println("POST:/FilterOrders...");
