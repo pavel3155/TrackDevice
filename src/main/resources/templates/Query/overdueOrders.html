@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>(З)Простроченные заявки</title>
+    <link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/style-form.css">
+	<script src="js/jquery-3.7.1.js"></script>
+</head>
+
+<header>
+	<div id="header">
+		<script src="/js/header-for-dir.js"></script>
+	</div>
+</header>
+
+<body>
+	<div class="container">
+
+		<form class="forms-operation"
+			  th:method="get">
+
+
+			<div class="container-inner">
+				<div class ="tbl-div">
+					<table class="table" id="tblOrders">
+						<tr>
+							<!-- <th class ="dev-col-num">№</th> -->
+							<th>Дата открытия</th>
+							<th>Дата исполнения</th>
+							<th>Срок исполнения</th>
+							<th>№заявки</th>
+							<th>КСА</th>
+							<th>Техническое средство</th>
+							<th>Описание</th>
+							<th>Статус</th>
+							<th>Исполнитель</th>
+							<th>Действие</th>
+						</tr>
+						<tr style="text-align:center" th:each="order : ${orders}">
+							<td th:text="${order.date}"></td>
+							<td th:text="${order.date_closing}"></td>
+							<td th:with="closDate=${order.date_closing != null ? order.date_closing : T(java.time.LocalDate).now()},
+                 						date=${order.date.atStartOfDay().atZone(T(java.time.ZoneId).systemDefault()).toLocalDate()},
+                 						diffDays=${T(java.time.temporal.ChronoUnit).DAYS.between(date, closDate)}">
+								<span th:text="${diffDays}"></span>
+							</td>
+							<td th:text="${order.num}"></td>
+							<td th:text="${order.csa.num}"></td>
+							<td th:text="${order.device.model.name}"></td>
+							<td th:text="${order.description}"></td>
+							<td th:text="${order.status}"></td>
+							<td th:text="${order.executor.email}"></td>
+							<td>
+								<span class="tbl-td-span-inline">
+									<a sec:authorize="!hasRole('ROLE_CSA')"
+									   th:href="@{/Query/viewOrder(id=${order.id})}"
+									   class="a-btn a-btn-tbl">Открыть</a>
+								</span>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div>
+				<span id="link"></span>
+				<span><a href="/" class="a-btn">Назад</a></span>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

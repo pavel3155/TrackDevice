@@ -19,24 +19,29 @@
 			  th:method="get"
 			  th:action="@{/model}"
 			  th:object="${typeDeviceDTO}">
-			<span class="margin-t">
-				<label for="selTypeDev">Вуберите тип ТС: </label>
-				<select  id="selTypeDev" class="select" change="loadSelectDevModel()">
-					<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
-				</select>
-				<script>
-					$('#selTypeDev option[value=2]').prop('selected',true);
-				</script>
-			</span>
 
-			<div class ="tbl-div">
-				<table class="table" id="tblModelDevice">
-					<tr>
-						<th class ="col-num">№</th>
-						<th class ="col-basic">Модель</th>
-						<th class ="col-action">Действие</th>
-					</tr>
-				</table>
+			<div class="container-inner">
+				<div class="filter">
+					<span>
+						<label for="selTypeDev">Вуберите тип ТС: </label>
+						<select  id="selTypeDev" class="select" change="loadSelectDevModel()">
+							<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
+						</select>
+						<script>
+							$('#selTypeDev option[value=2]').prop('selected',true);
+						</script>
+					</span>
+				</div>
+
+				<div class ="tbl-div">
+					<table class="table"  id="tblModelDevice">
+						<tr>
+							<th class ="col-num">№</th>
+							<th class ="col-basic">Модель</th>
+							<th class ="col-action">Действие</th>
+						</tr>
+					</table>
+				</div>
 			</div>
 			<div>
 				<span id="link"></span>

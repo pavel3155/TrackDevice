@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,17 +61,18 @@ public class DeviceController {
         } else {
             devices = deviceRepository.findByModelAndSernumContainingIgnoreCase(model,filterSN);
         }
-        List<JSONDeviceDTO> jsonDeviceDTOList= new ArrayList<>();
-        for (Device dev:devices){
-            JSONDeviceDTO jsonDeviceDTO=new JSONDeviceDTO();
-            jsonDeviceDTO.setId(dev.getId());
-            jsonDeviceDTO.setType(dev.getModel().getType().getType());
-            jsonDeviceDTO.setModel(dev.getModel().getName());
-            jsonDeviceDTO.setInvnum(dev.getInvnum());
-            jsonDeviceDTO.setSernum(dev.getSernum());
-            jsonDeviceDTO.setCsa(dev.getCsa().getNum());
-            jsonDeviceDTOList.add(jsonDeviceDTO);
-        }
+        List<JSONDeviceDTO> jsonDeviceDTOList=deviceService.newObjJSONDeviceDTO(devices);
+//        List<JSONDeviceDTO> jsonDeviceDTOList= new ArrayList<>();
+//        for (Device dev:devices){
+//            JSONDeviceDTO jsonDeviceDTO=new JSONDeviceDTO();
+//            jsonDeviceDTO.setId(dev.getId());
+//            jsonDeviceDTO.setType(dev.getModel().getType().getType());
+//            jsonDeviceDTO.setModel(dev.getModel().getName());
+//            jsonDeviceDTO.setInvnum(dev.getInvnum());
+//            jsonDeviceDTO.setSernum(dev.getSernum());
+//            jsonDeviceDTO.setCsa(dev.getCsa().getNum());
+//            jsonDeviceDTOList.add(jsonDeviceDTO);
+//        }
         System.out.println("devices:= "+devices);
         System.out.println("jsonDeviceDTOList:= "+jsonDeviceDTOList);
         Gson gson = new Gson();
@@ -107,17 +109,19 @@ public class DeviceController {
                 devices= deviceRepository.findByCsaAndModelAndSernumContainingIgnoreCase(csa, model, filterSN);
             }
         }
-        List<JSONDeviceDTO> jsonDeviceDTOList= new ArrayList<>();
-        for (Device dev:devices){
-            JSONDeviceDTO jsonDeviceDTO=new JSONDeviceDTO();
-            jsonDeviceDTO.setId(dev.getId());
-            jsonDeviceDTO.setType(dev.getModel().getType().getType());
-            jsonDeviceDTO.setModel(dev.getModel().getName());
-            jsonDeviceDTO.setInvnum(dev.getInvnum());
-            jsonDeviceDTO.setSernum(dev.getSernum());
-            jsonDeviceDTO.setCsa(dev.getCsa().getNum());
-            jsonDeviceDTOList.add(jsonDeviceDTO);
-        }
+
+        List<JSONDeviceDTO> jsonDeviceDTOList=deviceService.newObjJSONDeviceDTO(devices);
+//        List<JSONDeviceDTO> jsonDeviceDTOList= new ArrayList<>();
+//        for (Device dev:devices){
+//            JSONDeviceDTO jsonDeviceDTO=new JSONDeviceDTO();
+//            jsonDeviceDTO.setId(dev.getId());
+//            jsonDeviceDTO.setType(dev.getModel().getType().getType());
+//            jsonDeviceDTO.setModel(dev.getModel().getName());
+//            jsonDeviceDTO.setInvnum(dev.getInvnum());
+//            jsonDeviceDTO.setSernum(dev.getSernum());
+//            jsonDeviceDTO.setCsa(dev.getCsa().getNum());
+//            jsonDeviceDTOList.add(jsonDeviceDTO);
+//        }
         System.out.println("devices:= "+devices);
         System.out.println("jsonDeviceDTOList:= "+jsonDeviceDTOList);
         Gson gson = new Gson();
@@ -224,9 +228,19 @@ public class DeviceController {
             deviceService.addDevice(deviceDTO);
             model.addAttribute("deviceDTO", deviceDTO);
             model.addAttribute("success",true);
-        }
-        catch (Exception ex){
-            result.addError(new FieldError("deviceDTO","name",ex.getMessage()));
+        } catch (DataIntegrityViolationException e) {
+            result.addError(new FieldError("ordersDTO", "sernum", "серийным № уже существует"));
+            System.out.println("e.getMessage()={***"+e.getMessage()+"***}");
+            System.out.println("e.toString()={***"+e.toString()+"***}");
+            System.out.println("e.getCause()={***"+e.getCause()+"***}");
+            System.out.println("e.getRootCause()={***"+e.getRootCause()+"***}");
+            System.out.println("e.getLocalizedMessage()={***"+e.getLocalizedMessage()+"***}");
+            System.out.println("e.getMostSpecificCause()={***"+e.getMostSpecificCause()+"***}");
+
+        } catch (Exception ex){
+            result.addError(new FieldError("deviceDTO","err",ex.getMessage()));
+        } finally {
+            model.addAttribute("deviceDTO", deviceDTO);
         }
         return "addDevice";
     }

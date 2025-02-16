@@ -14,3 +14,4 @@ document.getElementById("header").innerHTML = '\
                 <img src="/img/head_img2.jpg">\
             </div>\
         </span>'
+

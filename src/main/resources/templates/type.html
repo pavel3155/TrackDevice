@@ -23,16 +23,14 @@
             <label>Тип технического устройства</label>
         </span>
 
-        <div class ="tbl-div">
-            <table class="table" id="tblModelDevice">
+        <div class ="tbl-div" style="width:80%">
+            <table class="table" style="width:100%" id="tblModelDevice">
                     <tr>
-                        <th class ="col-num">№</th>
                         <th class ="col-basic">Тип ТС</th>
                         <th class ="col-action">Действие</th>
                     </tr>
                     <tr th:each="type : ${types}">
-                        <td th:text="${type.id}" class ="col-num"></td>
-                        <td th:text="${type.type}"></td>
+                        <td style="text-align:left" th:text="${type.type}"></td>
                         <td>
                             <span class="tbl-td-span-inline">
                                 <a href="/editTypeDev" th:href="@{/editTypeDev{id}(id=${type.id})}"

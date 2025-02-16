@@ -1,0 +1,2 @@
+select o.id, o.num,o.date,COALESCE(o.date_closing, CURRENT_DATE), COALESCE(o.date_closing, CURRENT_DATE)-o.date from orders o;
+select *, COALESCE(o.date_closing, CURRENT_DATE)-o.date from orders o where  (COALESCE(o.date_closing, CURRENT_DATE)-o.date)>5;

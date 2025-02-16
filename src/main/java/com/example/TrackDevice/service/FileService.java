@@ -7,15 +7,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,8 +95,65 @@ public class FileService {
         }
         return false;
     }
-    public List<String> getAllFiles(String subDir) {
-        Path Directory =this.fileStorageLocation.resolve(subDir).resolve("pic");
+
+    public String createSubDirCons(String subDir,String fileName){
+        System.out.println("subDir:= " +subDir);
+        System.out.println("fileName:= " +fileName);
+        String pathFileName;
+        if (!fileName.isEmpty()){
+            try {
+                Path subDirectory =this.fileStorageLocation.resolve(subDir).resolve("cons");
+                Files.createDirectories(subDirectory);
+                Path targetLocation = subDirectory.resolve(fileName);
+                pathFileName =targetLocation.toString();
+                return pathFileName;
+            } catch (IOException ex) {
+                throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
+            } catch (Exception ex) {
+                throw new RuntimeException("Could not create the directory 'subDir'", ex);
+            }
+        }
+        return "";
+    }
+
+    public void addComment(String fileName, String comment){
+        // Проверка на null
+        if (fileName == null || comment == null) {
+            System.out.println("Имя файла или комментарий null");
+            return;
+        }
+        try (FileWriter writer = new FileWriter(fileName, true))
+        {
+                writer.write(comment+"\n");
+        }
+        catch(IOException ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+    public List<String> loadConsult (String subDir){
+        System.out.println("loadConsult...");
+        System.out.println("subDir:= "+subDir);
+
+        Path Directory =this.fileStorageLocation.resolve(subDir).resolve("cons");
+        String fileName = "consult_"+subDir+".txt";
+        Path targetLocation = Directory.resolve(fileName);
+        String pathFileName =targetLocation.toString();
+        System.out.println("pathFileName:= "+pathFileName);
+
+        List<String> lst = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(pathFileName))) {
+            String read=br.readLine();
+            while (read!=null) {
+                lst.add(read);
+                read=br.readLine();
+            }
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return lst;
+    }
+    public List<String> getAllFiles(String subDir1,String subDir2) {
+        Path Directory =this.fileStorageLocation.resolve(subDir1).resolve(subDir2);
         System.out.println("getAllFiles...");
         System.out.println("Directory:= "+Directory);
         if (Files.exists(Directory)){

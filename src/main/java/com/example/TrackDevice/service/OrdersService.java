@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -90,6 +91,9 @@ public class OrdersService {
         ordersDTO.setExecutor(order.getExecutor());
         ordersDTO.setRestore(order.getRestore());
         ordersDTO.setServiceable(order.getServiceable());
+        if (order.getDate_closing()!=null){
+            ordersDTO.setDateClosingOrder(order.getDate_closing().toString());
+        }
         return ordersDTO;
     }
 
@@ -100,5 +104,44 @@ public class OrdersService {
         orderStatus.add("закрыта");
         return orderStatus;
     }
+    public String GenerationNumOrder(List<Order> orders){
+        String num;
+        if(!orders.isEmpty()) {
+            List<Integer> lstNum = new ArrayList<>();
+            for (Order order : orders) {
+                lstNum.add(Integer.parseInt(order.getNum().substring(8)));
+            }
 
+            System.out.println("lstNum=" + lstNum);
+            System.out.println("max=" + Collections.max(lstNum));
+
+            int intNUM = Collections.max(lstNum) + 1;
+            System.out.println("intNUM=" + intNUM);
+
+
+            num = String.valueOf(intNUM);
+            System.out.println("num=" + num);
+            int l = num.length();
+            System.out.println("l=" + l);
+
+            switch (l) {
+                case 1:
+                    num = "000" + num;
+                    break;
+                case 2:
+                    num = "00" + num;
+                    break;
+                case 3:
+                    num = "0" + num;
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            num = "0001";
+        }
+
+        return num;
+
+    }
 }

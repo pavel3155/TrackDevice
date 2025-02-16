@@ -9,7 +9,6 @@ import lombok.Data;
 
 @Data
 public class DeviceDTO {
-    //private TypeDevice type;
     private long id;
     private ModelDevice modelDevice;
     private String invnum;
@@ -17,4 +16,5 @@ public class DeviceDTO {
     private String sernum;
     private String status;
     private CSA csa;
+    private String err;
 }

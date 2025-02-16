@@ -36,14 +36,14 @@
 					<input sec:authorize="hasRole('ROLE_CSA')" id ="textRestore" type="hidden" th:value="${restore}" th:field="*{restore}">
 					<table class="table" id="tblOrder">
 						<tr>
-							<td style=" font-weight: 600">Дата</td>
+							<td style=" font-weight: 600;text-align:right">Дата</td>
 							<td class="AlignCenter">
 								<input id="orderData" type="date" th:value="${date}" th:field="*{date}"/>
 							</td>
 							<td></td>
 						</tr>
 						<tr>
-							<td style=" font-weight: 600">Заявка №</td>
+							<td style=" font-weight: 600; text-align:right">Заявка №</td>
 							<td class="AlignCenter">
 								<input type="text" id="orderNum" name="orderNum" th:value="${num}" th:field="*{num}"/>
 								<div class="div_error">
@@ -54,7 +54,7 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td style=" font-weight: 600">КСА</td>
+							<td style=" font-weight: 600; text-align:right">КСА</td>
 							<td class="AlignCenter">
 								<label id="lblOrderCSA" for="orderCSA" th:text="${ordersDTO.csa.num}+', '+${ordersDTO.csa.address}"></label>
 								<input type="hidden" id="orderCSA" th:value="${csa}" th:field="*{csa}">
@@ -65,7 +65,7 @@
 
 						</tr>
 						<tr>
-							<td style=" font-weight: 600">Техническое средство</td>
+							<td style=" font-weight: 600; text-align:right">Техническое средство</td>
 							<td class="AlignCenter">
 								<label id="lblOrderDevice"  for="orderDevice"
 									   th:text="${ordersDTO.device.model.type.type} + ': ' +
@@ -76,7 +76,7 @@
 								<button id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button>
 							</td>
 						</tr>
-						<td>Серийный №</td>
+						<td style="text-align:right">Серийный №</td>
 						<td class="AlignCenter">
 							<label id="lblOrderDeviceSN"  for="orderDevice"
 								   th:text="${ordersDTO.device.sernum} "></label>
@@ -84,7 +84,7 @@
 						<td></td>
 						</tr>
 						<tr>
-							<td>Инвентарный №</td>
+							<td style="text-align:right">Инвентарный №</td>
 							<td class="AlignCenter">
 								<label id="lblOrderDeviceIN"  for="orderDevice"
 									   th:text="${ordersDTO.device.invnum}"></label>
@@ -92,7 +92,7 @@
 							</td>
 							<td></td>
 						<tr>
-							<td style="font-weight: 600">Статус</td>
+							<td style="font-weight: 600; text-align:right">Статус</td>
 							<td class="AlignCenter">
 								<label id="lblOrderStatus" for="orderStatus" th:text="${ordersDTO.status}"></label>
 								<input type="hidden" id="orderStatus" name="orderStatus" th:field="*{status}"/>
@@ -100,14 +100,14 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td style=" font-weight: 600">Описание</td>
+							<td style=" font-weight: 600; text-align:right">Описание</td>
 							<td class="AlignCenter">
 								<input type="text" id="orderDescription" style="width:99%;text-align:center" name="orderDescription"  th:value="${description}" th:field="*{description}"/>
 							</td>
 							<td></td>
 						</tr>
 						<tr>
-							<td style=" font-weight: 600">Исполнитель</td>
+							<td style=" font-weight: 600; text-align:right">Исполнитель</td>
 							<td class="AlignCenter">
 								<span sec:authorize="hasRole('ROLE_EXECDEV') or hasRole('ROLE_CSA')">
 									<label id="lblOrderExecutor"  for="orderExecutor"
@@ -129,7 +129,7 @@
 							<td></td>
 						</tr>
 						<tr sec:authorize="!hasRole('ROLE_CSA')">
-							<td  style=" font-weight: 600">Восстановление КСА</td>
+							<td  style=" font-weight: 600; text-align:right">Восстановление КСА</td>
 							<td  class="AlignCenter">
 								<select  id="selRestore"
 										 class="select"
@@ -144,7 +144,7 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td  style="font-weight: 600">Прикрепленные фото</td>
+							<td  style="font-weight: 600; text-align:right">Прикрепленные фото</td>
 							<td>
 								<span id="idListSaveFiles" th:each="file : ${files}" >
 									<div class="attached-pictures">
@@ -157,7 +157,7 @@
 						</tr>
 
 						<tr>
-							<td  style="font-weight: 600">Добавить новые фото</td>
+							<td  style="font-weight: 600; text-align:right">Добавить новые фото</td>
 							<td>
 								<span id="idListInputFiles"></span>
 							</td>
@@ -238,9 +238,25 @@
 
                 function setOrderNumDate(){
                 	console.log('setOrderNumDate()...');
+                	$('#orderNum').val(null);
                     var orderDate=moment($('#orderData').val()).format('YYYYMMDD');
                     console.log("orderDate:= "+orderDate);
-                    $('#orderNum').val(orderDate+$('#orderNum').val());
+
+                    GenerationNumOrder(orderDate);
+                    /* $('#orderNum').val(orderDate+$('#orderNum').val()); */
+
+                }
+
+                function GenerationNumOrder(orderDate) {
+                	console.log('GenerationNumOrder()...');
+                	console.log("orderDate="+orderDate);
+				   	$.getJSON('/GenerationNumOrder' + orderDate)
+                    	.done(function (data) {
+              			var num=data;
+							console.log("numOrder="+num);
+							$('#orderNum').val(num);
+                       }
+                    );
                 }
 
                 function selCSA(){

@@ -7,6 +7,7 @@ import com.example.TrackDevice.repo.*;
 import com.example.TrackDevice.service.FileService;
 import com.example.TrackDevice.service.OrdersService;
 import com.example.TrackDevice.specification.OrdersSpecification;
+import com.google.gson.Gson;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.hibernate.mapping.Array;
@@ -31,6 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -101,6 +103,8 @@ public class OrderController {
         return "Orders";
     }
 
+
+
     /**
      * метод реализовывает динамический запрос по параметрам объекта filterOrders
      * @param model
@@ -135,33 +139,38 @@ public class OrderController {
 
         return "Orders";
     }
+    @PostMapping("/addComment")
+    public String addComent(Model model, @AuthenticationPrincipal UserDetails userDetails,
+                            @Valid @ModelAttribute ConsultDTO consultDTO, BindingResult result) {
+        System.out.println("POST:addComent...");
+        System.out.println("consultDTO=" +consultDTO);
+        System.out.println("userDetails.getUsername()=" +userDetails.getUsername());
 
-    @PostMapping("/Orders")
-    public String Orders(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result) {
-
-        //если ошибки есть
-        if (result.hasErrors()) {
-            List<CSA> csas = csaRepository.findAll();
-            List<Device> devices = deviceRepository.findAll();
-            model.addAttribute("csas", csas);
-            model.addAttribute("devices", devices);
-            return "regUser";
-        }
-        try {
-            ordersService.add(ordersDTO);
-            List<CSA> csas = csaRepository.findAll();
-            List<Device> devices = deviceRepository.findAll();
-            model.addAttribute("csas", csas);
-            model.addAttribute("devices", devices);
-            model.addAttribute("ordersDTO", new OrdersDTO());
-            model.addAttribute("success", true);
-
-        } catch (Exception ex) {
-            result.addError(new FieldError("ordersDTO", "name", ex.getMessage()));
-        }
-
-        return "Orders";
+        int i=userDetails.getUsername().indexOf('@');
+        String user =userDetails.getUsername().substring(0,i);
+        String coment = user+":"+consultDTO.getNewComment();
+        String subDir = consultDTO.getNum();
+        String fileName = "consult_"+consultDTO.getNum()+".txt";
+        String pathFile= fileService.createSubDirCons(subDir,fileName);
+        fileService.addComment(pathFile,coment);
+        return "crConsult";
     }
+    @PostMapping("/crConsult")
+    public String crConsult(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result) {
+        System.out.println("POST:crConsult...");
+        System.out.println("ordersDTO=" +ordersDTO);
+
+        List<String> consults= fileService.loadConsult(ordersDTO.getNum());
+        ConsultDTO consultDTO = new ConsultDTO();
+        consultDTO.setNum(ordersDTO.getNum());
+
+        model.addAttribute("consultDTO", consultDTO);
+        model.addAttribute("consults", consults);
+
+        return "crConsult";
+    }
+
+
 
     /**
      * Метод отрабатывает переход на страницу 'addOrder' :
@@ -256,7 +265,7 @@ public class OrderController {
         String directory;
         if (ordersDTO.getId()!=0) {
             System.out.println("ordersDTO.getNum()!=null...");
-            fileNames = fileService.getAllFiles(ordersDTO.getNum());
+            fileNames = fileService.getAllFiles(ordersDTO.getNum(),"pic");
             directory=ordersDTO.getNum();
             System.out.println("directory:="+directory);
         } else {
@@ -440,6 +449,24 @@ public class OrderController {
     }
 
     /**
+     * метод генерирует и возвращает номер заявки
+     * @param OrderDate
+     * @return
+     */
+    @GetMapping("/GenerationNumOrder{OrderDate}")
+    @ResponseBody
+    public ResponseEntity<String> generationNumOrder(@PathVariable String OrderDate) {
+        System.out.println("GET:/GenerationNumOrder{OrderDate}...");
+        System.out.println("OrderDate:= " + OrderDate);
+        List<Order> orders = orderRepository.findAllByNumStartingWith(OrderDate);
+        String num= ordersService.GenerationNumOrder(orders);
+        String numOrder = OrderDate+num;
+        Gson gson = new Gson();
+        String jsonNumOrder = gson.toJson(numOrder);
+        return  ResponseEntity.ok(jsonNumOrder);
+    }
+
+    /**
      * метод осуществляет выбор КСА
      * @param csa_id
      * @param model
@@ -514,9 +541,9 @@ public class OrderController {
 //        ordersDTO.setRestore(order.getRestore());
 //        ordersDTO.setServiceable(order.getServiceable());
 
-        if (order.getDate_closing()!=null){
-            ordersDTO.setDateClosingOrder(order.getDate_closing().toString());
-        }
+//        if (order.getDate_closing()!=null){
+//            ordersDTO.setDateClosingOrder(order.getDate_closing().toString());
+//        }
 
 
         Object[] arrRoles=userDetails.getAuthorities().stream().toArray();
@@ -540,7 +567,7 @@ public class OrderController {
         String directory;
         if (ordersDTO.getNum()!=null) {
             System.out.println("ordersDTO.getNum()!=null...");
-            fileNames = fileService.getAllFiles(ordersDTO.getNum());
+            fileNames = fileService.getAllFiles(ordersDTO.getNum(),"pic");
             directory=ordersDTO.getNum();
         } else {
             fileNames=new ArrayList<>();
@@ -574,8 +601,8 @@ public class OrderController {
         model.addAttribute("selDevOrder", selDevOrder);
 
         List<String> fileNames;
-        if(fileService.getAllFiles(ordersDTO.getNum())!=null){
-            fileNames = fileService.getAllFiles(ordersDTO.getNum());
+        if(fileService.getAllFiles(ordersDTO.getNum(),"pic")!=null){
+            fileNames = fileService.getAllFiles(ordersDTO.getNum(),"pic");
         } else{
             fileNames = new ArrayList<>();
         }
@@ -623,18 +650,6 @@ public class OrderController {
             result.addError(new FieldError("ordersDTO", "err", ex.getMessage()));
         }
         return "/editOrder";
-    }
-
-    public List<String> getNameFilesToOrder(String subDir){
-        List<String> fileNames;
-        if (!subDir.isEmpty()) {
-            System.out.println("getNameFilesToOrder(String subDir)...");
-            System.out.println("subDir:= "+ subDir);
-            fileNames = fileService.getAllFiles(subDir);
-        } else {
-            fileNames=new ArrayList<>();
-        }
-        return fileNames;
     }
 }
 

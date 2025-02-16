@@ -1,6 +1,7 @@
 package com.example.TrackDevice.service;
 
 import com.example.TrackDevice.DTO.DeviceDTO;
+import com.example.TrackDevice.DTO.JSONDeviceDTO;
 import com.example.TrackDevice.DTO.ModelDeviceDTO;
 import com.example.TrackDevice.DTO.TypeDeviceDTO;
 import com.example.TrackDevice.model.CSA;
@@ -14,6 +15,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class DeviceService {
     @Autowired
@@ -22,7 +26,20 @@ public class DeviceService {
     ModelDeviceRepository modelDeviceRepository;
     @Autowired
     TypeDeviceRepository typeDeviceRepository;
-
+public List<JSONDeviceDTO> newObjJSONDeviceDTO(List<Device> devices){
+    List<JSONDeviceDTO> jsonDeviceDTOList= new ArrayList<>();
+    for (Device dev:devices){
+        JSONDeviceDTO jsonDeviceDTO=new JSONDeviceDTO();
+        jsonDeviceDTO.setId(dev.getId());
+        jsonDeviceDTO.setType(dev.getModel().getType().getType());
+        jsonDeviceDTO.setModel(dev.getModel().getName());
+        jsonDeviceDTO.setInvnum(dev.getInvnum());
+        jsonDeviceDTO.setSernum(dev.getSernum());
+        jsonDeviceDTO.setCsa(dev.getCsa().getNum());
+        jsonDeviceDTOList.add(jsonDeviceDTO);
+    }
+    return jsonDeviceDTOList;
+}
     public Device addDevice(@Valid DeviceDTO deviceDTO){
         Device device = new Device();
         device.setModel(deviceDTO.getModelDevice());

@@ -22,34 +22,38 @@
 			  th:action="@{/device}"
 			  th:object="${deviceDTO}">
 
-			<span class="margin-t">
-				<label for="selTypeDev">Тип: </label>
-				<select  id="selTypeDev"  change="loadSelectDevModel()">
-					<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
-				</select>
-				<script>
-					$('#selTypeDev option[value=0]').prop('selected',true);
-				</script>
+			<div class="container-inner">
+				<div class="filter">
+					<span>
+						<label for="selTypeDev">Тип: </label>
+						<select  id="selTypeDev"  change="loadSelectDevModel()">
+							<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
+						</select>
+						<script>
+							$('#selTypeDev option[value=0]').prop('selected',true);
+						</script>
 
-				<label for="selModelDev">Модель: </label>
-				<select  id="selModelDev" th:field="*{modelDevice}"></select>
+						<label for="selModelDev">Модель: </label>
+						<select  id="selModelDev" th:field="*{modelDevice}"></select>
 
-				<label for="filtrSN">Серийный номер(фильтр): </label>
-				<input type="text" id="filtrSN" name="filtrSN"/>
-				<button type="button" id="btnFiltrSn" class="a-btn">Применить</button>
-			</span>
+						<label for="filtrSN">Серийный номер(фильтр): </label>
+						<input type="text" id="filtrSN" name="filtrSN"/>
+						<button type="button" id="btnFiltrSn" class="a-btn">Применить</button>
+					</span>
+				</div>
 
-			<div class ="tbl-div">
-				<table class="table" id="tblDevice">
-					<tr>
-						<th class ="dev-col-num">№</th>
-						<th>Тип</th>
-						<th>Модель</th>
-						<th>Серийные №</th>
-						<th>Инвентарный №</th>
-						<th class ="dev-col-action">Действие</th>
-					</tr>
-				</table>
+				<div class ="tbl-div">
+					<table class="table" id="tblDevice">
+						<tr>
+							<th class ="dev-col-num">№</th>
+							<th>Тип</th>
+							<th>Модель</th>
+							<th>Серийные №</th>
+							<th>Инвентарный №</th>
+							<th class ="dev-col-action">Действие</th>
+						</tr>
+					</table>
+				</div>
 			</div>
 			<div>
 				<span id="link"></span>

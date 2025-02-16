@@ -56,7 +56,7 @@ public class OrdersSpecification {
 
             // Вычисляем разницу между датами с помощью функции AGE
 
-            Expression<Temporal> diffInDays = cb.function("EXTRACT", Temporal.class,
+            Expression<Number> diffInDays = cb.function("EXTRACT", Number.class,
                     cb.literal("DAY"),
                     cb.function("AGE",Number.class, effectiveEndDate,startDate));
             // Создаем предикат для фильтрации (разница в днях > 5)

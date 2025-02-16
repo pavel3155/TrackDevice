@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>(З)Заявки</title>
+    <link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/style-form.css">
+	<script src="js/jquery-3.7.1.js"></script>
+</head>
+
+<header>
+	<div id="header">
+		<script src="js/header.js"></script>
+	</div>
+</header>
+
+<body>
+	<div class="container">
+
+		<form class="forms-operation"
+			  th:method="post"
+			  th:action="@{/addComment}"
+			  th:object="${consultDTO}">
+
+			<input id ="num" type="hidden" th:value="${num}" th:field="*{num}">
+			<div class="container-inner" style="margin-top:10px;">
+				<span>Консультации по заявке №</span>
+				<div id="allComents" class="tbl-div" style="width:100%;height: 75%; background:#f9f9f9">
+					<p class="comment-item" th:each="cons : ${consults}" th:text="${cons}">
+
+				</div>
+				<!-- th:selected="${exec.id == ordersDTO.executor.id}"> -->
+				<div class="comment" >
+						<!-- <input style="width:85%;" id="txtNewComent" type="text" th:value="${newComment}" th:field="*{newComment}">
+							-->
+						<span style="width:90%; margin-right:5px">
+							<div id="lblNewComent" >Новый коментарий</div>
+							<textarea id="content" name="content" style = "width : 97%" rows="4" th:field="*{newComment}"  required></textarea>
+						</span>
+						<span class="column-item">
+							<button id="btnSendComent" type=submit class="a-btn">Отправить</button>
+							<a href="/" class="a-btn">Назад</a>
+						</span>
+				</div>
+
+			</div>
+
+
+		</form>
+	</div>
+</body>
+</html>
