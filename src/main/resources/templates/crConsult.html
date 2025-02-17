@@ -25,10 +25,32 @@
 
 			<input id ="num" type="hidden" th:value="${num}" th:field="*{num}">
 			<div class="container-inner" style="margin-top:10px;">
-				<span>Консультации по заявке №</span>
-				<div id="allComents" class="tbl-div" style="width:100%;height: 75%; background:#f9f9f9">
-					<p class="comment-item" th:each="cons : ${consults}" th:text="${cons}">
+				<span th:text="'Консультации по заявке №'+${consultDTO.num}"></span>
+				<div id="allComents" class="comment-all">
+					<th:block th:each="cons : ${consults}">
+						<div>
+							<p th:if="${cons.csa == '02C001'}"
+								  class="comment-exec"
+								  th:text="${cons.user + ': ' + cons.comment}">
+							</p>
+						</div>
+						<div>
+							<p th:unless="${cons.csa == '02C001'}"
+								  class="comment-csa"
+								  th:text="${cons.user + ': ' + cons.comment}">
+							</p>
+						</div>
+					</th:block>
 
+
+
+
+<!--
+
+					<p th:each="cons : ${consults}"
+					   th:if = "${cons.csa=='02C001'}"  class="comment-item"
+					   th:text="${cons.user+':'+cons.comment}">
+-->
 				</div>
 				<!-- th:selected="${exec.id == ordersDTO.executor.id}"> -->
 				<div class="comment" >

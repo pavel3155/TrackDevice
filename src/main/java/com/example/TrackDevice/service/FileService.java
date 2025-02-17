@@ -1,5 +1,6 @@
 package com.example.TrackDevice.service;
 
+import com.example.TrackDevice.DTO.CommentDTO;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
@@ -130,27 +131,56 @@ public class FileService {
             System.out.println(ex.getMessage());
         }
     }
-    public List<String> loadConsult (String subDir){
+
+//    public List<String> loadConsult (String subDir){
+//        System.out.println("loadConsult...");
+//        System.out.println("subDir:= "+subDir);
+//
+//        Path Directory =this.fileStorageLocation.resolve(subDir).resolve("cons");
+//        String fileName = "consult_"+subDir+".txt";
+//        Path targetLocation = Directory.resolve(fileName);
+//        String pathFileName =targetLocation.toString();
+//        System.out.println("pathFileName:= "+pathFileName);
+//
+//        List<String> lst = new ArrayList<>();
+//        try (BufferedReader br = new BufferedReader(new FileReader(pathFileName))) {
+//            String read=br.readLine();
+//            while (read!=null) {
+//                lst.add(read);
+//                read=br.readLine();
+//            }
+//        } catch (IOException ex) {
+//            System.out.println(ex.getMessage());
+//        }
+//        return lst;
+//    }
+    public List<CommentDTO> loadConsult (String subDir){
         System.out.println("loadConsult...");
         System.out.println("subDir:= "+subDir);
 
         Path Directory =this.fileStorageLocation.resolve(subDir).resolve("cons");
         String fileName = "consult_"+subDir+".txt";
+        System.out.println("fileName="+fileName);
         Path targetLocation = Directory.resolve(fileName);
         String pathFileName =targetLocation.toString();
         System.out.println("pathFileName:= "+pathFileName);
 
-        List<String> lst = new ArrayList<>();
+        List<CommentDTO> lstConsul = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(pathFileName))) {
             String read=br.readLine();
             while (read!=null) {
-                lst.add(read);
+                String[] strArr= read.split(":");
+                CommentDTO commentDTO = new CommentDTO();
+                commentDTO.setCsa(strArr[0]);
+                commentDTO.setUser(strArr[1]);
+                commentDTO.setComment(strArr[2]);
+                lstConsul.add(commentDTO);
                 read=br.readLine();
             }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
-        return lst;
+        return lstConsul;
     }
     public List<String> getAllFiles(String subDir1,String subDir2) {
         Path Directory =this.fileStorageLocation.resolve(subDir1).resolve(subDir2);

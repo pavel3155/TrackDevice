@@ -61,9 +61,33 @@
     padding: 10px; /* Поля вокруг текста */
 
   }
-  comment-item{
-    margin-left:20px;
-    background: #a1a4b576;;
+   .comment-all{
+      width:100%;
+      height: 75%;
+      overflow-y:auto;
+      margin: 2px;
+      background:#f9f9f9"
+      display:block;
+   }
+  .comment-csa{
+    display: inline-block;
+    padding: 10px; /* Добавляет отступы для лучшего восприятия */
+    border-radius: 8px; /* Скругляет углы */
+    background-color: #e9ebdd; /* Цвет фона */
+    margin-left:60px;
+    margin-right:20px;
+    margin-top:5px;
+
+  }
+  .comment-exec{
+    display: inline-block;
+    padding: 10px; /* Добавляет отступы для лучшего восприятия */
+    border-radius: 8px; /* Скругляет углы */
+    background-color: #ebe1dd; /* Цвет фона */
+    margin-left:40px;
+    margin-right:20px;
+    margin-top:5px;
+
   }
   .comment{
       margin-top:10px;

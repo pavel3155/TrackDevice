@@ -147,12 +147,17 @@ public class OrderController {
         System.out.println("userDetails.getUsername()=" +userDetails.getUsername());
 
         int i=userDetails.getUsername().indexOf('@');
+        String csa =userRepository.findByEmail(userDetails.getUsername()).getCsa().getNum();
         String user =userDetails.getUsername().substring(0,i);
-        String coment = user+":"+consultDTO.getNewComment();
+        String coment = csa+":"+user+":"+consultDTO.getNewComment();
         String subDir = consultDTO.getNum();
         String fileName = "consult_"+consultDTO.getNum()+".txt";
         String pathFile= fileService.createSubDirCons(subDir,fileName);
         fileService.addComment(pathFile,coment);
+        //List<String> consults= fileService.loadConsult(subDir);
+        List<CommentDTO> consults= fileService.loadConsult(subDir);
+        model.addAttribute("consultDTO", consultDTO);
+        model.addAttribute("consults", consults);
         return "crConsult";
     }
     @PostMapping("/crConsult")
@@ -160,7 +165,7 @@ public class OrderController {
         System.out.println("POST:crConsult...");
         System.out.println("ordersDTO=" +ordersDTO);
 
-        List<String> consults= fileService.loadConsult(ordersDTO.getNum());
+        List<CommentDTO> consults= fileService.loadConsult(ordersDTO.getNum());
         ConsultDTO consultDTO = new ConsultDTO();
         consultDTO.setNum(ordersDTO.getNum());
 
