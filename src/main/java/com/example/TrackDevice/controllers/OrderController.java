@@ -148,14 +148,23 @@ public class OrderController {
 
         int i=userDetails.getUsername().indexOf('@');
         String csa =userRepository.findByEmail(userDetails.getUsername()).getCsa().getNum();
-        String user =userDetails.getUsername().substring(0,i);
-        String coment = csa+":"+user+":"+consultDTO.getNewComment();
-        String subDir = consultDTO.getNum();
-        String fileName = "consult_"+consultDTO.getNum()+".txt";
-        String pathFile= fileService.createSubDirCons(subDir,fileName);
-        fileService.addComment(pathFile,coment);
-        //List<String> consults= fileService.loadConsult(subDir);
-        List<CommentDTO> consults= fileService.loadConsult(subDir);
+        List<CommentDTO> consults;
+
+        System.out.println("consultDTO.getNewComment().isEmpty()="+consultDTO.getNewComment().isEmpty());
+        System.out.println("consultDTO.getNewComment()="+consultDTO.getNewComment());
+
+
+            if(!consultDTO.getNewComment().isEmpty()) {
+                String user = userDetails.getUsername().substring(0, i);
+                String coment = csa + ":" + user + ":" + consultDTO.getNewComment();
+                String subDir = consultDTO.getNum();
+                String fileName = "consult_" + consultDTO.getNum() + ".txt";
+                String pathFile = fileService.createSubDirCons(subDir, fileName);
+                fileService.addComment(pathFile, coment);
+                //List<String> consults= fileService.loadConsult(subDir);
+                consults = fileService.loadConsult(subDir);
+            } else consults=new ArrayList<>();
+
         model.addAttribute("consultDTO", consultDTO);
         model.addAttribute("consults", consults);
         return "crConsult";

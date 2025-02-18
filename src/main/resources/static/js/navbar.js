@@ -47,5 +47,14 @@ document.getElementById("nav_bar").innerHTML = `
                   </span>
             </li>
         </ul>
-    </nav>`;
+    </nav>
+    		<nav>
+    				<span>
+    					<h3 sec:authorize="isAuthenticated()" class="nav_bar_span_h" sec:authentication="name">Username</h3>
+    				</span>
+    		</nav>`;
+
+
+
+
 

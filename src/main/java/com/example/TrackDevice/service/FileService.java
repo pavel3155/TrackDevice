@@ -168,7 +168,8 @@ public class FileService {
         List<CommentDTO> lstConsul = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(pathFileName))) {
             String read=br.readLine();
-            while (read!=null) {
+            System.out.println("read="+read);
+            while (read!=null&&!read.isEmpty()) {
                 String[] strArr= read.split(":");
                 CommentDTO commentDTO = new CommentDTO();
                 commentDTO.setCsa(strArr[0]);
