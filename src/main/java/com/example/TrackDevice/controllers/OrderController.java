@@ -168,6 +168,7 @@ public class OrderController {
         List<CommentDTO> consults= fileService.loadConsult(ordersDTO.getNum());
         ConsultDTO consultDTO = new ConsultDTO();
         consultDTO.setNum(ordersDTO.getNum());
+        consultDTO.setIdOrder(ordersDTO.getId());
 
         model.addAttribute("consultDTO", consultDTO);
         model.addAttribute("consults", consults);

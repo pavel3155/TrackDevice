@@ -50,6 +50,7 @@ public class ActDevController {
         model.addAttribute("devActs", devActs);
         ActDevDTO actDevDTO = new ActDevDTO();
         model.addAttribute("actDevDTO", actDevDTO);
+        model.addAttribute("idOrder", 0);
 
     return "/Acts/ActsDev";
     }
@@ -133,6 +134,7 @@ public class ActDevController {
     public String moveActDev(@RequestParam long idOrder, Model model) {
         System.out.println("GET:/moveActsDev?idOrder...");
         System.out.println("idOrder= "+idOrder);
+        model.addAttribute("idOrder", idOrder);
         Order order=orderRepository.getById(idOrder);
         List<ActDev> devActs = actDevRepository.findByOrder(order);
         System.out.println("devActs ="+devActs);
@@ -337,8 +339,13 @@ public class ActDevController {
     public String devTransfer(Model model, @ModelAttribute ActDevDTO actDevDTO){
         System.out.println("POST:/trDevSC...");
         System.out.println("actDevDTO:= "+actDevDTO);
-
-        Device selDev=deviceRepository.getById(actDevDTO.getIdSelDev());
+        Device selDev;
+        if (actDevDTO.getIdSelDev()!=0){
+                selDev=deviceRepository.getById(actDevDTO.getIdSelDev());
+        } else{
+            List<Device> lstDev=deviceRepository.findBySernum("---");
+            selDev= lstDev.get(0);
+        }
         actDevDTO.setDevice(selDev);
         List<CSA> csas = csaRepository.findAll();
         List<ActTypes> types =actTypesRepository.findAll();

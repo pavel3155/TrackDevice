@@ -69,8 +69,17 @@
 							<a href="/csa" th:href="@{/csa}">КСА</a>
 						</span>
 					</span>
-				<li class ="li-horizontally"><a href="#">Настройки</a></li>
-            </ul>
+				<li class="li-horizontally">
+                  <span class="dropdown">
+                       <button class="dropbtn">Настройки
+                            <i class="fa fa-caret-down"></i>
+                       </button>
+                       <span class="dropdown-content">
+                            <a href="/regUser">Регистрация пользователя</a>
+                       </span>
+                  </span>
+				</li>
+			</ul>
         </nav>
 		<nav>
 				<span>
@@ -86,7 +95,7 @@
 					</form>
 				</li>
                 <li class ="li-horizontally"><a href="/login" th:href="@{/login}">Вход</a></li>
-				<li class ="li-horizontally"><a href="/regUser" th:href="@{/regUser}">Регистрация</a></li>
+				<!-- <li class ="li-horizontally"><a href="/regUser" th:href="@{/regUser}">Регистрация</a></li> -->
                
             </ul>
         </nav>

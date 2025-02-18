@@ -14,7 +14,7 @@
 		<div th:if="${param.error}">Не правильный пароль</div>
 		<div th:if="${param.logout}">Не правильный логин</div>
 		<div>
-				<form class="auth_form" method="post" th:action="@{/login}">
+				<form class="auth_form"  style="width: 100%;" method="post" th:action="@{/login}">
 					<div class="auth_form_div">
 						<label for="input_login">Логин: </label>
 						<input type="text" id="input_login" name="username" />

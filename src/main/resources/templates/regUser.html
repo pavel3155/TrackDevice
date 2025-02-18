@@ -3,68 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/style-form.css">
 	<title>Регистрация</title>
 </head>
-<body class="auth">
+<header>
+	<div id="header">
+		<script src="js/header.js"></script>
+	</div>
+	<div id="nav_bar">
+		<script src="js/navbar.js"></script>
+	</div>
+</header>
+<body>
+<div class="container">
+
+	<form class="auth_form"
+		  th:method="post"
+		  th:action="@{/regUser}"
+		  th:object="${registerDTO}">
+		<div class="container-inner">
+			<span>
+				<h3>Регистрация пользователя</h3>
+			</span>
+				<div th:if="${success}" class="" role="alert">
+					<strong>Аккаунт успешно создан!</strong>
+				</div>
+				<div class ="tbl-div">
+					<div class="div_error">
+						<p th:if="${#fields.hasErrors('name')}"  th:errors="*{name}"></p>
+					</div>
+					<!-- class="auth_form_div" -->
+					<div class="auth_form_div">
+						<label for="input_name">Имя: </label>
+						<input type="text" id="input_name" name="name" th:field="*{name}"/>
+					</div>
+					<div class="div_error">
+						<p th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></p>
+					</div>
+					<div class="auth_form_div">
+						<label for="input_surname">Фамилия: </label>
+						<input type="text" id="input_surname" name="surname" th:field="*{surname}" />
+					</div>
+					<div class="div_error">
+						<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" ></p>
+					</div>
+					<div class="auth_form_div">
+						<label for="input_email">Email: </label>
+						<input type="text" id="input_email" name="email" th:field="*{email}"  />
+					</div>
+					<div class="div_error">
+						<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+					</div>
+					<div class="auth_form_div">
+						<label for="input_password">Пароль: </label>
+						<input type="password" id="input_password" name="password" th:field="*{password}"/>
+					</div>
+					<div class="div_error">
+						<p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></p>
+					</div>
+					<div class="auth_form_div">
+						<label for="confirm_password">Подтвердите пароль: </label>
+						<input type="password" id="confirm_password" name="conf_password" th:field="*{confirmPassword}"/>
+					</div>
+
+					<div class="auth_form_div">
+						<label for="input_role">Роль: </label>
+						<select  id="input_role" th:field="*{role}">
+							<option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.type}"></option>
+						</select>
+					</div>
+					<div class="auth_form_div">
+						<label for="input_csa">КСА: </label>
+						<select  id="input_csa" th:field="*{csa}">
+							<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
+						</select>
+					</div>
+				</div>
+		</div>
 		<span>
-			<div th:if="${success}" class="" role="alert">
-				<strong>Аккаунт успешно создан!</strong>
-			</div>
-
-			<form class="auth_form" th:method="post" th:action="@{/regUser}" th:object="${registerDTO}">
-				<div class="div_error">
-					<p th:if="${#fields.hasErrors('name')}"  th:errors="*{name}"></p>
-				</div>
-				<div class="auth_form_div">
-					<label for="input_name">Имя: </label>
-					<input type="text" id="input_name" name="name" th:field="*{name}"/>
-				</div>
-				<div class="div_error">
-					<p th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></p>
-				</div>
-				<div class="auth_form_div">
-					<label for="input_surname">Фамилия: </label>
-					<input type="text" id="input_surname" name="surname" th:field="*{surname}" />
-				</div>
-				<div class="div_error">
-					<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" ></p>
-				</div>
-                <div class="auth_form_div">
-					<label for="input_email">Email: </label>
-					<input type="text" id="input_email" name="email" th:field="*{email}"  />
-				</div>
-				<div class="div_error">
-					<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
-				</div>
-                <div class="auth_form_div">
-					<label for="input_password">Пароль: </label>
-					<input type="password" id="input_password" name="password" th:field="*{password}"/>
-				</div>
-				<div class="div_error">
-					<p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></p>
-				</div>
-				<div class="auth_form_div">
-					<label for="confirm_password">Подтвердите пароль: </label>
-					<input type="password" id="confirm_password" name="conf_password" th:field="*{confirmPassword}"/>
-				</div>
-
-                <div class="auth_form_div">
-					<label for="input_role">Роль: </label>
-					<select  id="input_role" th:field="*{role}">
-						<option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.type}"></option>
-					</select>
-				</div>
-				<div class="auth_form_div">
-					<label for="input_csa">КСА: </label>
-					<select  id="input_csa" th:field="*{csa}">
-						<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
-					</select>
-				</div>
-
-				<div class="auth_form_div_btn">
-					<button type="submit">Регистрация</button>
-				</div>
-			</form>
+			<button type="submit" class="a-btn">Регистрация</button>
+			<a href="/" class="a-btn">Назад</a>
 		</span>
+	</form>
+</div>
 </body>
 </html>

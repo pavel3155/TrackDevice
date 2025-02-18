@@ -13,6 +13,9 @@
 	<div id="header">
 		<script src="/js/header-for-dir.js"></script>
 	</div>
+	<div id="nav_bar">
+		<script src="/js/navbar.js"></script>
+	</div>
 </header>
 
 <body>
@@ -25,6 +28,8 @@
 
 			<div class="container-inner">
 				<div class="filter">
+
+
 					<span>
 						<span class="div_error">
 							<p th:if="${#fields.hasErrors('err')}"  th:errors="*{err}"></p>
@@ -78,7 +83,8 @@
 			<div>
 				<input type="submit" id="btnSend" style="display:none;">
 				<span id="link"></span>
-				<span><a href="/" class="a-btn">Назад</a></span>
+				<span><a th:if="${idOrder == 0}" href="/" class="a-btn">Назад</a></span>
+				<span><a th:unless="${idOrder == 0}" th:href="@{/editOrder{order}(order=${idOrder})}" class="a-btn">Назад</a></span>
 			</div>
 
 		</form>

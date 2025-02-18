@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class ConsultDTO {
+    Long idOrder;
     String num;
     Order order;
     String newComment;

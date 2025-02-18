@@ -24,45 +24,33 @@
 			  th:object="${consultDTO}">
 
 			<input id ="num" type="hidden" th:value="${num}" th:field="*{num}">
+			<input id ="idOrder" type="hidden" th:value="${idOrder}" th:field="*{idOrder}">
 			<div class="container-inner" style="margin-top:10px;">
 				<span th:text="'Консультации по заявке №'+${consultDTO.num}"></span>
 				<div id="allComents" class="comment-all">
 					<th:block th:each="cons : ${consults}">
 						<div>
-							<p th:if="${cons.csa == '02C001'}"
-								  class="comment-exec"
-								  th:text="${cons.user + ': ' + cons.comment}">
+							<p th:if="${cons.csa == '02C001'}" class="comment-exec">
+								<b th:text="${cons.user}"></b>:
+								<span th:text="${cons.comment}"></span>
 							</p>
 						</div>
 						<div>
-							<p th:unless="${cons.csa == '02C001'}"
-								  class="comment-csa"
-								  th:text="${cons.user + ': ' + cons.comment}">
+							<p th:unless="${cons.csa == '02C001'}" class="comment-csa">
+								<b th:text="${cons.user}"></b>:
+								<span th:text="${cons.comment}"></span>
 							</p>
 						</div>
 					</th:block>
-
-
-
-
-<!--
-
-					<p th:each="cons : ${consults}"
-					   th:if = "${cons.csa=='02C001'}"  class="comment-item"
-					   th:text="${cons.user+':'+cons.comment}">
--->
 				</div>
-				<!-- th:selected="${exec.id == ordersDTO.executor.id}"> -->
 				<div class="comment" >
-						<!-- <input style="width:85%;" id="txtNewComent" type="text" th:value="${newComment}" th:field="*{newComment}">
-							-->
 						<span style="width:90%; margin-right:5px">
 							<div id="lblNewComent" >Новый коментарий</div>
 							<textarea id="content" name="content" style = "width : 97%" rows="4" th:field="*{newComment}"  required></textarea>
 						</span>
 						<span class="column-item">
 							<button id="btnSendComent" type=submit class="a-btn">Отправить</button>
-							<a href="/" class="a-btn">Назад</a>
+							<a th:href="@{/editOrder{order}(order=${consultDTO.idOrder})}" class="a-btn">Назад</a>
 						</span>
 				</div>
 

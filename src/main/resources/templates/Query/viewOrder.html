@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>(З)Заявка</title>
+    <link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/style-form.css">
+	<script src="/js/jquery-3.7.1.js"></script>
+</head>
+<header>
+	<div id="header">
+		<script src="/js/header-for-dir.js"></script>
+	</div>
+	<div id="nav_bar">
+		<script src="/js/navbar.js"></script>
+	</div>
+</header>
+
+<body>
+	<div class="container">
+		<form id="addOrder" class="forms-operation" enctype="multipart/form-data"
+			  th:method="post"
+			  th:action="@{/editOrder}"
+			  th:object="${ordersDTO}">
+			<div class="container-addOrder">
+				<div  style="text-align:center" th:if="${success}" role="alert">
+					<h3>Изменения в заявку внесены!</h3>
+				</div>
+				<div style="text-align:center" th:if="!${success}">
+					<h3>Заявка </h3>
+				</div>
+				<div class="div_error">
+					<p th:if="${#fields.hasErrors('err')}"  th:errors="*{err}"></p>
+				</div>
+				<div class ="tbl-div">
+					<input id ="idOrder" type="hidden" th:value="${id}" th:field="*{id}">
+					<input id ="idCSA" type="hidden" th:value="${idCSA}" th:field="*{idCSA}">
+					<input id ="idDevice" type="hidden" th:value="${idDevice}" th:field="*{idDevice}">
+					<table class="table" id="tblOrder">
+						<tr>
+							<td style=" font-weight: 600">Дата</td>
+							<td class="AlignCenter">
+								<label id="lblData" th:text="${ordersDTO.date}"/></label>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td style=" font-weight: 600">Заявка №</td>
+							<td class="AlignCenter">
+								<label id="lblNum" th:text="${ordersDTO.num}"/></label>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td style=" font-weight: 600">КСА</td>
+							<td class="AlignCenter">
+								<label id="lblOrderCSA" th:text="${ordersDTO.csa.num}+', '+${ordersDTO.csa.address}"></label>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td style=" font-weight: 600">Техническое средство</td>
+							<td class="AlignCenter">
+								<label id="lblOrderDevice" th:text="${ordersDTO.device.model.type.type} + ': ' + ${ordersDTO.device.model.name}"></label>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Серийный №</td>
+							<td class="AlignCenter">
+								<label id="lblOrderDeviceSN" th:text="${ordersDTO.device.sernum} "></label>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>Инвентарный №</td>
+							<td class="AlignCenter">
+								<label id="lblOrderDeviceIN" th:text="${ordersDTO.device.invnum}"></label>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td style=" font-weight: 600">Описание</td>
+							<td class="AlignCenter">
+								<label id="lblDescription" style="width:99%;text-align:center" th:text="${ordersDTO.description}"/>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td style=" font-weight: 600">Исполнитель</td>
+							<td class="AlignCenter">
+								<span>
+									<label id="lblOrderExecutor" th:text="${ordersDTO.executor.email}"></label>
+								</span>
+							</td>
+							<td></td>
+						</tr>
+						<tr >
+							<td  style=" font-weight: 600">Восстановление КСА</td>
+							<td>
+								<label th:text="${ordersDTO.restore.method}"></label>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td  style="font-weight: 600">Прикрепленные фото</td>
+							<td>
+								<span id="idListSaveFiles" th:each="file : ${files}" >
+									<div class="attached-pictures">
+										<a th:href="@{/addOrder/loadPicture(direc=${directory}, fileName=${file})}" target="_blank" th:text="${file}"></a>
+										<a href="#" class="input-file-remove" th:onclick="removeAttachedPictures(event, [[${directory}]], [[${file}]])">x</a>
+										<a th:href="@{/addOrder/downloadPicture(direc=${directory}, fileName=${file})}" class="input-file-download">>></a>
+									</div>
+								</span>
+							</td>
+							<td></td>
+						</tr>
+
+						<tr>
+							<td  style="font-weight: 600">Статус заявки</td>
+							<td>
+								<label id="lblStatus" style="width:99%;text-align:center" th:text="*{status}"/></label>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td  style="font-weight: 600">Функционирование КСА</td>
+							<td>
+								<label id="lblServiceable"  for="chServiceable">восстановлено</label>
+							</td>
+							<td>
+								<input id="chServiceable" type="checkbox" th:field="*{serviceable}" th:value="${serviceable}" disabled>
+							</td>
+						</tr>
+						<tr>
+							<td  style="font-weight: 600">Дата восстановления КСА</td>
+							<td>
+								<label id="lblDataClosing" th:text="*{dateClosingOrder}"/></label>
+							</td>
+							<td></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<span style="margin:20px 5px 5px 5px">
+				<a href="/Query/overdueOrders" class="a-btn">Назад</a>
+			</span>
+		</form>
+	</div>
+
+</body>
+</html>

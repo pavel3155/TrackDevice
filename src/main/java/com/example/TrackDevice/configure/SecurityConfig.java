@@ -1,16 +1,16 @@
 package com.example.TrackDevice.configure;
 
-import org.springframework.boot.web.server.Cookie;
+import com.example.TrackDevice.Exception.CustomAccessDeniedHandler;
+import com.example.TrackDevice.Exception.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -19,8 +19,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-//                .headers(headers -> headers
-//                        .frameOptions(frameOptions -> frameOptions.sameOrigin()))
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/resources/**").permitAll()
                         .requestMatchers("/static/js/**").permitAll()
@@ -31,7 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/index").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/logout").permitAll()
-                        .requestMatchers("/regUser").permitAll()
+                        .requestMatchers("/regUser").hasRole("ADMIN")
                         .requestMatchers("/device").permitAll()
                         .requestMatchers("/device/model").permitAll()
                         .requestMatchers("/model").permitAll()
@@ -52,8 +51,26 @@ public class SecurityConfig {
                         .permitAll())
                 .logout(config -> config.logoutSuccessUrl("/")
                         .permitAll())
-                .build();
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(accessDeniedHandler()))
+
+                // .authenticationEntryPoint(authenticationEntryPoint())
+
+
+
+        .build();
+
+
     }
+//                .headers(headers -> headers
+//                        .frameOptions(frameOptions -> frameOptions.sameOrigin()))
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler(); // Ваш обработчик доступа
+    }
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();}
 
     @Bean
     public PasswordEncoder passwordEncoder(){
