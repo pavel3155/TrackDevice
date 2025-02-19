@@ -14,9 +14,7 @@
 	<div id="header">
 		<script src="js/header.js"></script>
 	</div>
-	<div id="nav_bar">
-		<script src="js/navbar.js"></script>
-	</div>
+	<div th:replace="Index ::navigation"></div>
 </header>
 
 <body>
@@ -215,7 +213,7 @@
 
 						<tr  sec:authorize="!hasRole('ROLE_CSA')">
 							<td></td>
-							<td style="font-weight: 600; text-align:right">Акты движения ТС по заявке</td>
+							<td style="font-weight: 600; text-align:center">Акты движения ТС по заявке</td>
 							<td></td>
 						</tr>
 
@@ -240,8 +238,7 @@
 							<td  style="font-weight: 600; text-align:right">Консультация </td>
 							<td></td>
 							<td>
-								<button id="btnCreateConsult" type="submit" class="a-btn">Создать</button>
-								<button id="btnViewConsult" type="submit" class="a-btn">Открыть</button>
+								<button id="btnCreateConsult" type="submit" class="a-btn">Открыть</button>
 							</td>
 						</tr>
 						<tr sec:authorize="!hasRole('ROLE_CSA')">

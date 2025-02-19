@@ -9,9 +9,7 @@
 	<script src="/js/jquery-3.7.1.js"></script>
 </head>
 <header>
-	<div id="header">
-		<script src="/js/header-for-dir.js"></script>
-	</div>
+	<div th:replace="Index ::navigation"></div>
 </header>
 
 <body>
@@ -106,7 +104,7 @@
 								<span id="idListSaveFiles" th:each="file : ${files}" >
 									<div class="attached-pictures">
 										<a th:href="@{/addOrder/loadPicture(direc=${directory}, fileName=${file})}" target="_blank" th:text="${file}"></a>
-										<a href="#" class="input-file-remove" th:onclick="removeAttachedPictures(event, [[${directory}]], [[${file}]])">x</a>
+										<!-- <a href="#" class="input-file-remove" th:onclick="removeAttachedPictures(event, [[${directory}]], [[${file}]])">x</a> -->
 										<a th:href="@{/addOrder/downloadPicture(direc=${directory}, fileName=${file})}" class="input-file-download">>></a>
 									</div>
 								</span>

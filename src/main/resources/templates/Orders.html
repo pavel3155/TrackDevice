@@ -13,9 +13,7 @@
 	<div id="header">
 		<script src="js/header.js"></script>
 	</div>
-	<div id="nav_bar">
-		<script src="js/navbar.js"></script>
-	</div>
+	<div th:replace="Index ::navigation"></div>
 </header>
 
 <body>
@@ -80,11 +78,14 @@
 							<td th:text="${order.executor.email}"></td>
 							<td>
 								<span class="tbl-td-span-inline">
-									<a sec:authorize="hasRole('ROLE_CSA') or hasRole('ROLE_SERV')"
+									<!-- <a sec:authorize="hasRole('ROLE_CSA') or hasRole('ROLE_SERV')"
 									   href="/editOrder" th:href="@{/editOrder{order}(order=${order.id})}" target="_blank"
 									   class="a-btn a-btn-tbl">Редактировать</a>
 									<a sec:authorize="hasRole('ROLE_EXECDEV')"
 									   href="/editOrder" th:href="@{/editOrder{order}(order=${order.id})}" target="_blank"
+									   class="a-btn a-btn-tbl">Открыть</a> -->
+
+									<a href="/editOrder" th:href="@{/editOrder{order}(order=${order.id})}" target="_blank"
 									   class="a-btn a-btn-tbl">Открыть</a>
 								</span>
 							</td>

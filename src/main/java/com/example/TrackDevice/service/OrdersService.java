@@ -8,6 +8,7 @@ import com.example.TrackDevice.model.Order;
 import com.example.TrackDevice.repo.DeviceRepository;
 import com.example.TrackDevice.repo.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,12 +23,21 @@ public class OrdersService {
     OrderRepository orderRepository;
     @Autowired
     DeviceRepository deviceRepository;
-
+    public Object getRoleFromUserDetails(UserDetails userDetails){
+        Object[] arrRoles=userDetails.getAuthorities().stream().toArray();
+        System.out.println("arrRoles[0]= "+arrRoles[0]);
+        Object role=arrRoles[0].toString();
+        System.out.println("arrRoles[0].toString()="+role);
+        return role;
+    }
     public Boolean btnSelDeviceDisplay(CSA oCSA, Device oDevice){
         if (!oCSA.getNum().equals("---")&&!oDevice.getSernum().equals("---")){
             Device device = deviceRepository.getById(oDevice.getId());
             CSA csaDevice = device.getCsa();
+            System.out.println("oCSA="+oCSA);
+            System.out.println("csaDevice="+csaDevice);
             if (oCSA==csaDevice){
+                System.out.println("..oCSA==csaDevice..");
                 return true;
             } else {
                 return false;

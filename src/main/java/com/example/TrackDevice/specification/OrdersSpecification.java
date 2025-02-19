@@ -2,6 +2,7 @@ package com.example.TrackDevice.specification;
 
 import com.example.TrackDevice.model.CSA;
 import com.example.TrackDevice.model.Order;
+import com.example.TrackDevice.model.User;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -18,6 +19,7 @@ import java.util.Date;
 
 @Component
 public class OrdersSpecification {
+
     public Specification<Order> dateBetween(LocalDate startDate, LocalDate endDate) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.between(root.get("date"), startDate, endDate);
@@ -34,6 +36,11 @@ public class OrdersSpecification {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("csa"), csa);
     }
+    public Specification<Order> hasExecutor(User executor) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("executor"), executor);
+    }
+
     public Specification<Order> hasDateDiffGrThan5Days() {
         return (Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             // Получаем startDate и endDate

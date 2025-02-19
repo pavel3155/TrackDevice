@@ -33,11 +33,15 @@
  }	 
  .auth_form {
     width: 30%;
+    height: 90%;
     background: #f1f1f1;
 	margin:0px;
-	padding:5px;
+	padding:0px;
 	border: 2px solid;
 	font-size: 20px;
+	display:flex;
+    justify-content:center;
+
 	
  }	 
 .auth_form_div{

@@ -1,7 +1,7 @@
   .container{
     margin:4px 0px 0px 0px;
     padding:0px;
-    height: 450px;
+    height: 500px;
     border: 2px solid;
     font-size: 20px;
     display:flex;
@@ -44,9 +44,9 @@
   }
 
   .container-inner{
-      margin-top:20px;
+      margin-top:5px;
       width: 95%;
-      height: 85%;
+      height: 90%;
   }
     .margin-t {
       margin-top:10px;

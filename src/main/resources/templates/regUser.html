@@ -10,9 +10,7 @@
 	<div id="header">
 		<script src="js/header.js"></script>
 	</div>
-	<div id="nav_bar">
-		<script src="js/navbar.js"></script>
-	</div>
+	<div th:replace="Index ::navigation"></div>
 </header>
 <body>
 <div class="container">
@@ -21,18 +19,15 @@
 		  th:method="post"
 		  th:action="@{/regUser}"
 		  th:object="${registerDTO}">
-		<div class="container-inner">
-			<span>
-				<h3>Регистрация пользователя</h3>
-			</span>
-				<div th:if="${success}" class="" role="alert">
-					<strong>Аккаунт успешно создан!</strong>
-				</div>
-				<div class ="tbl-div">
+		<div class="container-inner" style="height: 85%;margin:0px;padding:10px 0px 5px 0px">
+			<div style="margin:5px 0px 20px 0px; padding:0px">
+				<h3 style="text-align: center;margin:0px 0px 5px 0px;padding:0px">Регистрация пользователя</h3>
+				<h5  th:if="${success}" style="text-align:center;margin:0px;padding:0px;color:blue;">Аккаунт успешно создан!</h5>
+			</div>
+				<div class ="tbl-div" style="margin:0px">
 					<div class="div_error">
 						<p th:if="${#fields.hasErrors('name')}"  th:errors="*{name}"></p>
 					</div>
-					<!-- class="auth_form_div" -->
 					<div class="auth_form_div">
 						<label for="input_name">Имя: </label>
 						<input type="text" id="input_name" name="name" th:field="*{name}"/>
@@ -79,11 +74,12 @@
 						</select>
 					</div>
 				</div>
+			<div style="display: flex;justify-content: center;">
+				<button type="submit" class="a-btn">Регистрация</button>
+				<a href="/" class="a-btn">Назад</a>
+			</div>
 		</div>
-		<span>
-			<button type="submit" class="a-btn">Регистрация</button>
-			<a href="/" class="a-btn">Назад</a>
-		</span>
+
 	</form>
 </div>
 </body>

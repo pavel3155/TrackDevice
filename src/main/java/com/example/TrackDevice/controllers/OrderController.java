@@ -112,11 +112,26 @@ public class OrderController {
      * @return
      */
     @PostMapping("/FilterOrders")
-    public String filterOrders(Model model, @Valid @ModelAttribute FilterOrders filterOrders) {
+    public String filterOrders(Model model, @AuthenticationPrincipal UserDetails userDetails,@Valid @ModelAttribute FilterOrders filterOrders) {
         System.out.println("POST:/FilterOrders...");
         System.out.println("filterOrders= "+filterOrders);
+        System.out.println("UserName:= "+userDetails.getUsername());
+        Object role=ordersService.getRoleFromUserDetails(userDetails);
 
         Specification<Order> spec = Specification.where(null);
+
+        if(role.equals("ROLE_CSA")){
+            System.out.println("role.getType()==\"CSA\"");
+            CSA csa = userRepository.findByEmail(userDetails.getUsername()).getCsa();
+            spec = spec.and(ordersSpecification.hasCSA(csa));
+        } else if(role.equals("ROLE_EXECDEV")){
+            System.out.println("role.getType()==\"EXECDEV\"");
+            User executor = userRepository.findByEmail(userDetails.getUsername());
+            spec = spec.and(ordersSpecification.hasExecutor(executor));
+        } else {
+            System.out.println("role.getType()==\"SERV, ADMIN\"");
+            if (!"---".equals(filterOrders.getCsa().getNum())) spec = spec.and(ordersSpecification.hasCSA(filterOrders.getCsa()));
+        }
 
         if (!filterOrders.getStartDate().isEmpty() && !filterOrders.getEndDate().isEmpty()) {
             LocalDate startDate = ordersService.toLocalData(filterOrders.getStartDate());
@@ -125,7 +140,7 @@ public class OrderController {
         }
         if (!filterOrders.getNum().isEmpty()) spec = spec.and(ordersSpecification.hasNum(filterOrders.getNum()));
         if (!"---".equals(filterOrders.getStatus())) spec = spec.and(ordersSpecification.hasStatus(filterOrders.getStatus()));
-        if (!"---".equals(filterOrders.getCsa().getNum())) spec = spec.and(ordersSpecification.hasCSA(filterOrders.getCsa()));
+
         var orders = orderRepository.findAll(spec);
 
         System.out.println("orders= "+orders);

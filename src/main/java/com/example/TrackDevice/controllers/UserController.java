@@ -45,6 +45,11 @@ public class UserController {
 
     @PostMapping("/regUser")
     public String regUser(Model model, @Valid @ModelAttribute RegisterDTO registerDTO, BindingResult result){
+
+        List<Roles> roles =roleRepository.findAll();
+        List<CSA> csas = csaRepository.findAll();
+        model.addAttribute("roles",roles);
+        model.addAttribute("csas",csas);
         //если пароль не совпадает, то  добавляеся ошибка в result
         if(!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
             result.addError(new FieldError("registerDTO",
@@ -63,17 +68,12 @@ public class UserController {
         }
         //если ошибки есть
         if(result.hasErrors()){
-            List<Roles> roles =roleRepository.findAll();
-            model.addAttribute("roles",roles);
             return "regUser";
         }
         try {
             userService.regNewUser(registerDTO);
             model.addAttribute("registerDTO", new RegisterDTO());
-            List<Roles> roles =roleRepository.findAll();
-            model.addAttribute("roles",roles);
             model.addAttribute("success",true);
-
         }
         catch (Exception ex){
             result.addError(new FieldError("registerDTO","name",ex.getMessage()));
