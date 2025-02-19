@@ -20,8 +20,9 @@
 	flex-grow:1;
 	align-items:center;
     justify-content:center;
-	background:#e0e0e0;
-	border-left: 3px solid white;
+	background:#f7f7f7;
+	/* border-left: 3px solid white;
+	border-right: 3px solid white; */
  }
 
 .auth {
