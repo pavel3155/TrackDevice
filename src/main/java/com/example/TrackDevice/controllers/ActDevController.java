@@ -154,34 +154,6 @@ public class ActDevController {
         ActDev actDev = actDevRepository.getById(id);
         System.out.println("actDev:= "+actDev);
 
-        ActDevDTO actDevDTO = new ActDevDTO();
-        actDevDTO.setId(actDev.getId());
-        actDevDTO.setDate(actDev.getDate().toString());
-        actDevDTO.setNum(actDev.getNum());
-        actDevDTO.setActType(actDev.getTypes());
-        actDevDTO.setDevice(actDev.getDevice());
-        actDevDTO.setIdSelDev(actDev.getDevice().getId());
-        actDevDTO.setFromCSA(actDev.getFromCSA());
-        actDevDTO.setIdFromCSA(actDev.getFromCSA().getId());
-        actDevDTO.setIdFromCSA(actDev.getFromCSA().getId());
-        actDevDTO.setToCSA(actDev.getToCSA());
-        actDevDTO.setOrder(actDev.getOrder());
-        actDevDTO.setNote(actDev.getNote());
-
-
-        System.out.println("actDevDTO:= "+actDevDTO);
-        List<CSA> csas = csaRepository.findAll();
-        List<ActTypes> types =actTypesRepository.findAll();
-
-        model.addAttribute("types", types);
-        model.addAttribute("csas", csas);
-        model.addAttribute("actDevDTO", actDevDTO);
-
-        return "Acts/ActDev";
-    }
-
-
-//    private ActDevDTO newActDevDTO(ActDev actDev){
 //        ActDevDTO actDevDTO = new ActDevDTO();
 //        actDevDTO.setId(actDev.getId());
 //        actDevDTO.setDate(actDev.getDate().toString());
@@ -195,8 +167,19 @@ public class ActDevController {
 //        actDevDTO.setToCSA(actDev.getToCSA());
 //        actDevDTO.setOrder(actDev.getOrder());
 //        actDevDTO.setNote(actDev.getNote());
-//        return actDevDTO;
-//    }
+
+        ActDevDTO actDevDTO =actDevService.getActDevDTOfromActDev(actDev);
+        System.out.println("actDevDTO:= "+actDevDTO);
+        List<CSA> csas = csaRepository.findAll();
+        List<ActTypes> types =actTypesRepository.findAll();
+
+        model.addAttribute("types", types);
+        model.addAttribute("csas", csas);
+        model.addAttribute("actDevDTO", actDevDTO);
+
+        return "Acts/ActDev";
+    }
+
     /** метод выполняется при нажатии на кнопку "Удалить" на странице "ActsDev"
      * метод принимает id акта, загружает страницу "ActDev"
      */

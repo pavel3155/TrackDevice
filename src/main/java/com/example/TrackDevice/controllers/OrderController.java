@@ -557,25 +557,6 @@ public class OrderController {
         model.addAttribute("selDevOrder", selDevOrder);
         OrdersDTO ordersDTO =ordersService.newOrderDTOtoObject(order);
 
-//        OrdersDTO ordersDTO =new OrdersDTO();
-//        ordersDTO.setId(order.getId());
-//        ordersDTO.setDate(order.getDate().toString());
-//        ordersDTO.setNum(order.getNum());
-//        ordersDTO.setCsa(order.getCsa());
-//        ordersDTO.setIdCSA(order.getCsa().getId());
-//        ordersDTO.setDevice(order.getDevice());
-//        ordersDTO.setIdDevice(order.getDevice().getId());
-//        ordersDTO.setDescription(order.getDescription());
-//        ordersDTO.setStatus(order.getStatus());
-//        ordersDTO.setExecutor(order.getExecutor());
-//        ordersDTO.setRestore(order.getRestore());
-//        ordersDTO.setServiceable(order.getServiceable());
-
-//        if (order.getDate_closing()!=null){
-//            ordersDTO.setDateClosingOrder(order.getDate_closing().toString());
-//        }
-
-
         Object[] arrRoles=userDetails.getAuthorities().stream().toArray();
         Object role=arrRoles[0].toString();
         List<User> execs;
@@ -605,6 +586,7 @@ public class OrderController {
         }
 
         List<ActTypes> actTypes = actTypesRepository.findAll();
+        actTypes.remove(0);
         List<String> orderStatus = ordersService.loadStatusOrder();
 
 

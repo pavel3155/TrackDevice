@@ -24,7 +24,7 @@
 				<h3 style="text-align: center;margin:0px 0px 5px 0px;padding:0px">Регистрация пользователя</h3>
 				<h5  th:if="${success}" style="text-align:center;margin:0px;padding:0px;color:blue;">Аккаунт успешно создан!</h5>
 			</div>
-				<div class ="tbl-div" style="margin:0px">
+				<div class ="tbl-div-noflex" style="margin:0px">
 					<div class="div_error">
 						<p th:if="${#fields.hasErrors('name')}"  th:errors="*{name}"></p>
 					</div>

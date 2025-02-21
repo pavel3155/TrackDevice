@@ -27,7 +27,23 @@ public class ActDevService {
     DeviceRepository deviceRepository;
     @Autowired
     OrderRepository orderRepository;
+public ActDevDTO getActDevDTOfromActDev(ActDev actDev){
+        ActDevDTO actDevDTO = new ActDevDTO();
+        actDevDTO.setId(actDev.getId());
+        actDevDTO.setDate(actDev.getDate().toString());
+        actDevDTO.setNum(actDev.getNum());
+        actDevDTO.setActType(actDev.getTypes());
+        actDevDTO.setDevice(actDev.getDevice());
+        actDevDTO.setIdSelDev(actDev.getDevice().getId());
+        actDevDTO.setFromCSA(actDev.getFromCSA());
+        actDevDTO.setIdFromCSA(actDev.getFromCSA().getId());
+        actDevDTO.setIdFromCSA(actDev.getFromCSA().getId());
+        actDevDTO.setToCSA(actDev.getToCSA());
+        actDevDTO.setOrder(actDev.getOrder());
+        actDevDTO.setNote(actDev.getNote());
+        return actDevDTO;
 
+}
     public LocalDate toLocalData(String date){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);

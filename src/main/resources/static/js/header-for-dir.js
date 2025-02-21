@@ -6,7 +6,7 @@ document.getElementById("header").innerHTML = '\
         </span>\
         <span class ="header_label">\
             <div>\
-                <h1 style="text-align: center">Обеспечение эксплуатация комплексов средств автоматизации</h1>\
+                <h1 style="text-align: center">Обеспечение комплексов средств автоматизации</h1>\
             </div>\
         </span>\
         <span class ="header_img">\

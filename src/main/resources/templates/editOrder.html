@@ -37,6 +37,7 @@
 					<input id ="idOrder" type="hidden" th:value="${id}" th:field="*{id}">
 					<input id ="idCSA" type="hidden" th:value="${idCSA}" th:field="*{idCSA}">
 					<input id ="idDevice" type="hidden" th:value="${idDevice}" th:field="*{idDevice}">
+					<input sec:authorize="hasRole('ROLE_CSA')" id="idStatus" type="hidden" th:value="${ordersDTO.status}" th:field="*{status}">
 					<table class="table" id="tblOrder">
 						<tr>
 							<td style=" font-weight: 600; text-align:right">Дата</td>

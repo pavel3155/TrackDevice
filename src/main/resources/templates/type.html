@@ -21,30 +21,27 @@
           th:object="${typeDeviceDTO}">
 
         <span>
-            <label>Тип технического устройства</label>
+            <h4 style="margin:10px 0px 10px 0px">Тип технического устройства</h4>
         </span>
-
-        <div class ="tbl-div" style="width:80%">
-            <table class="table" style="width:100%" id="tblModelDevice">
-                    <tr>
-                        <th class ="col-basic">Тип ТС</th>
-                        <th class ="col-action">Действие</th>
-                    </tr>
-                    <tr th:each="type : ${types}">
-                        <td style="text-align:left" th:text="${type.type}"></td>
-                        <td>
-                            <span class="tbl-td-span-inline">
-                                <a href="/editTypeDev" th:href="@{/editTypeDev{id}(id=${type.id})}"
-                                   class="a-btn a-btn-tbl">Редактировать</a>
-                            </span>
-                        </td>
-                    </tr>
-            </table>
+        <div class="container-inner">
+            <div class ="tbl-div">
+                <table class="table" style="width:50%;margin:5px 0px 5px 0px" id="tblModelDevice">
+                        <tr>
+                            <th style="width: 40%;text-align:center">Тип ТС</th>
+                            <th class ="col-action">Действие</th>
+                        </tr>
+                        <tr th:each="type : ${types}">
+                            <td style="text-align:center" th:text="${type.type}"></td>
+                            <td>
+                                <a href="/editTypeDev" th:href="@{/editTypeDev{id}(id=${type.id})}" class="a-btn a-btn-tbl">Редактировать</a>
+                            </td>
+                        </tr>
+                </table>
+            </div>
         </div>
-
-        <div>
-                <span><a href="/addTypeDev" class="a-btn">Добавить тип ТС</a></span>
-                <span><a href="/" class="a-btn">Назад</a></span>
+        <div style="margin:0px 0px 15px 0px">
+            <span><a href="/addTypeDev" class="a-btn">Добавить тип ТС</a></span>
+            <span><a href="/" class="a-btn">Назад</a></span>
         </div>
 
     </form>

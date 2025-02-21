@@ -77,7 +77,8 @@
 	border: 2px solid;
 	margin-top:3px;
 	padding:0px;
-	background:#e0e0e0;
+	/* background:#e0e0e0; 56a1d6;*/
+	background:#6db2e3ee;
 	display:flex;
 	align-items: center;
 	justify-content:space-between;
@@ -109,7 +110,10 @@
 	border-right: 3px solid white;            
 }
 .dropdown .dropbtn {
-  background: #e0e0e0;
+  /* background: #e0e0e0; */
+
+
+  background:#6db2e3ee;
   font-family: "Times New Roman";
   font-size: 20px;
   border: none;
@@ -147,14 +151,16 @@
 }
 
 .nav_bar_ul a:hover, .dropdown:hover .dropbtn{
-    background-color: #c4c4c4;
+    /* background-color: #c4c4c4; */
+    background-color:#accfe8;
 }
 
 /* Выпадающее содержимое (скрыто по умолчанию) */
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color:#e0e0e0;
+  /* background-color:#e0e0e0; */
+  background-color:#accfe8;
   min-width: 200px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
@@ -172,7 +178,8 @@
 
 /* Добавить серый цвет фона для выпадающих ссылок при наведении курсора */
 .dropdown-content a:hover {
-  background-color: #c4c4c4;
+  /* background-color: #c4c4c4; */
+  background:#6db2e3ee;
 }
 /* Показать выпадающее меню при наведении курсора */
 .dropdown:hover .dropdown-content {
@@ -189,14 +196,16 @@
     appearance: none;
     border: 0px;
     border-radius: 0x;
-    background: #e0e0e0;
+    background:#6db2e3ee;
+    /* background: #e0e0e0; */
     padding-left:5px;
     padding-right:5px;
     font-family: "Times New Roman";
     font-size: 20px;
 }
 .button_no_borders:hover {
-    background: #c4c4c4;
+    /*background: #c4c4c4;*/
+    background:#accfe8;
 }
 
 .body_parent{
