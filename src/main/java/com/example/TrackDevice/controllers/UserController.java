@@ -1,26 +1,26 @@
 package com.example.TrackDevice.controllers;
 
+import com.example.TrackDevice.DTO.ActDevDTO;
 import com.example.TrackDevice.DTO.RegisterDTO;
-import com.example.TrackDevice.model.CSA;
-import com.example.TrackDevice.model.Roles;
-import com.example.TrackDevice.model.User;
+import com.example.TrackDevice.model.*;
 import com.example.TrackDevice.repo.CSARepository;
 import com.example.TrackDevice.repo.RoleRepository;
 import com.example.TrackDevice.repo.UserRepository;
 import com.example.TrackDevice.service.UserService;
+import com.example.TrackDevice.show.ShowUser;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequestMapping("/Users")
 public class UserController {
     @Autowired
     private UserRepository userRepository;
@@ -30,7 +30,36 @@ public class UserController {
     private RoleRepository roleRepository;
     @Autowired
     private CSARepository csaRepository;
+    @GetMapping("/showUsers")
+    public String showUsers(Model model) {
+        List<User> lstUsers=userRepository.findAll();
+        List<ShowUser> showUsers=userService.getListShowUsers(lstUsers);
+        model.addAttribute("users", showUsers);
+        return "/Users/showUsers";
+    }
 
+    /** метод выполняется при нажатии на кнопку "Редактировать" на странице "showUsers"
+     * метод принимает id акта, загружает страницу "regUser"
+     */
+    @GetMapping("/editUser")
+    public String getActDev(@RequestParam long id, Model model) {
+        System.out.println("GET:/editUser{id}....");
+        User user=userRepository.getById(id);
+        System.out.println("user:= "+user);
+
+        RegisterDTO registerDTO=userService.convertUserToRegisterDTO(user);
+        System.out.println("registerDTO:= "+registerDTO);
+
+        List<Roles> roles =roleRepository.findAll();
+        List<CSA> csas = csaRepository.findAll();
+
+
+        model.addAttribute("roles", roles);
+        model.addAttribute("csas", csas);
+        model.addAttribute("registerDTO", registerDTO);
+
+        return "Users/regUser";
+    }
 
     @GetMapping("/regUser")
     public String regUser(Model model) {
@@ -40,7 +69,7 @@ public class UserController {
         List<CSA> csas = csaRepository.findAll();
         model.addAttribute("roles",roles);
         model.addAttribute("csas",csas);
-        return "regUser";
+        return "/Users/regUser";
     }
 
     @PostMapping("/regUser")

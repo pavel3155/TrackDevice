@@ -1,16 +1,19 @@
 package com.example.TrackDevice.service;
 
 import com.example.TrackDevice.DTO.RegisterDTO;
-import com.example.TrackDevice.model.Roles;
 import com.example.TrackDevice.model.User;
 import com.example.TrackDevice.repo.RoleRepository;
 import com.example.TrackDevice.repo.UserRepository;
+import com.example.TrackDevice.show.ShowUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -37,6 +40,18 @@ public class UserService implements UserDetailsService {
         }
         return null;
     }
+    public RegisterDTO convertUserToRegisterDTO(User user){
+        RegisterDTO registerDTO = new RegisterDTO();
+        registerDTO.setName(user.getName());
+        registerDTO.setSurname(user.getSurname());
+        registerDTO.setEmail(user.getEmail());
+        registerDTO.setRole(user.getRole());
+        registerDTO.setCsa(user.getCsa());
+        return registerDTO;
+    }
+
+
+
     public User regNewUser(RegisterDTO registerDTO){
 
         var bCryptEncoder = new BCryptPasswordEncoder();
@@ -50,5 +65,17 @@ public class UserService implements UserDetailsService {
         return userRepository.save(newUser);
     }
 
+    public List<ShowUser> getListShowUsers(List<User> users){
+        List<ShowUser> showUsers=new ArrayList<>();
+        int num = 1;
+        for(User user:users){
+            ShowUser showUser = new ShowUser();
+            showUser.setNum(num);
+            showUser.setUser(user);
+            showUsers.add(showUser);
+            num++;
+        }
+        return showUsers;
+    }
 
 }

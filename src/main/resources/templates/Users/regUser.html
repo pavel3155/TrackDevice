@@ -2,13 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" href="css/style-form.css">
+    <link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/style-form.css">
 	<title>Регистрация</title>
 </head>
 <header>
 	<div id="header">
-		<script src="js/header.js"></script>
+		<script src="/js/header-for-dir.js"></script>
 	</div>
 	<div th:replace="Index ::navigation"></div>
 </header>
@@ -30,21 +30,21 @@
 					</div>
 					<div class="auth_form_div">
 						<label for="input_name">Имя: </label>
-						<input type="text" id="input_name" name="name" th:field="*{name}"/>
+						<input type="text" id="input_name" name="name" th:value="${registerDTO.name}" th:field="*{name}"/>
 					</div>
 					<div class="div_error">
 						<p th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></p>
 					</div>
 					<div class="auth_form_div">
 						<label for="input_surname">Фамилия: </label>
-						<input type="text" id="input_surname" name="surname" th:field="*{surname}" />
+						<input type="text" id="input_surname" name="surname" th:value="${registerDTO.surname}" th:field="*{surname}" />
 					</div>
 					<div class="div_error">
 						<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" ></p>
 					</div>
 					<div class="auth_form_div">
 						<label for="input_email">Email: </label>
-						<input type="text" id="input_email" name="email" th:field="*{email}"  />
+						<input type="text" id="input_email" name="email" th:value="${registerDTO.email}" th:field="*{email}"  />
 					</div>
 					<div class="div_error">
 						<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
@@ -64,13 +64,22 @@
 					<div class="auth_form_div">
 						<label for="input_role">Роль: </label>
 						<select  id="input_role" th:field="*{role}">
-							<option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.type}"></option>
+							<option th:each="role : ${roles}"
+									th:value="${role.id}"
+									th:text="${role.type}"
+									th:selected="${role.id == registerDTO.role.id}">
+							</option>
 						</select>
 					</div>
 					<div class="auth_form_div">
 						<label for="input_csa">КСА: </label>
 						<select  id="input_csa" th:field="*{csa}">
-							<option th:each="csa : ${csas}" th:value="${csa.id}" th:text="${csa.num}"></option>
+							<option th:each="csa : ${csas}"
+									th:value="${csa.id}"
+									th:text="${csa.num}"
+									th:selected="${csa.id == registerDTO.csa.id}">
+
+							</option>
 						</select>
 					</div>
 				</div>

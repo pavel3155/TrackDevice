@@ -27,20 +27,21 @@ public class TrackDeviceApplication implements CommandLineRunner {
 	@Transactional
 	@Override
 	public void run(String... args) throws Exception {
-		ActDev actDev=actDevRepository.getById(1);
-		System.out.println("actDev= "+actDev);
-
-		LocalDate date = actDev.getDate();
-		System.out.println("date= "+date);
-
-		String strDate=date.toString();
-		System.out.println("strDate= "+strDate);
+//		ActDev actDev=actDevRepository.getById(1);
+//		System.out.println("actDev= "+actDev);
+//
+//		LocalDate date = actDev.getDate();
+//		System.out.println("date= "+date);
+//
+//		String strDate=date.toString();
+//		System.out.println("strDate= "+strDate);
 
 //		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 //		String dateString = "2025-01-28";
 //		LocalDate localDate = LocalDate.parse(dateString, formatter);
-//		actDevService.add(localDate); // Вызываем метод add() после запуска приложения
-
+//		actDevService.add("ТС-02/001-Р-25", localDate); // Вызываем метод add() после запуска приложения
+//		actDevService.add("ТС-02/002-Р-25", localDate);
+//		actDevService.add("ТС-02/003-Р-25", localDate);
 
 	}
 }
