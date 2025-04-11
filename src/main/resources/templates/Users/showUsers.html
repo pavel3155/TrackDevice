@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Тип ТС</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style-form.css">
+</head>
+
+<header>
+    <div id="header">
+        <script src="/js/header-for-dir.js"></script>
+    </div>
+    <div th:replace="Index ::navigation"></div>
+</header>
+<body>
+<div class="container">
+    <form class="forms-operation"
+          th:method="post"
+          th:action="@{/type}"
+          th:object="${typeDeviceDTO}">
+
+        <span>
+            <h4 style="margin:10px 0px 10px 0px">Пользователи</h4>
+        </span>
+        <div class="container-inner" style="height: 80%">
+            <div class ="tbl-div" style=" height: 90%;">
+                <table class="table" style="margin-top:5px; margin-bottom:0px" id="tblUsers">
+                        <tr>
+                            <th style="width: 5%;text-align:center">N</th>
+                            <th style="width: 20%;text-align:center">Имя</th>
+                            <th style="width: 20%;text-align:center">Фамилия</th>
+                            <th style="width: 20%;text-align:center">Логин</th>
+                            <th style="width: 10%;text-align:center">Роль</th>
+                            <th style="width: 10%;text-align:center">КСА</th>
+                            <th class ="col-action">Действие</th>
+                        </tr>
+                        <tr th:each="u : ${users}">
+                            <td style="text-align:center" th:text="${u.num}"></td>
+                            <td style="text-align:center" th:text="${u.user.name}"></td>
+                            <td style="text-align:center" th:text="${u.user.surname}"></td>
+                            <td style="text-align:center" th:text="${u.user.email}"></td>
+                            <td style="text-align:center" th:text="${u.user.role.type}"></td>
+                            <td style="text-align:center" th:text="${u.user.csa.num}"></td>
+                            <td>
+                                <a href="/Users/editUser" th:href="@{/Users/editUser(id=${u.user.id})}" class="a-btn a-btn-tbl">Редактировать</a>
+                            </td>
+                        </tr>
+                </table>
+            </div>
+        </div>
+        <div style="margin:0px 0px 0px 0px">
+            <span><a href="/Users/regUser" class="a-btn">Добавить пользователя</a></span>
+            <span><a href="/" class="a-btn">Назад</a></span>
+        </div>
+    </form>
+</div>
+</body>
+</html>
