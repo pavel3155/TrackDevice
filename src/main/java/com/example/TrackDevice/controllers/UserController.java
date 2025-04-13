@@ -42,7 +42,7 @@ public class UserController {
      * метод принимает id акта, загружает страницу "regUser"
      */
     @GetMapping("/editUser")
-    public String getActDev(@RequestParam long id, Model model) {
+    public String getEditUser(@RequestParam long id, Model model) {
         System.out.println("GET:/editUser{id}....");
         User user=userRepository.getById(id);
         System.out.println("user:= "+user);
@@ -60,21 +60,13 @@ public class UserController {
 
         return "Users/regUser";
     }
-
-    @GetMapping("/regUser")
-    public String regUser(Model model) {
-        RegisterDTO registerDTO = new RegisterDTO();
-        model.addAttribute(registerDTO);
-        List<Roles> roles =roleRepository.findAll();
-        List<CSA> csas = csaRepository.findAll();
-        model.addAttribute("roles",roles);
-        model.addAttribute("csas",csas);
-        return "/Users/regUser";
-    }
-
-    @PostMapping("/regUser")
-    public String regUser(Model model, @Valid @ModelAttribute RegisterDTO registerDTO, BindingResult result){
-
+    /** метод выполняет сохранение изменений свойств User в БД при нажатии на кнопку "Сохранить" на странице "showUsers"
+     *
+     */
+    @PostMapping("/editUser")
+    public String saveEditUser(Model model, @Valid @ModelAttribute RegisterDTO registerDTO, BindingResult result){
+        System.out.println("POST:/editUser....");
+        System.out.println("registerDTO:="+registerDTO);
         List<Roles> roles =roleRepository.findAll();
         List<CSA> csas = csaRepository.findAll();
         model.addAttribute("roles",roles);
@@ -82,25 +74,17 @@ public class UserController {
         //если пароль не совпадает, то  добавляеся ошибка в result
         if(!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
             result.addError(new FieldError("registerDTO",
-                                                "confirmPassword",
-                                        "Пароль не сходится!"));
-            return "regUser";
+                    "confirmPassword",
+                    "Пароль не сходится!"));
+            return "Users/regUser";
         }
 
-        // если пользователь с введенным email уже существует, то добавляеся ошибка в result
-        User user = userRepository.findByEmail(registerDTO.getEmail());
-        if(user != null){
-            result.addError((new FieldError("registerDTO",
-                                                  "email",
-                                          "Данный Email уже занят!")));
-            return "regUser";
-        }
         //если ошибки есть
         if(result.hasErrors()){
-            return "regUser";
+            return "Users/regUser";
         }
         try {
-            userService.regNewUser(registerDTO);
+            userService.updUser(registerDTO);
             model.addAttribute("registerDTO", new RegisterDTO());
             model.addAttribute("success",true);
         }
@@ -108,7 +92,66 @@ public class UserController {
             result.addError(new FieldError("registerDTO","name",ex.getMessage()));
         }
 
-        return "regUser";
+        return "Users/regUser";
+    }
+
+    @GetMapping("/regUser")
+    public String regUser(Model model) {
+        System.out.println("GET:/regUser....");
+        RegisterDTO registerDTO = new RegisterDTO();
+        model.addAttribute(registerDTO);
+        List<Roles> roles =roleRepository.findAll();
+        List<CSA> csas = csaRepository.findAll();
+        model.addAttribute("roles",roles);
+        model.addAttribute("csas",csas);
+        return "Users/regUser";
+    }
+
+    @PostMapping("/regUser")
+    public String regUser(Model model, @Valid @ModelAttribute RegisterDTO registerDTO, BindingResult result){
+        System.out.println("POST:/regUser....");
+        System.out.println("registerDTO:="+registerDTO);
+
+        List<Roles> roles =roleRepository.findAll();
+        List<CSA> csas = csaRepository.findAll();
+        model.addAttribute("roles",roles);
+        model.addAttribute("csas",csas);
+
+        //если пароль не совпадает, то  добавляеся ошибка в result
+        if(!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
+            result.addError(new FieldError("registerDTO",
+                                                "confirmPassword",
+                                        "Пароль не сходится!"));
+            return "Users/regUser";
+        }
+        //если id = 0, то выполняется проверка на существование email
+        if(registerDTO.getId()==0) {
+            // если пользователь с введенным email уже существует, то добавляеся ошибка в result
+            User user = userRepository.findByEmail(registerDTO.getEmail());
+            if (user != null) {
+                result.addError((new FieldError("registerDTO",
+                        "email",
+                        "Данный Email уже занят!")));
+                return "Users/regUser";
+            }
+        }
+        //если ошибки есть
+        if(result.hasErrors()){
+            return "Users/regUser";
+        }
+        try {
+            if(registerDTO.getId()==0) {
+                userService.regNewUser(registerDTO);
+            } else{
+                userService.updUser(registerDTO);
+            }
+            model.addAttribute("registerDTO", registerDTO);
+            model.addAttribute("success",true);
+        }
+        catch (Exception ex){
+            result.addError(new FieldError("registerDTO","name",ex.getMessage()));
+        }
+        return "Users/regUser";
     }
 
     @GetMapping("/access-denied")

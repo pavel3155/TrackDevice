@@ -17,14 +17,15 @@
 
 	<form class="auth_form"
 		  th:method="post"
-		  th:action="@{/regUser}"
+		  th:action="@{/Users/regUser}"
 		  th:object="${registerDTO}">
 		<div class="container-inner" style="height: 85%;margin:0px;padding:10px 0px 5px 0px">
 			<div style="margin:5px 0px 20px 0px; padding:0px">
-				<h3 style="text-align: center;margin:0px 0px 5px 0px;padding:0px">Регистрация пользователя</h3>
-				<h5  th:if="${success}" style="text-align:center;margin:0px;padding:0px;color:blue;">Аккаунт успешно создан!</h5>
+				<h3 style="text-align: center;margin:0px 0px 5px 0px;padding:0px">Пользователь</h3>
+				<h5  th:if="${success}" style="text-align:center;margin:0px;padding:0px;color:blue;">Пользователь успешно сохранен!</h5>
 			</div>
 				<div class ="tbl-div-noflex" style="margin:0px">
+					<input id ="idUser" type="hidden" th:value="${registerDTO.id}" th:field="*{id}">
 					<div class="div_error">
 						<p th:if="${#fields.hasErrors('name')}"  th:errors="*{name}"></p>
 					</div>
@@ -78,13 +79,12 @@
 									th:value="${csa.id}"
 									th:text="${csa.num}"
 									th:selected="${csa.id == registerDTO.csa.id}">
-
 							</option>
 						</select>
 					</div>
 				</div>
 			<div style="display: flex;justify-content: center;">
-				<button type="submit" class="a-btn">Регистрация</button>
+				<button type="submit" class="a-btn">Сохранить</button>
 				<a href="/" class="a-btn">Назад</a>
 			</div>
 		</div>

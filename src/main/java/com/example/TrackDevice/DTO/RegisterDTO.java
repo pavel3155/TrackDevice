@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 public class RegisterDTO {
+    private  long id;
     @NotEmpty
     private String name;
     @NotEmpty

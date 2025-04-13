@@ -50,7 +50,18 @@ public class UserService implements UserDetailsService {
         return registerDTO;
     }
 
-
+    public User updUser(RegisterDTO registerDTO){
+        var bCryptEncoder = new BCryptPasswordEncoder();
+        User newUser = new User();
+        newUser.setId(registerDTO.getId());
+        newUser.setName(registerDTO.getName());
+        newUser.setSurname(registerDTO.getSurname());
+        newUser.setEmail(registerDTO.getEmail());
+        newUser.setRole(registerDTO.getRole());
+        newUser.setCsa(registerDTO.getCsa());
+        newUser.setPassword(bCryptEncoder.encode(registerDTO.getPassword()));
+        return userRepository.save(newUser);
+    }
 
     public User regNewUser(RegisterDTO registerDTO){
 
