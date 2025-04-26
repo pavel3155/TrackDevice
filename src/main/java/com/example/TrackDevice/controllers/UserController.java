@@ -38,8 +38,9 @@ public class UserController {
         return "/Users/showUsers";
     }
 
-    /** метод выполняется при нажатии на кнопку "Редактировать" на странице "showUsers"
-     * метод принимает id акта, загружает страницу "regUser"
+    /** метод выполняется при нажатии на кнопку "Редактировать" на странице "showUsers",
+     * метод принимает id акта, загружает данные пользователя и отображает их на странице "regUser"
+     * для редактирования
      */
     @GetMapping("/editUser")
     public String getEditUser(@RequestParam long id, Model model) {
@@ -60,8 +61,9 @@ public class UserController {
 
         return "Users/regUser";
     }
-    /** метод выполняет сохранение изменений свойств User в БД при нажатии на кнопку "Сохранить" на странице "showUsers"
-     *
+    /**
+     * метод выполняет сохранение изменений свойств User в БД
+     * при нажатии на кнопку "Сохранить" на странице "regUser"
      */
     @PostMapping("/editUser")
     public String saveEditUser(Model model, @Valid @ModelAttribute RegisterDTO registerDTO, BindingResult result){
@@ -95,15 +97,24 @@ public class UserController {
         return "Users/regUser";
     }
 
+    /** метод выполняется при нажатии на кнопку "Добавить пользоаптеля" на странице "showUsers",
+     * метод загружает страницу "regUser" для заполнения свойств пользователя
+     * для редактирования
+     */
     @GetMapping("/regUser")
     public String regUser(Model model) {
         System.out.println("GET:/regUser....");
         RegisterDTO registerDTO = new RegisterDTO();
+        Roles role=roleRepository.findByType("---");
+        CSA csa=csaRepository.getByNum("---");
+        registerDTO.setCsa(csa);
+        registerDTO.setRole(role);
         model.addAttribute(registerDTO);
         List<Roles> roles =roleRepository.findAll();
         List<CSA> csas = csaRepository.findAll();
         model.addAttribute("roles",roles);
         model.addAttribute("csas",csas);
+        model.addAttribute("registerDTO", registerDTO);
         return "Users/regUser";
     }
 

@@ -15,17 +15,17 @@ DROP TABLE if exists act_dev CASCADE;
 create table act_dev 
 (
 	id serial primary key,
-	act_num varchar(20),
-    act_date date,
+	num varchar(20),
+    date date,
     type_id integer default 1,
-	compl_from_id integer default 1,
-	compl_to_id integer default 1,
+	csa_from_id integer default 1,
+	csa_to_id integer default 1,
 	dev_id integer default 92,
 	order_id integer,
 	note varchar(200),
 	CONSTRAINT fk_type FOREIGN KEY(type_id) REFERENCES act_types(id) ON DELETE SET DEFAULT ON UPDATE CASCADE,
-	CONSTRAINT fk_compl_from FOREIGN KEY(compl_from_id) REFERENCES csa(id) ON DELETE SET DEFAULT ON UPDATE CASCADE,
-	CONSTRAINT fk_compl_to FOREIGN KEY(compl_to_id) REFERENCES csa(id) ON DELETE SET DEFAULT ON UPDATE CASCADE,
+	CONSTRAINT fk_csa_from FOREIGN KEY(csa_from_id) REFERENCES csa(id) ON DELETE SET DEFAULT ON UPDATE CASCADE,
+	CONSTRAINT fk_csa_to FOREIGN KEY(csa_to_id) REFERENCES csa(id) ON DELETE SET DEFAULT ON UPDATE CASCADE,
 	CONSTRAINT fk_dev FOREIGN KEY(dev_id) REFERENCES device(id) ON DELETE SET DEFAULT ON UPDATE CASCADE,
 	CONSTRAINT fk_order FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE SET DEFAULT ON UPDATE CASCADE
 );
