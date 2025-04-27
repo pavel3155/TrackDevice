@@ -61,41 +61,6 @@ public class UserController {
 
         return "Users/regUser";
     }
-    /**
-     * метод выполняет сохранение изменений свойств User в БД
-     * при нажатии на кнопку "Сохранить" на странице "regUser"
-     */
-    @PostMapping("/editUser")
-    public String saveEditUser(Model model, @Valid @ModelAttribute RegisterDTO registerDTO, BindingResult result){
-        System.out.println("POST:/editUser....");
-        System.out.println("registerDTO:="+registerDTO);
-        List<Roles> roles =roleRepository.findAll();
-        List<CSA> csas = csaRepository.findAll();
-        model.addAttribute("roles",roles);
-        model.addAttribute("csas",csas);
-        //если пароль не совпадает, то  добавляеся ошибка в result
-        if(!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
-            result.addError(new FieldError("registerDTO",
-                    "confirmPassword",
-                    "Пароль не сходится!"));
-            return "Users/regUser";
-        }
-
-        //если ошибки есть
-        if(result.hasErrors()){
-            return "Users/regUser";
-        }
-        try {
-            userService.updUser(registerDTO);
-            model.addAttribute("registerDTO", new RegisterDTO());
-            model.addAttribute("success",true);
-        }
-        catch (Exception ex){
-            result.addError(new FieldError("registerDTO","name",ex.getMessage()));
-        }
-
-        return "Users/regUser";
-    }
 
     /** метод выполняется при нажатии на кнопку "Добавить пользоаптеля" на странице "showUsers",
      * метод загружает страницу "regUser" для заполнения свойств пользователя
@@ -118,9 +83,16 @@ public class UserController {
         return "Users/regUser";
     }
 
-    @PostMapping("/regUser")
+    /**
+     * Метод выполняет сохранение нового пользователя или изменения в существующем пользователе
+     * @param model
+     * @param registerDTO - gпередается в метод и формы regUser
+     * @param result
+     * @return
+     */
+    @PostMapping("/saveUser")
     public String regUser(Model model, @Valid @ModelAttribute RegisterDTO registerDTO, BindingResult result){
-        System.out.println("POST:/regUser....");
+        System.out.println("POST:/saveUser....");
         System.out.println("registerDTO:="+registerDTO);
 
         List<Roles> roles =roleRepository.findAll();
@@ -151,11 +123,7 @@ public class UserController {
             return "Users/regUser";
         }
         try {
-            if(registerDTO.getId()==0) {
-                userService.regNewUser(registerDTO);
-            } else{
-                userService.updUser(registerDTO);
-            }
+            userService.saveUser(registerDTO);
             model.addAttribute("registerDTO", registerDTO);
             model.addAttribute("success",true);
         }

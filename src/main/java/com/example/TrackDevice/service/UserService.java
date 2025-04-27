@@ -42,6 +42,7 @@ public class UserService implements UserDetailsService {
     }
     public RegisterDTO convertUserToRegisterDTO(User user){
         RegisterDTO registerDTO = new RegisterDTO();
+        registerDTO.setId(user.getId());
         registerDTO.setName(user.getName());
         registerDTO.setSurname(user.getSurname());
         registerDTO.setEmail(user.getEmail());
@@ -50,7 +51,7 @@ public class UserService implements UserDetailsService {
         return registerDTO;
     }
 
-    public User updUser(RegisterDTO registerDTO){
+    public User saveUser(RegisterDTO registerDTO){
         var bCryptEncoder = new BCryptPasswordEncoder();
         User newUser = new User();
         newUser.setId(registerDTO.getId());

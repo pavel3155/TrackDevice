@@ -10,7 +10,7 @@ create table users
 	id serial primary key,
 	name varchar(20),
 	surname varchar(20),
-	email varchar(20),
+	email varchar(20) UNIQUE,
 	password varchar(20),
 	role_id integer default 5,
 	csa_id integer default 1,
