@@ -133,9 +133,9 @@ public class UserController {
         return "Users/regUser";
     }
 
-    @GetMapping("/access-denied")
-    public String accessDenied() {
-        System.out.println("GET:access-denied...");
-        return "/access-denied";
-    }
+//    @GetMapping("/access-denied")
+//    public String accessDenied() {
+//        System.out.println("GET:access-denied...");
+//        return "/access-denied";
+//    }
 }
