@@ -31,11 +31,21 @@
 	<div th:fragment="navigation" id="nav_bar">
         <nav>
             <ul class="nav_bar_ul">
-                <li class ="li-horizontally"><a href="/Orders" th:href="@{/Orders}">Заявка</a></li>
                 <li class ="li-horizontally">
-					<!-- <a href="#">Акты движения ТС</a> -->
 					<span class="dropdown">
-						<button class="dropbtn">Движения ТС
+						<button class="dropbtn">Заявки
+							<i class="fa fa-caret-down"></i>
+						</button>
+						<span class="dropdown-content">
+							<a href="/Orders" th:href="@{/Orders}">Заявка</a>
+							<a href="/Orders/orders" th:href="@{/Orders/orders}">Заявки</a>
+						</span>
+					</span>
+				</li>
+
+                <li class ="li-horizontally">
+					<span class="dropdown">
+						<button class="dropbtn">Движение ТС
 							<i class="fa fa-caret-down"></i>
 						</button>
 						<span class="dropdown-content">

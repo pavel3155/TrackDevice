@@ -1,12 +1,8 @@
 package com.example.TrackDevice.service;
 
 import com.example.TrackDevice.DTO.OrdersDTO;
-import com.example.TrackDevice.model.ActTypes;
-import com.example.TrackDevice.model.CSA;
-import com.example.TrackDevice.model.Device;
-import com.example.TrackDevice.model.Order;
-import com.example.TrackDevice.repo.DeviceRepository;
-import com.example.TrackDevice.repo.OrderRepository;
+import com.example.TrackDevice.model.*;
+import com.example.TrackDevice.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -23,6 +19,76 @@ public class OrdersService {
     OrderRepository orderRepository;
     @Autowired
     DeviceRepository deviceRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    RoleRepository roleRepository;
+    @Autowired
+    CSARepository csaRepository;
+    public List<User> getListExecs(UserDetails userDetails){
+        List<User> execs = new ArrayList<>();
+        //если авторизованый пользователь с ролью "EXECDEV"-исполнитель,
+        //то список "execs" будет содержать только одного этого пользователя
+        if(userDetails.getAuthorities().contains(roleRepository.findByType("EXECDEV"))) {
+            execs.add(userRepository.findByEmail(userDetails.getUsername()));
+            System.out.println("user: EXECDEV...");
+            System.out.println("execs:= " +execs);
+        }
+        //если авторизованый пользователь с ролью "SERV",
+        //то список "execs" будет содержать пользователей с ролью "ROLE_EXECDEV"  и "ROLE_SERV"
+        if(userDetails.getAuthorities().contains(roleRepository.findByType("SERV"))) {
+            List<Roles> roles = new ArrayList<>();
+            roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
+            roles.add(roleRepository.findByRole("ROLE_SERV"));
+            execs = userRepository.findByRoleIn(roles);
+            System.out.println("execs:= " +execs);
+        }
+        return execs;
+    }
+    public CSA getCSAfromUserDetails(UserDetails userDetails){
+        //если пользователь с ролью CSA
+        if(userDetails.getAuthorities().contains(roleRepository.findByType("CSA")))        {
+            CSA csa= userRepository.findByEmail(userDetails.getUsername()).getCsa();//получаем csa(объект) из пользователя
+            return csa;
+        }else{
+            CSA csa = csaRepository.getByNum("---"); // получаем csa '---'
+            return csa;
+            //ordersDTO.setIdCSA(csa.getId());
+        }
+    }
+    public Device getDeviceDefault(){
+        List<Device> devices = deviceRepository.findBySernum("---");
+        Device device=devices.get(0);
+        return device;
+    }
+
+    public  User getExecutorDefault(){
+        List<User> execs =userRepository.findByRole(roleRepository.findByRole("ROLE_SERV"));//получаем всех пользователей с ролью "ROLE_SERV"
+        System.out.println("execs:= "+execs);
+        User exec = execs.get(0);//получаем первого пользователя из списка
+        System.out.println("exec:= "+exec);
+        return exec;
+    }
+
+
+    public List<Order> getListOfUsersOrders(Object role, UserDetails userDetails){
+        List<Order> orders;
+        if(role.equals("ROLE_CSA")){
+            System.out.println("role.getType()==\"CSA\"");
+            User user = userRepository.findByEmail(userDetails.getUsername());
+            CSA csa = user.getCsa();
+            orders = orderRepository.getByCsa(csa);
+        } else if(role.equals("ROLE_EXECDEV")){
+            System.out.println("role.getType()==\"EXECDEV\"");
+            User executor = userRepository.findByEmail(userDetails.getUsername());
+            orders=orderRepository.getByExecutor(executor);
+        } else {
+            System.out.println("role.getType()==\"SERV, ADMIN\"");
+            orders = orderRepository.findAll();
+        }
+        return orders;
+    }
+
     public Object getRoleFromUserDetails(UserDetails userDetails){
         Object[] arrRoles=userDetails.getAuthorities().stream().toArray();
         System.out.println("arrRoles[0]= "+arrRoles[0]);

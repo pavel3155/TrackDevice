@@ -232,11 +232,13 @@ public class OrderController {
             Roles roleCSA =roleRepository.findByType("CSA");
             System.out.println("roleCSA:= "+roleCSA);
 
-            if(userDetails.getAuthorities().contains(roleCSA)){
-                CSA csa= userRepository.findByEmail(userDetails.getUsername()).getCsa();
+            if(userDetails.getAuthorities().contains(roleCSA))
+            //если рользователь с ролью CSA
+            {
+                CSA csa= userRepository.findByEmail(userDetails.getUsername()).getCsa();//получаем csa(объект) из пользователя
                 System.out.println("csa:="+csa);
-                ordersDTO.setCsa(csa);
-                ordersDTO.setIdCSA(csa.getId());
+                ordersDTO.setCsa(csa);//присваиваем свойству csa объекта ordersDTO, полученный csa пользователя
+                ordersDTO.setIdCSA(csa.getId()); //присваиваем свойству idCsa объекта ordersDTO, id полученного объекта csa пользователя
             }else{
                 CSA csa = csaRepository.getById(1); // получаем csa '---'
                 ordersDTO.setCsa(csa);
@@ -245,6 +247,7 @@ public class OrderController {
         }
 
         if (ordersDTO.getDevice() ==null){
+            //получаем device "---"
             System.out.println("ordersDTO.getDevice()==null....");
             List<Device> devices = deviceRepository.findBySernum("---");
             Device device=devices.get(0);
@@ -255,19 +258,21 @@ public class OrderController {
         if (ordersDTO.getStatus() ==null){
             ordersDTO.setStatus("открыта");
         }
-
+        //полуаем список пользователей с ролью "ROLE_SERV",
+        // выбираем первого из списка и присваиваем его сойству Executor объекту ordersDTO
         if(ordersDTO.getExecutor()==null){
             System.out.println("ordersDTO.getExecutor()==null....");
             Roles role=roleRepository.findByRole("ROLE_SERV");
             System.out.println("role:= "+role);
-            List<User> execs =userRepository.findByRole(role);
+            List<User> execs =userRepository.findByRole(role);//получаем всех пользователей с ролью "ROLE_SERV"
             System.out.println("execs:= "+execs);
-            User exec = execs.get(0);
+            User exec = execs.get(0);//получаем первого пользователя из списка
             System.out.println("exec:= "+exec);
             ordersDTO.setExecutor(exec);
         }
 
-
+        //если авторизованый пользователь с ролью "EXECDEV"-исполнитель,
+        //то список "execs" будет содержать только одного этого пользователя
         if(userDetails.getAuthorities().contains(roleRepository.findByType("EXECDEV"))) {
             List<User> execs = new ArrayList<>();
             execs.add(userRepository.findByEmail(userDetails.getUsername()));
@@ -275,7 +280,8 @@ public class OrderController {
             System.out.println("execs:= " +execs);
             model.addAttribute("execs", execs);
         }
-
+        //если авторизованый пользователь с ролью "SERV",
+        //то список "execs" будет содержать пользователей с ролью "ROLE_EXECDEV"  и "ROLE_SERV"
         if(userDetails.getAuthorities().contains(roleRepository.findByType("SERV"))) {
             List<Roles> roles = new ArrayList<>();
             roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
