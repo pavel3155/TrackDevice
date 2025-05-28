@@ -561,7 +561,7 @@ public class OrderController {
 
         boolean selDevOrder= ordersService.btnSelDeviceDisplay(order.getCsa(),order.getDevice());
         model.addAttribute("selDevOrder", selDevOrder);
-        OrdersDTO ordersDTO =ordersService.newOrderDTOtoObject(order);
+        OrdersDTO ordersDTO =ordersService.objOrderDTOtoObject(order);
 
         Object[] arrRoles=userDetails.getAuthorities().stream().toArray();
         Object role=arrRoles[0].toString();

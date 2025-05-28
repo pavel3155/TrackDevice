@@ -56,7 +56,7 @@ public class QueryController {
         System.out.println("GET:/viewOrder....");
         Order order = orderRepository.getById(id);
         System.out.println("order:= "+order);
-        OrdersDTO ordersDTO =ordersService.newOrderDTOtoObject(order);
+        OrdersDTO ordersDTO =ordersService.objOrderDTOtoObject(order);
         List<String> fileNames;
         String directory;
         if (ordersDTO.getNum()!=null) {

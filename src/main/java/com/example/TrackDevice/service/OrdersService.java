@@ -25,6 +25,38 @@ public class OrdersService {
     RoleRepository roleRepository;
     @Autowired
     CSARepository csaRepository;
+    @Autowired
+    RestoreRepository restoreRepository;
+    @Autowired
+    FileService fileService;
+    //получаем основной каталог заявки в которой размещаются подкаталоги и файлы
+    public String getFileDirectoryOrder(OrdersDTO ordersDTO){
+        String directory;
+        if (ordersDTO.getId()!=0) {
+            directory=ordersDTO.getNum();
+        } else {
+            directory="";
+        }
+        return directory;
+    }
+    //получаем список имен файлов  подкаталога "pic"
+    public List<String> getListFileNames(OrdersDTO ordersDTO){
+        List<String> fileNames;
+        if (ordersDTO.getId()!=0) {
+            fileNames = fileService.getAllFiles(ordersDTO.getNum(),"pic");
+        } else {
+            fileNames=new ArrayList<>();
+        }
+
+        return fileNames;
+    }
+    //получаем список возможный методов восстановления
+    public  List<Restore> getListOfRestoreMethods(){
+        return restoreRepository.findAll();
+    }
+
+
+    //получаем список исполнителей
     public List<User> getListExecs(UserDetails userDetails){
         List<User> execs = new ArrayList<>();
         //если авторизованый пользователь с ролью "EXECDEV"-исполнитель,
@@ -41,6 +73,12 @@ public class OrdersService {
             roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
             roles.add(roleRepository.findByRole("ROLE_SERV"));
             execs = userRepository.findByRoleIn(roles);
+            System.out.println("execs:= " +execs);
+        }
+        //если авторизованый пользователь с ролью "CSA",
+        //то список "execs" будет содержать пользователей с ролью "ROLE_SERV"
+        if(userDetails.getAuthorities().contains(roleRepository.findByType("CSA"))) {
+            execs = userRepository.findByRole(roleRepository.findByRole("ROLE_SERV"));
             System.out.println("execs:= " +execs);
         }
         return execs;
@@ -152,8 +190,32 @@ public class OrdersService {
         }
         return orderRepository.save(order);
     }
+    public OrdersDTO objOrderDTOCreate(long orderID,UserDetails userDetails){
+        OrdersDTO orderDTO;
+        if(orderID==0){
+            orderDTO= new OrdersDTO();
+            //устанавливаем свойство csa объекта ordersDTO, в соответствии с csa объекта userDetails
+            orderDTO.setCsa(getCSAfromUserDetails(userDetails));
+            //устанавливаем свойство idCsa объекта ordersDTO, в соответствии с id объекта userDetails
+            orderDTO.setIdCSA(getCSAfromUserDetails(userDetails).getId());
+            //устанавливаем значение device "---"
+            orderDTO.setDevice(getDeviceDefault());
+            //устанавливаем значение id объекта device "---"
+            orderDTO.setIdDevice(getDeviceDefault().getId());
+            //устанавливаем статус заявки
+            orderDTO.setStatus("открыта");
+            //устанавливаем сойство Executor в соответствии с первым пользователем из списка пользователей с ролью "ROLE_SERV"
+            orderDTO.setExecutor(getExecutorDefault());
+            //устанавливаем сойство restore(способ восстановление)
+            orderDTO.setRestore(restoreRepository.getByMethod("---"));
 
-    public OrdersDTO newOrderDTOtoObject(Order order){
+
+        } else {
+            orderDTO = objOrderDTOtoObject(orderRepository.getById(orderID));
+        }
+        return orderDTO;
+    }
+    public OrdersDTO objOrderDTOtoObject(Order order){
         OrdersDTO ordersDTO =new OrdersDTO();
         ordersDTO.setId(order.getId());
         ordersDTO.setDate(order.getDate().toString());
