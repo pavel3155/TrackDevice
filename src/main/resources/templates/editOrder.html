@@ -202,7 +202,7 @@
 								<label id="lblServiceable"  for="chServiceable">восстановлено</label>
 							</td>
 							<td>
-								<input id="chServiceable" type="checkbox" th:field="*{serviceable}" th:value="${serviceable}">
+								<input id="chServiceable" type="checkbox" checked th:field="*{serviceable}" th:value="${serviceable}">
 							</td>
 						</tr>
 						<tr sec:authorize="!hasRole('ROLE_CSA')">
@@ -269,10 +269,10 @@
         function initEvent() {
             $('#btnSelCSA').bind('click', selCSA);
             $('#btnSelDev').bind('click', selDev);
-            $('#btnCloseOrder').bind('click', closeOrder);
+            /* $('#btnCloseOrder').bind('click', closeOrder); */
             $('#btnCreateActDev').bind('click', сreateActDev);
             $('#btnCreateConsult').bind('click', сreateConsult);
-
+			$('#chServiceable').change(closeOrder);
             $('#btnMoveActDev').on('click', moveActDev);
             $('#orderData').bind('change', setOrderNumDate);
             $('#idInputFile').bind('change', CreateNewListFiles);
@@ -365,8 +365,15 @@
 		}
 		function closeOrder(){
 			console.log("closeOrder...");
-		    /* $('#lblOrderStatus'.text("закрыта"); */
-		    $('#orderStatus').val("закрыта");
+		    if ($('#chServiceable').is(':checked')){
+				$('#selStatusOrder').val("закрыта");
+				$('#selStatusOrder option:contains("закрыта")').prop('selected', true);
+			} else {
+				console.log("открыта...");
+				$('#selStatusOrder').val("открыта");
+				$('#selStatusOrder option:contains("открыта")').prop('selected', true);
+				console.log("открыта...");
+			}
 		}
 	</script>
 
