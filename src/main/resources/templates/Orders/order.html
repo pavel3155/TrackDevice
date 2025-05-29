@@ -34,7 +34,11 @@
 				<div class ="tbl-div">
 					<input id ="idCSA" type="hidden" th:value="${idCSA}" th:field="*{idCSA}">
 					<input id ="idDevice" type="hidden" th:value="${idDevice}" th:field="*{idDevice}">
-					<input sec:authorize="hasRole('ROLE_CSA')" id ="textRestore" type="hidden" th:value="${restore}" th:field="*{restore}">
+					<input sec:authorize="hasRole('ROLE_CSA')" id ="textRestore" type="hidden"
+						   th:value="${restore}" th:field="*{restore}">
+					<input th:if="${id == 0}" sec:authorize="hasRole('ROLE_CSA')" id="idStatus" type="hidden"
+						   th:value="${ordersDTO.status}" th:field="*{status}">
+
 					<table class="table" id="tblOrder">
 						<tr>
 							<td style=" font-weight: 600;text-align:right">Дата</td>
@@ -79,12 +83,13 @@
 								<button id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button>
 							</td>
 						</tr>
-						<td style="text-align:right">Серийный №</td>
-						<td class="AlignCenter">
-							<label id="lblOrderDeviceSN"  for="orderDevice"
-								   th:text="${ordersDTO.device.sernum} "></label>
-						</td>
-						<td></td>
+						<tr>
+							<td style="text-align:right">Серийный №</td>
+							<td class="AlignCenter">
+								<label id="lblOrderDeviceSN"  for="orderDevice"
+									   th:text="${ordersDTO.device.sernum} "></label>
+							</td>
+							<td></td>
 						</tr>
 						<tr>
 							<td style="text-align:right">Инвентарный №</td>
@@ -92,13 +97,6 @@
 								<label id="lblOrderDeviceIN"  for="orderDevice"
 									   th:text="${ordersDTO.device.invnum}"></label>
 								<input type="hidden" id="orderDeviceIN" th:value="${device}" th:field="*{device}">
-							</td>
-							<td></td>
-						<tr>
-							<td style="font-weight: 600; text-align:right">Статус</td>
-							<td class="AlignCenter">
-								<label id="lblOrderStatus" for="orderStatus" th:text="${ordersDTO.status}"></label>
-								<input type="hidden" id="orderStatus" name="orderStatus" th:field="*{status}"/>
 							</td>
 							<td></td>
 						</tr>
@@ -111,6 +109,38 @@
 							</td>
 							<td></td>
 						</tr>
+
+						<tr>
+							<td style="font-weight: 600; text-align:right">Статус</td>
+							<td class="AlignCenter">
+								<span th:if="${id == 0}">
+									<label id="lblOrderStatus" for="orderStatus" th:text="${ordersDTO.status}"></label>
+									<input type="hidden" id="orderStatus" name="orderStatus" th:field="*{status}"/>
+								</span>
+								<span th:else>
+									<select	sec:authorize="!hasRole('ROLE_CSA')"
+											   id="selStatusOrder" class="select"
+											   th:field="*{status}">
+										<option th:each="status : ${orderStatus}"
+												th:value="${status}"
+												th:text="${status}"
+												th:selected="${status == ordersDTO.status}">
+										</option>
+									</select>
+									<span  sec:authorize="hasRole('ROLE_CSA')">
+										<input id ="inputStatusOrder"
+											   type="hidden"
+											   th:value="${status}"
+											   th:field="*{status}">
+										<label id="lblStatusOrder"
+											   th:text="${ordersDTO.status}">
+										</label>
+									</span>
+								</span>
+							</td>
+							<td></td>
+						</tr>
+
 						<tr>
 							<td style=" font-weight: 600; text-align:right">Исполнитель</td>
 							<td class="AlignCenter">
@@ -121,7 +151,7 @@
 										   style="width:99%;text-align:center" name="orderExec"
 										   th:value="${executor}" th:field="*{executor}"/>
 								</span>
-								<select  sec:authorize="hasRole('ROLE_SERV') or hasRole('ROLE_ADMIN')"
+								<select  sec:authorize="hasRole('ROLE_SERV')"
 										 id="selExecOrder" class="select"
 										 th:field="*{executor}">
 									<option th:each="exec : ${execs}"
@@ -133,10 +163,12 @@
 							</td>
 							<td></td>
 						</tr>
-						<tr sec:authorize="!hasRole('ROLE_CSA')">
+
+						<tr th:unless="${id == 0}">
 							<td  style=" font-weight: 600; text-align:right">Восстановление КСА</td>
 							<td  class="AlignCenter">
-								<select  id="selRestore"
+								<select  sec:authorize="!hasRole('ROLE_CSA')"
+										 id="sRestore"
 										 class="select"
 										 th:field="*{restore}">
 									<option th:each="restore : ${restoreMethods}"
@@ -145,9 +177,20 @@
 											th:selected="${restore.id == ordersDTO.restore.id}">
 									</option>
 								</select>
+								<span sec:authorize="hasRole('ROLE_CSA')">
+									<input id ="tRestore"
+										   type="hidden"
+										   th:value="${restore}"
+										   th:field="*{restore}">
+									<label id="lblRestore"
+										   for="textRestore"
+										   th:text="${ordersDTO.restore.method}">
+									</label>
+								</span>
 							</td>
 							<td></td>
 						</tr>
+
 						<tr>
 							<td  style="font-weight: 600; text-align:right">Прикрепленные фото</td>
 							<td>
@@ -171,12 +214,63 @@
 							</td>
 						</tr>
 
+						<tr th:unless="${id == 0}">
+							<td  style="font-weight: 600; text-align:right">Функционирование КСА</td>
+							<td>
+								<label id="lblServiceable">восстановлено</label>
+							</td>
+							<td >
+								<input sec:authorize="!hasRole('ROLE_CSA')" type="checkbox" th:field="*{serviceable}" th:value="${serviceable}">
+								<input sec:authorize="hasRole('ROLE_CSA')" type="checkbox" th:field="*{serviceable}" th:value="${serviceable}" readonly>
+							</td>
+						</tr>
+
+						<tr  th:unless="${id == 0}">
+							<td  style="font-weight: 600; text-align:right">Дата восстановления КСА</td>
+							<td>
+								<input sec:authorize="!hasRole('ROLE_CSA')" type="date" th:value="${dateClosingOrder}" th:field="*{dateClosingOrder}"/>
+								<input sec:authorize="hasRole('ROLE_CSA')"  type="text" th:value="${dateClosingOrder}" th:field="*{dateClosingOrder}" readonly/>
+							<td></td>
+						</tr>
+
+						<tr  th:unless="${id == 0}" sec:authorize="!hasRole('ROLE_CSA')">
+							<td></td>
+							<td style="font-weight: 600; text-align:center">Акты движения ТС по заявке</td>
+							<td>
+								<button id="btnMoveActDev" type="submit" class="a-btn">Перейти</button>
+							</td>
+						</tr>
+
+						<tr  th:unless="${id == 0}" sec:authorize="!hasRole('ROLE_CSA')">
+							<td  style="font-weight: 600; text-align:right">Создать акт</td>
+							<td>
+								<select
+										id="selActDev" class="select"
+										th:field="*{actTypes}">
+									<option th:each="actType : ${actTypes}"
+											th:value="${actType.id}"
+											th:text="${actType.type}">
+									</option>
+								</select>
+							</td>
+							<td>
+								<button id="btnCreateActDev" type="submit" class="a-btn">Создать</button>
+							</td>
+						</tr>
+						<tr th:unless="${id == 0}">
+							<td  style="font-weight: 600; text-align:right">Консультация </td>
+							<td></td>
+							<td>
+								<button id="btnCreateConsult" type="submit" class="a-btn">Перейти</button>
+							</td>
+						</tr>
+
 
 					</table>
 				</div>
 			</div>
 			<span style="margin:20px 5px 5px 5px">
-				<button type="submit" class="a-btn">Добавить</button>
+				<button type="submit" class="a-btn">Сохранить</button>
 				<a href="/Orders" class="a-btn">Назад</a>
 			</span>
 		</form>
@@ -191,7 +285,14 @@
                 function initEvent() {
                     $('#btnSelCSA').bind('click', selCSA);
                     $('#btnSelDev').bind('click', selDev);
-                    $('#btnSelExec').bind('click', selExec);
+                    /* $('#btnSelExec').bind('click', selExec); */
+                    /* $('#btnCloseOrder').bind('click', closeOrder); */
+            		$('#btnCreateActDev').bind('click', сreateActDev);
+            		$('#btnCreateConsult').bind('click', сreateConsult);
+
+
+
+
                     $('#orderData').bind('change', setOrderNumDate);
                     $('#idInputFile').bind('change', CreateNewListFiles);
                 }
@@ -275,10 +376,36 @@
                     $('#addOrder').attr("action","/Orders/device")
                 }
 
+			/*
                 function selExec(){
                     console.log("selExec...");
                     $('#addOrder').attr("action","/selExec")
                 }
+
+                function closeOrder(){
+					console.log("closeOrder...");
+					/* $('#lblOrderStatus'.text("закрыта"); */
+					$('#orderStatus').val("закрыта");
+				}
+            */
+
+				function сreateActDev(){
+					console.log("сreateActDev...");
+					$('#addOrder').attr("action","/Acts/crActDev")
+				}
+				function moveActDev(){
+					console.log("moveActDev...");
+					var idOrder=$('#idOrder').val();
+					$('#addOrder').attr("action","/Acts/moveActsDev?idOrder="+idOrder);
+				}
+				function сreateConsult(){
+					console.log("сreateActDev...");
+					$('#addOrder').attr("action","/crConsult")
+				}
+
+
+
+
 
 	</script>
 

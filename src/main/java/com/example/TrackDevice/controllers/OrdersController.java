@@ -80,7 +80,7 @@ public class OrdersController {
      */
     @GetMapping("order{id}")
     public String Order(@PathVariable long id, @AuthenticationPrincipal UserDetails userDetails, Model model) {
-        System.out.println("GET:/order{id}....");
+        System.out.println("GET:/Orders/order{id}....");
         System.out.println("id= "+id);
         System.out.println("Username:= "+userDetails.getUsername());
         System.out.println("Role:= "+userDetails.getAuthorities());
@@ -91,14 +91,9 @@ public class OrdersController {
         model.addAttribute("files", ordersService.getListFileNames(ordersDTO));
         model.addAttribute("execs", ordersService.getListExecs(userDetails));
         model.addAttribute("restoreMethods", ordersService.getListOfRestoreMethods());
+        model.addAttribute("orderStatus", ordersService.loadStatusOrder());
         model.addAttribute("ordersDTO",ordersDTO);
 
-//
-//
-//        model.addAttribute("directory", directory);
-//        model.addAttribute("files", fileNames);
-//        model.addAttribute("restoreMethods", restoreMethods);
-//        model.addAttribute("ordersDTO", ordersDTO);
         return "Orders/order";
 }
     @PostMapping("/order")

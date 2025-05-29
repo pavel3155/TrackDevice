@@ -234,7 +234,7 @@ public class OrdersService {
         }
         return ordersDTO;
     }
-
+    //получаем список с возможным статусом (состоянием) заявки
     public List<String> loadStatusOrder() {
         List<String> orderStatus = new ArrayList<>();
         orderStatus.add("---");
@@ -242,6 +242,7 @@ public class OrdersService {
         orderStatus.add("закрыта");
         return orderStatus;
     }
+
     public String GenerationNumOrder(List<Order> orders){
         String num;
         if(!orders.isEmpty()) {
