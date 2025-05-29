@@ -366,6 +366,7 @@
 		function closeOrder(){
 			console.log("closeOrder...");
 		    if ($('#chServiceable').is(':checked')){
+		    	console.log("закрыта...");
 				$('#selStatusOrder').val("закрыта");
 				$('#selStatusOrder option:contains("закрыта")').prop('selected', true);
 			} else {
