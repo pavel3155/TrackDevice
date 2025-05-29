@@ -90,20 +90,26 @@
 				</div>
 			</div>
 			<div>
-				<span id="link"></span>
+				<span id="link">
+				<a sec:authorize="hasRole('ROLE_CSA') or hasRole('ROLE_SERV')"
+				   th:href="@{/Orders/order{id}(id=0)}"
+				   class="a-btn">Создать заявку</a>
+				</span>
 				<span><a href="/" class="a-btn">Назад</a></span>
 			</div>
 
 		</form>
 	</div>
+	<!--
 	<script sec:authorize="hasRole('ROLE_CSA') or hasRole('ROLE_SERV')">
 		$(document).ready(loadOrders);
 
         function loadOrders() {
             console.log("выполняется loadOrders");
 			$('#link').empty().prop('disabled', false);
-            $('#link').append('<a href="/Orders/order" class="a-btn">Создать заявку</a>');
+            $('#link').append('<a href="/Orders/order0" class="a-btn">Создать заявку</a>');
         }
 	</script>
+	-->
 </body>
 </html>
