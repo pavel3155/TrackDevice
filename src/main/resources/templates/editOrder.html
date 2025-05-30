@@ -143,16 +143,16 @@
 											th:selected="${restore.id == ordersDTO.restore.id}">
 									</option>
 								</select>
-								<input sec:authorize="hasRole('ROLE_CSA')"
-									   id ="textRestore"
-									   type="hidden"
-									   th:value="${restore}"
-									   th:field="*{restore}">
-								<label sec:authorize="hasRole('ROLE_CSA')"
-									   id="lblRestore"
-									   for="textRestore"
-									   th:text="${ordersDTO.restore.method}">
-								</label>
+								<span sec:authorize="hasRole('ROLE_CSA')">
+									<input id ="textRestore"
+										   type="hidden"
+										   th:value="${restore}"
+										   th:field="*{restore}">
+									<label id="lblRestore"
+										   for="textRestore"
+										   th:text="${ordersDTO.restore.method}">
+									</label>
+								</span>
 							</td>
 							<td></td>
 						</tr>

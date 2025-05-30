@@ -12,6 +12,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class OrdersService {
@@ -29,6 +31,14 @@ public class OrdersService {
     RestoreRepository restoreRepository;
     @Autowired
     FileService fileService;
+    @Autowired
+    ActTypesRepository actTypesRepository;
+
+    //получаем список возможных актов движения ТС
+    public List<ActTypes> getActTypes(){
+        List<ActTypes> actTypes = actTypesRepository.findAll();
+        return actTypes;
+    }
     //получаем основной каталог заявки в которой размещаются подкаталоги и файлы
     public String getFileDirectoryOrder(OrdersDTO ordersDTO){
         String directory;
@@ -208,14 +218,12 @@ public class OrdersService {
             orderDTO.setExecutor(getExecutorDefault());
             //устанавливаем сойство restore(способ восстановление)
             orderDTO.setRestore(restoreRepository.getByMethod("---"));
-
-
         } else {
-            orderDTO = objOrderDTOtoObject(orderRepository.getById(orderID));
+            orderDTO = getOrderDTOfromOrder(orderRepository.getById(orderID));
         }
         return orderDTO;
     }
-    public OrdersDTO objOrderDTOtoObject(Order order){
+    public OrdersDTO getOrderDTOfromOrder(Order order){
         OrdersDTO ordersDTO =new OrdersDTO();
         ordersDTO.setId(order.getId());
         ordersDTO.setDate(order.getDate().toString());
@@ -234,6 +242,7 @@ public class OrdersService {
         }
         return ordersDTO;
     }
+
     //получаем список с возможным статусом (состоянием) заявки
     public List<String> loadStatusOrder() {
         List<String> orderStatus = new ArrayList<>();
@@ -241,6 +250,35 @@ public class OrdersService {
         orderStatus.add("открыта");
         orderStatus.add("закрыта");
         return orderStatus;
+    }
+    public String numOrder(String OrderDate){
+        String orderNum;
+        List<Order> orders = orderRepository.findAllByNumStartingWith(OrderDate);
+        List<Long> lstNum =orders.stream()
+                .map(o -> {
+                    try {
+                        // Извлекаем подстроку и преобразуем в целое число
+                        return Long.parseLong(o.getNum());
+                    } catch (NumberFormatException e) {
+                        // Обработка ошибок: если строка не может быть преобразована или индекс вне диапазона
+                        System.err.println("Ошибка при обработке номера: " + o.getNum());
+                        return null; // Возвращаем null, чтобы отфильтровать позже
+                    }
+                })
+                .filter(num -> num != null) // Удаляем null значения
+                .toList(); // Собираем результаты в список
+        // Выводим список целых чисел
+        lstNum.forEach(System.out::println);
+        //List<String> lstNum =orders.stream().map(o->new String(o.getNum())).collect(Collectors.toList());
+
+        long maxNum = Collections.max(lstNum) + 1;
+        System.out.println("maxNum=" + maxNum);
+
+        orderNum= String.valueOf(maxNum);
+
+
+        return orderNum;
+
     }
 
     public String GenerationNumOrder(List<Order> orders){

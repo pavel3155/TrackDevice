@@ -7,9 +7,11 @@ import com.example.TrackDevice.repo.*;
 import com.example.TrackDevice.service.FileService;
 import com.example.TrackDevice.service.OrdersService;
 import com.example.TrackDevice.specification.OrdersSpecification;
+import com.google.gson.Gson;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -92,6 +94,7 @@ public class OrdersController {
         model.addAttribute("execs", ordersService.getListExecs(userDetails));
         model.addAttribute("restoreMethods", ordersService.getListOfRestoreMethods());
         model.addAttribute("orderStatus", ordersService.loadStatusOrder());
+        model.addAttribute("actTypes", ordersService.getActTypes());
         model.addAttribute("ordersDTO",ordersDTO);
 
         return "Orders/order";
@@ -193,7 +196,23 @@ public class OrdersController {
         model.addAttribute("ordersDTO",ordersDTO);
         return "Orders/device";
     }
-
+    /**
+     * метод генерирует и возвращает номер заявки
+     * @param OrderDate
+     * @return
+     */
+    @GetMapping("/NumOrder{OrderDate}")
+    @ResponseBody
+    public ResponseEntity<String> generationNumOrder(@PathVariable String OrderDate) {
+        System.out.println("GET:/NumOrder{OrderDate}...");
+        System.out.println("OrderDate:= " + OrderDate);
+//        List<Order> orders = orderRepository.findAllByNumStartingWith(OrderDate);
+//        String num= ordersService.GenerationNumOrder(orders);
+        String numOrder = ordersService.numOrder(OrderDate);
+        Gson gson = new Gson();
+        String jsonNumOrder = gson.toJson(numOrder);
+        return  ResponseEntity.ok(jsonNumOrder);
+    }
 
 
 }

@@ -32,6 +32,7 @@
 				</div>
 
 				<div class ="tbl-div">
+					<input id ="idOrder" type="hidden" th:value="${id}" th:field="*{id}">
 					<input id ="idCSA" type="hidden" th:value="${idCSA}" th:field="*{idCSA}">
 					<input id ="idDevice" type="hidden" th:value="${idDevice}" th:field="*{idDevice}">
 					<input sec:authorize="hasRole('ROLE_CSA')" id ="textRestore" type="hidden"
@@ -43,7 +44,10 @@
 						<tr>
 							<td style=" font-weight: 600;text-align:right">Дата</td>
 							<td class="AlignCenter">
-								<input id="orderData" type="date" th:value="${date}" th:field="*{date}"/>
+								<input sec:authorize="hasRole('ROLE_CSA') or hasRole('ROLE_SERV')"
+									   id="orderData" type="date" th:value="${date}" th:field="*{date}"/>
+								<input sec:authorize="hasRole('ROLE_EXECDEV')"
+									   id="orderDataText" type="text" th:value="${date}" th:field="*{date}" readonly/>
 							</td>
 							<td></td>
 						</tr>
@@ -197,6 +201,7 @@
 								<span id="idListSaveFiles" th:each="file : ${files}" >
 									<div class="attached-pictures">
 										<a th:href="@{/addOrder/loadPicture(direc=${directory}, fileName=${file})}" target="_blank" th:text="${file}"></a>
+										<a th:unless="${id == 0}" href="#" class="input-file-remove" th:onclick="removeAttachedPictures(event, [[${directory}]], [[${file}]])">x</a>
 										<a th:href="@{/addOrder/downloadPicture(direc=${directory}, fileName=${file})}" class="input-file-download">>></a>
 									</div>
 								</span>
@@ -286,14 +291,11 @@
                     $('#btnSelCSA').bind('click', selCSA);
                     $('#btnSelDev').bind('click', selDev);
                     /* $('#btnSelExec').bind('click', selExec); */
-                    /* $('#btnCloseOrder').bind('click', closeOrder); */
+                    $('#chServiceable').change(closeOrder);
             		$('#btnCreateActDev').bind('click', сreateActDev);
             		$('#btnCreateConsult').bind('click', сreateConsult);
-
-
-
-
-                    $('#orderData').bind('change', setOrderNumDate);
+            		$('#btnMoveActDev').on('click', moveActDev);
+                    $('#orderData').bind('change', getNumOrderFromDate);
                     $('#idInputFile').bind('change', CreateNewListFiles);
                 }
 
@@ -342,8 +344,20 @@
                     $('#idInputFile')[0].files = dt.files;
                 }
 
-                function setOrderNumDate(){
-                	console.log('setOrderNumDate()...');
+				function removeAttachedPictures(e,dir,fName){
+					console.log("dir="+dir);
+					console.log("fName="+fName);
+					const target = e.target;
+					let fileName = $(target).prev().text();
+					console.log("removeAttachedPictures()...");
+					console.log("direc...");
+					console.log("fileName= "+fileName);
+					$(target).closest('.attached-pictures').remove();
+					$.get('/addOrder/deletPicture' + dir+'&'+fName);
+				}
+
+                function getNumOrderFromDate(){
+                	console.log('getNumOrderDate()...');
                 	$('#orderNum').val(null);
                     var orderDate=moment($('#orderData').val()).format('YYYYMMDD');
                     console.log("orderDate:= "+orderDate);
@@ -356,7 +370,7 @@
                 function GenerationNumOrder(orderDate) {
                 	console.log('GenerationNumOrder()...');
                 	console.log("orderDate="+orderDate);
-				   	$.getJSON('/GenerationNumOrder' + orderDate)
+				   	$.getJSON('/Orders/NumOrder' + orderDate)
                     	.done(function (data) {
               			var num=data;
 							console.log("numOrder="+num);
@@ -382,25 +396,33 @@
                     $('#addOrder').attr("action","/selExec")
                 }
 
-                function closeOrder(){
-					console.log("closeOrder...");
-					/* $('#lblOrderStatus'.text("закрыта"); */
-					$('#orderStatus').val("закрыта");
-				}
             */
 
 				function сreateActDev(){
 					console.log("сreateActDev...");
-					$('#addOrder').attr("action","/Acts/crActDev")
+					$('#order').attr("action","/Acts/crActDev")
 				}
 				function moveActDev(){
 					console.log("moveActDev...");
 					var idOrder=$('#idOrder').val();
-					$('#addOrder').attr("action","/Acts/moveActsDev?idOrder="+idOrder);
+					$('#order').attr("action","/Acts/moveActsDev?idOrder="+idOrder);
 				}
 				function сreateConsult(){
 					console.log("сreateActDev...");
-					$('#addOrder').attr("action","/crConsult")
+					$('#order').attr("action","/crConsult")
+				}
+				function closeOrder(){
+					console.log("closeOrder...");
+					if ($('#chServiceable').is(':checked')){
+						console.log("закрыта...");
+						$('#selStatusOrder').val("закрыта");
+						$('#selStatusOrder option:contains("закрыта")').prop('selected', true);
+					} else {
+						console.log("открыта...");
+						$('#selStatusOrder').val("открыта");
+						$('#selStatusOrder option:contains("открыта")').prop('selected', true);
+						console.log("открыта...");
+					}
 				}
 
 
