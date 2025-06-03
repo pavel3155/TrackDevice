@@ -69,7 +69,7 @@
 								<input type="hidden" id="orderCSA" th:value="${csa}" th:field="*{csa}">
 							</td>
 							<td>
-								<button sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_SERV')"
+								<button sec:authorize="hasRole('ROLE_SERV')"
 										id="btnSelCSA" type="submit" class="a-btn">Выбрать КСА
 								</button>
 							</td>

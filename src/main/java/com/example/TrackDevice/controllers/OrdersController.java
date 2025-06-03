@@ -108,9 +108,17 @@ public class OrdersController {
         System.out.println("Role:= "+userDetails.getAuthorities());
         System.out.println("ordersDTO:= "+ordersDTO);
 
-        ordersDTO.setCsa(csaRepository.getById(ordersDTO.getIdCSA()));
-        ordersDTO.setDevice(deviceRepository.getById(ordersDTO.getIdDevice()));
 
+
+
+
+        ordersDTO.setCsa(csaRepository.getById(ordersDTO.getIdCSA()));
+        Device device =deviceRepository.getById(ordersDTO.getIdDevice());
+        if (device.getCsa().getId()==ordersDTO.getIdCSA()) {
+            ordersDTO.setDevice(deviceRepository.getById(ordersDTO.getIdDevice()));
+        }else{
+            ordersDTO.setDevice(deviceRepository.findBySernum("---").get(0));
+        }
 //        if (ordersDTO.getCsa()==null) {
 //            System.out.println("ordersDTO.getCsa()==null....");
 //            //присваиваем свойству csa объекта ordersDTO, полученный csa пользователя
@@ -179,6 +187,7 @@ public class OrdersController {
     public String selCSA(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO){
         System.out.println("POST:/Orders/csa...");
         System.out.println("ordersDTO:= "+ordersDTO);
+        //получаем список с кодами регионов
         List<String> codes = csaRepository.findDistinctCode();
         model.addAttribute("codes",codes);
         model.addAttribute("ordersDTO",ordersDTO);
