@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>КСА</title>
+	<link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style-form.css">
+	<script src="/js/jquery-3.7.1.js"></script>
+</head>
+
+<header>
+	<div id="header">
+		<script src="/js/header-for-dir.js"></script>
+	</div>
+	<div th:replace="Index ::navigation"></div>
+</header>
+<body>
+	<div class="container">
+		<form id="frSelCSA" class="forms-child"
+			  th:method="POST"
+			  th:action="@{/Orders/order}"
+			  th:object="${ordersDTO}">
+			<span class="margin-t">
+				<label for="selCodeCSA">Вуберите код региона: </label>
+				<select  id="selCodeCSA" class="select">
+					<option th:each="code : ${codes}" th:value="${code}" th:text="${code}"></option>
+				</select>
+				<script>
+					$('#selCodeCSA option[value="02"]').prop('selected',true);
+				</script>
+				<input id ="idOrder" type="hidden" th:value="${id}" th:field="*{id}">
+				<input type="hidden" th:value="${num}" th:field="*{num}">
+				<input type="hidden" th:value="${date}" th:field="*{date}">
+				<input id ="idCSA" type="hidden" th:value="${idCSA}" th:field="*{idCSA}">
+				<input id ="idDevice" type="hidden" th:value="${idDevice}" th:field="*{idDevice}">
+				<input type="hidden" th:value="${status}" th:field="*{status}">
+				<input type="hidden" th:value="${description}" th:field="*{description}">
+				<input type="hidden" th:value="${executor}" th:field="*{executor}">
+				<input type="hidden" th:value="${restore}" th:field="*{restore}">
+			</span>
+
+			<div class ="tbl-div">
+				<table class="table" id="tblCSA">
+					<tr>
+						<th class ="col-num">№</th>
+						<th>Региона</th>
+						<th>КСА</th>
+						<th class ="col-action">Адрес</th>
+					</tr>
+				</table>
+			</div>
+			<div>
+				<span id="link"></span>
+				<span><button type="submit" class="a-btn">Назад</button></span>
+				<!--- <span><button th:if="${ordersDTO.id == 0}" type="submit" class="a-btn">Назад</button></span>
+				 <span><a th:unless="${ordersDTO.id == 0}" th:href="@{/editOrder{order}(order=${ordersDTO.id})}" class="a-btn">Назад</a></span> -->
+			</div>
+			<input type="submit" id="btnSend" style="display:none;">
+
+
+
+
+			<script>
+				$(document).ready(loadCSA);
+				$(document).ready(initEvent);
+
+                function initEvent() {
+                    $('#selCodeCSA').bind('change', loadCSA);
+                }
+
+                function loadCSA() {
+
+                     	var selCode=$('#selCodeCSA option:selected').text();
+						$('#link').empty().prop('disabled', false);
+
+
+                    	$.getJSON('/csa' + selCode)
+                    	 .done(function (data) {
+                    		$('#tblCSA').empty().prop('disabled', false);
+                    		$('#tblCSA').append('<tr><th class ="col-num">№</th><th>Регион</th><th>КСА</th><th>Адрес</th><th class ="col-action">Действие</th></tr>');
+                    		console.log(data);
+							var models=data;
+							console.log(models);
+							$.each(models, function(i,item) {
+
+    							$('#tblCSA').append('<tr><td class ="col-num">' + i +
+    														'</td><td>' + models[i].code +
+    														'</td><td>' + models[i].num +
+    														'</td><td>' + models[i].address +
+    														<!-- '</td><td><a href="/addOrder?idCSA=' +models[i].id +'" class="a-btn a-btn-tbl">Выбрать</a></td><tr>'); -->
+    														'</td><td><button id="btnSelected" type="button" class="a-btn" onclick ="GoToAddOrder('+models[i].id +')">Выбрать</button></td><tr>');
+							});
+                         });
+                }
+				function GoToAddOrder(idCSA){
+					console.log("GoToAddOrder...");
+					console.log("idCSA:="+idCSA);
+					$('#idCSA').val(idCSA);
+					$('#btnSend').click();
+				}
+			</script>
+
+		</form>
+	</div>
+</body>
+
+</html>

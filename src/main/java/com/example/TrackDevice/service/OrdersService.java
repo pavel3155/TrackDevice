@@ -34,11 +34,30 @@ public class OrdersService {
     @Autowired
     ActTypesRepository actTypesRepository;
 
+    //проверка ТС на принадлежность к КСА
+    public  boolean DeviceBelongsThisCSA(long idCSA, long idCSAthisDev){
+        return idCSAthisDev == idCSA;
+    }
+    //проверка ТС на принадлежность к КСА
+    public  boolean DeviceBelongsThisCSA(OrdersDTO ordersDTO){
+        return ordersDTO.getCsa().equals(ordersDTO.getDevice().getCsa());
+    }
+    //получаем объект Device по id
+    public Device getDevice(long id){
+        return deviceRepository.getById(id);
+    }
+
+    //получаем объект CSA по id
+    public CSA getCSA(long id){
+        return csaRepository.getById(id);
+    }
+
     //получаем список возможных актов движения ТС
     public List<ActTypes> getActTypes(){
         List<ActTypes> actTypes = actTypesRepository.findAll();
         return actTypes;
     }
+
     //получаем основной каталог заявки в которой размещаются подкаталоги и файлы
     public String getFileDirectoryOrder(OrdersDTO ordersDTO){
         String directory;
@@ -49,6 +68,7 @@ public class OrdersService {
         }
         return directory;
     }
+
     //получаем список имен файлов  подкаталога "pic"
     public List<String> getListFileNames(OrdersDTO ordersDTO){
         List<String> fileNames;
@@ -143,6 +163,22 @@ public class OrdersService {
         Object role=arrRoles[0].toString();
         System.out.println("arrRoles[0].toString()="+role);
         return role;
+    }
+    public Boolean btnCSADisplay(OrdersDTO orderDTO){
+
+        if (orderDTO.getStatus().equals("закрыта")){
+           return false;
+        }
+        if (!DeviceBelongsThisCSA(orderDTO)){
+            return false;
+        }
+        return true;
+    }
+    public Boolean btnSelDeviceDisplay(OrdersDTO orderDTO){
+        if (orderDTO.getStatus().equals("закрыта")){
+            return false;
+        }
+        return true;
     }
     public Boolean btnSelDeviceDisplay(CSA oCSA, Device oDevice){
         if (!oCSA.getNum().equals("---")&&!oDevice.getSernum().equals("---")){

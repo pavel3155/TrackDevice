@@ -69,7 +69,7 @@
 								<input type="hidden" id="orderCSA" th:value="${csa}" th:field="*{csa}">
 							</td>
 							<td>
-								<button sec:authorize="hasRole('ROLE_SERV')"
+								<button sec:authorize="hasRole('ROLE_SERV')" th:if="${btnCSADisplay}"
 										id="btnSelCSA" type="submit" class="a-btn">Выбрать КСА
 								</button>
 							</td>
@@ -84,7 +84,7 @@
 								<input type="hidden" id="orderDevice" th:value="${device}" th:field="*{device}">
 							</td>
 							<td>
-								<button id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button>
+								<button th:if="${btnDeviceDisplay}" id="btnSelDev" type="submit" class="a-btn">Выбрать ТС</button>
 							</td>
 						</tr>
 						<tr>
@@ -382,18 +382,18 @@
                 function selCSA(){
                     var orderNum=$('#orderNum').val();
                     console.log("orderNum:= "+orderNum);
-                    $('#addOrder').attr("action","/Orders/csa")
+                    $('#order').attr("action","/Orders/csa")
                 }
 
                 function selDev(){
                     console.log("selDev...");
-                    $('#addOrder').attr("action","/Orders/device")
+                    $('#order').attr("action","/Orders/device")
                 }
 
 			/*
                 function selExec(){
                     console.log("selExec...");
-                    $('#addOrder').attr("action","/selExec")
+                    $('#order').attr("action","/selExec")
                 }
 
             */

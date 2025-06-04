@@ -50,7 +50,7 @@ public class OrdersController {
     TypeDeviceRepository typeDeviceRepository;
 
     /**
-     * Метод обрабатывает запрос GET при преходе на сраницу Orders
+     * Метод выводит сохраненные заявки на сранице Orders
      * @param userDetails - анаотация @AuthenticationPrincipal позволяет получить данные пользователя
      * @param model - объект класса Model
      * @return - страница orders
@@ -75,7 +75,7 @@ public class OrdersController {
 
     /**
      * Метод отрабатывает переход на страницу 'order' :
-     *  -при нажатии 'Создать заявку' на странице orders
+     *  -при нажатии 'Создать заявку' или 'Открыть' на странице orders
      * @param userDetails
      * @param model
      * @return
@@ -89,6 +89,8 @@ public class OrdersController {
 
         OrdersDTO ordersDTO =ordersService.objOrderDTOCreate(id,userDetails);
         System.out.println("ordersDTO:= " +ordersDTO);
+        model.addAttribute("btnCSADisplay",ordersService.btnCSADisplay(ordersDTO));
+        model.addAttribute("btnDeviceDisplay",ordersService.btnSelDeviceDisplay(ordersDTO));
         model.addAttribute("directory", ordersService.getFileDirectoryOrder(ordersDTO));
         model.addAttribute("files", ordersService.getListFileNames(ordersDTO));
         model.addAttribute("execs", ordersService.getListExecs(userDetails));
@@ -108,73 +110,26 @@ public class OrdersController {
         System.out.println("Role:= "+userDetails.getAuthorities());
         System.out.println("ordersDTO:= "+ordersDTO);
 
-
-
-
-
-        ordersDTO.setCsa(csaRepository.getById(ordersDTO.getIdCSA()));
-        Device device =deviceRepository.getById(ordersDTO.getIdDevice());
-        if (device.getCsa().getId()==ordersDTO.getIdCSA()) {
-            ordersDTO.setDevice(deviceRepository.getById(ordersDTO.getIdDevice()));
-        }else{
-            ordersDTO.setDevice(deviceRepository.findBySernum("---").get(0));
-        }
-//        if (ordersDTO.getCsa()==null) {
-//            System.out.println("ordersDTO.getCsa()==null....");
-//            //присваиваем свойству csa объекта ordersDTO, полученный csa пользователя
-//            ordersDTO.setCsa(ordersService.getCSAfromUserDetails(userDetails));
-//            //присваиваем свойству idCsa объекта ordersDTO, id полученного объекта csa пользователя
-//            ordersDTO.setIdCSA(ordersService.getCSAfromUserDetails(userDetails).getId());
-//        }
-//
-//        if (ordersDTO.getDevice() ==null){
-//            //устанавливаем значение device "---"
-//            ordersDTO.setDevice(ordersService.getDeviceDefault());
-//            //устанавливаем значение id объекта device "---"
-//            ordersDTO.setIdDevice(ordersService.getDeviceDefault().getId());
-//        }
-
-////        if (ordersDTO.getStatus() ==null){
-////            ordersDTO.setStatus("открыта");
-////        }
-//        ordersDTO.setStatus("открыта");//устанавливаем статус заявки
-
-
-
-        //полуаем список пользователей с ролью "ROLE_SERV",
-        // выбираем первого из списка и присваиваем его сойству Executor объекту ordersDTO
-        if(ordersDTO.getExecutor()==null){
-            ordersDTO.setExecutor(ordersService.getExecutorDefault());
-        }
-
-        //формируем список исполнителей "execs"
-        List<User> execs=ordersService.getListExecs(userDetails);
-        model.addAttribute("execs", execs);
-
-
-        if (ordersDTO.getRestore()==null){
-            ordersDTO.setRestore(restoreRepository.getByMethod("---"));
-        }
-        List<Restore> restoreMethods=restoreRepository.findAll();
-
-        List<String> fileNames;
-        String directory;
-        if (ordersDTO.getId()!=0) {
-            System.out.println("ordersDTO.getNum()!=null...");
-            fileNames = fileService.getAllFiles(ordersDTO.getNum(),"pic");
-            directory=ordersDTO.getNum();
-            System.out.println("directory:="+directory);
+        ordersDTO.setCsa(ordersService.getCSA(ordersDTO.getIdCSA()));
+        Device device =ordersService.getDevice(ordersDTO.getIdDevice());
+        boolean  belongs= ordersService.DeviceBelongsThisCSA(ordersDTO.getIdCSA(),device.getCsa().getId());
+        if (belongs){
+            ordersDTO.setDevice(device);
         } else {
-            fileNames=new ArrayList<>();
-            directory="";
+            ordersDTO.setDevice(ordersService.getDeviceDefault());
         }
 
-        System.out.println("ordersDTO:= " +ordersDTO);
-        System.out.println("fileNames:= " +fileNames);
-        model.addAttribute("directory", directory);
-        model.addAttribute("files", fileNames);
-        model.addAttribute("restoreMethods", restoreMethods);
-        model.addAttribute("ordersDTO", ordersDTO);
+
+        model.addAttribute("btnCSADisplay",ordersService.btnCSADisplay(ordersDTO));
+        model.addAttribute("btnDeviceDisplay",ordersService.btnSelDeviceDisplay(ordersDTO));
+        model.addAttribute("directory", ordersService.getFileDirectoryOrder(ordersDTO));
+        model.addAttribute("files", ordersService.getListFileNames(ordersDTO));
+        model.addAttribute("execs", ordersService.getListExecs(userDetails));
+        model.addAttribute("restoreMethods", ordersService.getListOfRestoreMethods());
+        model.addAttribute("orderStatus", ordersService.loadStatusOrder());
+        model.addAttribute("actTypes", ordersService.getActTypes());
+        model.addAttribute("ordersDTO",ordersDTO);
+
         return "Orders/order";
     }
     /**
@@ -215,8 +170,6 @@ public class OrdersController {
     public ResponseEntity<String> generationNumOrder(@PathVariable String OrderDate) {
         System.out.println("GET:/NumOrder{OrderDate}...");
         System.out.println("OrderDate:= " + OrderDate);
-//        List<Order> orders = orderRepository.findAllByNumStartingWith(OrderDate);
-//        String num= ordersService.GenerationNumOrder(orders);
         String numOrder = ordersService.numOrder(OrderDate);
         Gson gson = new Gson();
         String jsonNumOrder = gson.toJson(numOrder);
