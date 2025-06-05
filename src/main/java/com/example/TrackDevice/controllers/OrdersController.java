@@ -110,9 +110,18 @@ public class OrdersController {
         System.out.println("Role:= "+userDetails.getAuthorities());
         System.out.println("ordersDTO:= "+ordersDTO);
 
-        ordersDTO.setCsa(ordersService.getCSA(ordersDTO.getIdCSA()));
+
+        boolean csaChanges=false;
+        boolean  belongs=true;
+
         Device device =ordersService.getDevice(ordersDTO.getIdDevice());
-        boolean  belongs= ordersService.DeviceBelongsThisCSA(ordersDTO.getIdCSA(),device.getCsa().getId());
+        if (!ordersDTO.getNum().equals("---")&&
+                ordersDTO.getIdCSA()!=ordersDTO.getCsa().getId()){
+            csaChanges=true;
+            ordersDTO.setCsa(ordersService.getCSA(ordersDTO.getIdCSA()));
+            belongs= ordersService.DeviceBelongsThisCSA(ordersDTO.getIdCSA(),device.getCsa().getId());
+        }
+
         if (belongs){
             ordersDTO.setDevice(device);
         } else {
