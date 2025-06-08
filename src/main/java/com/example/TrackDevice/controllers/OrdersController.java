@@ -1,5 +1,7 @@
 package com.example.TrackDevice.controllers;
 
+import com.example.TrackDevice.DTO.CommentDTO;
+import com.example.TrackDevice.DTO.ConsultDTO;
 import com.example.TrackDevice.DTO.OrdersDTO;
 import com.example.TrackDevice.filter.FilterOrders;
 import com.example.TrackDevice.model.*;
@@ -105,7 +107,7 @@ public class OrdersController {
     public String objTransferToOrder(Model model,
                                      @Valid @ModelAttribute OrdersDTO ordersDTO,
                                      @AuthenticationPrincipal UserDetails userDetails){
-        System.out.println("POST:/order....");
+        System.out.println("POST:Orders/order....");
         System.out.println("Username:= "+userDetails.getUsername());
         System.out.println("Role:= "+userDetails.getAuthorities());
         System.out.println("ordersDTO:= "+ordersDTO);
@@ -185,5 +187,19 @@ public class OrdersController {
         return  ResponseEntity.ok(jsonNumOrder);
     }
 
+    @PostMapping("/crConsult")
+    public String crConsult(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result) {
+        System.out.println("POST:Orders/crConsult...");
+        System.out.println("ordersDTO=" +ordersDTO);
 
+        List<CommentDTO> consults= fileService.loadConsult(ordersDTO.getNum());
+        ConsultDTO consultDTO = new ConsultDTO();
+        consultDTO.setNum(ordersDTO.getNum());
+        consultDTO.setIdOrder(ordersDTO.getId());
+
+        model.addAttribute("consultDTO", consultDTO);
+        model.addAttribute("consults", consults);
+
+        return "Orders/crConsult";
+    }
 }

@@ -21,7 +21,7 @@
 	<div class="container">
 		<form id="order" class="forms-operation" enctype="multipart/form-data"
 			  th:method="post"
-			  th:action="@{/addOrder}"
+			  th:action="@{Orders/order}"
 			  th:object="${ordersDTO}">
 			<div class="container-addOrder">
 				<div  style="text-align:center" th:if="${success}" role="alert">
@@ -266,7 +266,7 @@
 							<td  style="font-weight: 600; text-align:right">Консультация </td>
 							<td></td>
 							<td>
-								<button id="btnCreateConsult" type="submit" class="a-btn">Перейти</button>
+								<button id="btnCreateConsult" type="submit" class="a-btn">Открыть</button>
 							</td>
 						</tr>
 
