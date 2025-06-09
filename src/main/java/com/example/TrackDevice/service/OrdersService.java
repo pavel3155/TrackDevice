@@ -1,5 +1,6 @@
 package com.example.TrackDevice.service;
 
+import com.example.TrackDevice.DTO.CommentDTO;
 import com.example.TrackDevice.DTO.OrdersDTO;
 import com.example.TrackDevice.model.*;
 import com.example.TrackDevice.repo.*;
@@ -33,6 +34,7 @@ public class OrdersService {
     FileService fileService;
     @Autowired
     ActTypesRepository actTypesRepository;
+
 
     //проверка ТС на принадлежность к КСА
     public  boolean DeviceBelongsThisCSA(long idCSA, long idCSAthisDev){
@@ -164,6 +166,17 @@ public class OrdersService {
         System.out.println("arrRoles[0].toString()="+role);
         return role;
     }
+
+    public List<CommentDTO> getListComments(String numOrder){
+        return fileService.loadConsult(numOrder);
+    }
+
+
+
+
+
+
+
     public Boolean btnCSADisplay(OrdersDTO orderDTO){
 
         if (orderDTO.getStatus().equals("закрыта")){
@@ -357,4 +370,18 @@ public class OrdersService {
         return num;
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

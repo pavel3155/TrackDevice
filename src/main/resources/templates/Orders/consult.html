@@ -21,7 +21,7 @@
 
 		<form class="forms-operation"
 			  th:method="post"
-			  th:action="@{/addComment}"
+			  th:action="@{/сomment}"
 			  th:object="${consultDTO}">
 
 			<input id ="num" type="hidden" th:value="${num}" th:field="*{num}">
@@ -29,17 +29,17 @@
 			<div class="container-inner" style="margin-top:10px;">
 				<span th:text="'Консультации по заявке №'+${consultDTO.num}"></span>
 				<div id="allComents" class="comment-all">
-					<th:block th:each="cons : ${consults}">
+					<th:block th:each="comment : ${comments}">
 						<div>
-							<p th:if="${cons.csa == '02C001'}" class="comment-exec">
-								<b th:text="${cons.user}"></b>:
-								<span th:text="${cons.comment}"></span>
+							<p th:if="${comment.csa == '02C001'}" class="comment-exec">
+								<b th:text="${comment.user}"></b>:
+								<span th:text="${comment.comment}"></span>
 							</p>
 						</div>
 						<div>
-							<p th:unless="${cons.csa == '02C001'}" class="comment-csa">
-								<b th:text="${cons.user}"></b>:
-								<span th:text="${cons.comment}"></span>
+							<p th:unless="${comment.csa == '02C001'}" class="comment-csa">
+								<b th:text="${comment.user}"></b>:
+								<span th:text="${comment.comment}"></span>
 							</p>
 						</div>
 					</th:block>
@@ -51,7 +51,7 @@
 						</span>
 						<span class="column-item">
 							<button id="btnSendComent" type=submit class="a-btn">Отправить</button>
-							<a th:href="@{/editOrder{order}(order=${consultDTO.idOrder})}" class="a-btn">Назад</a>
+							<a th:href="@{/Orders/order{id}(id=${consultDTO.idOrder})}" class="a-btn">Назад</a>
 						</span>
 				</div>
 

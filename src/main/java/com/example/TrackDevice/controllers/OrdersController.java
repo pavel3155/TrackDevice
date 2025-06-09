@@ -187,19 +187,49 @@ public class OrdersController {
         return  ResponseEntity.ok(jsonNumOrder);
     }
 
-    @PostMapping("/crConsult")
+    @PostMapping("/consult")
     public String crConsult(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result) {
         System.out.println("POST:Orders/crConsult...");
         System.out.println("ordersDTO=" +ordersDTO);
 
-        List<CommentDTO> consults= fileService.loadConsult(ordersDTO.getNum());
+        List<CommentDTO> comments= ordersService.getListComments(ordersDTO.getNum());
         ConsultDTO consultDTO = new ConsultDTO();
         consultDTO.setNum(ordersDTO.getNum());
         consultDTO.setIdOrder(ordersDTO.getId());
 
         model.addAttribute("consultDTO", consultDTO);
-        model.addAttribute("consults", consults);
+        model.addAttribute("comments", comments);
 
-        return "Orders/crConsult";
+        return "Orders/сonsult";
+    }
+    @PostMapping("/сomment")
+    public String addComment(Model model, @AuthenticationPrincipal UserDetails userDetails,
+                            @Valid @ModelAttribute ConsultDTO consultDTO, BindingResult result) {
+        System.out.println("POST:Order/comment...");
+        System.out.println("consultDTO=" +consultDTO);
+        System.out.println("userDetails.getUsername()=" +userDetails.getUsername());
+
+        int i=userDetails.getUsername().indexOf('@');
+        String csa =userRepository.findByEmail(userDetails.getUsername()).getCsa().getNum();
+        List<CommentDTO> consults;
+
+        System.out.println("consultDTO.getNewComment().isEmpty()="+consultDTO.getNewComment().isEmpty());
+        System.out.println("consultDTO.getNewComment()="+consultDTO.getNewComment());
+
+
+        if(!consultDTO.getNewComment().isEmpty()) {
+            String user = userDetails.getUsername().substring(0, i);
+            String coment = csa + ":" + user + ":" + consultDTO.getNewComment();
+            String subDir = consultDTO.getNum();
+            String fileName = "consult_" + consultDTO.getNum() + ".txt";
+            String pathFile = fileService.createSubDirCons(subDir, fileName);
+            fileService.addComment(pathFile, coment);
+            //List<String> consults= fileService.loadConsult(subDir);
+            consults = fileService.loadConsult(subDir);
+        } else consults=new ArrayList<>();
+
+        model.addAttribute("consultDTO", consultDTO);
+        model.addAttribute("consults", consults);
+        return "crConsult";
     }
 }
