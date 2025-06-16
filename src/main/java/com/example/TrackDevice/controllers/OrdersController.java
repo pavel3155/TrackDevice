@@ -20,7 +20,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
@@ -104,6 +106,84 @@ public class OrdersController {
 
         return "Orders/order";
 }
+
+
+    @PostMapping("/saveOrder")
+    public String save(@RequestParam("files") MultipartFile[] addFiles,
+                       @AuthenticationPrincipal UserDetails userDetails,
+                       @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result, Model model) {
+        System.out.println("POST:/saveOrder...");
+        System.out.println("ordersDTO:= "+ordersDTO);
+
+//        boolean selDevOrder= ordersService.btnSelDeviceDisplay(ordersDTO.getCsa(),ordersDTO.getDevice());
+//        model.addAttribute("selDevOrder", selDevOrder);
+
+//        List<String> fileNames;
+//        if(fileService.getAllFiles(ordersDTO.getNum(),"pic")!=null){
+//            fileNames = fileService.getAllFiles(ordersDTO.getNum(),"pic");
+//        } else{
+//            fileNames = new ArrayList<>();
+//        }
+//
+//        System.out.println("fileNames="+fileNames);
+
+//        List<Roles> roles = new ArrayList<>();
+//        roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
+//        roles.add(roleRepository.findByRole("ROLE_SERV"));
+//        List<User> execs =userRepository.findByRoleIn(roles);
+//        List<Restore> restoreMethods=restoreRepository.findAll();
+//        List<ActTypes> actTypes = actTypesRepository.findAll();
+//        List<String> orderStatus = new ArrayList<>();
+//        orderStatus.add("---");
+//        orderStatus.add("открыта");
+//        orderStatus.add("закрыта");
+
+//        model.addAttribute("orderStatus", orderStatus);
+//        model.addAttribute("directory", ordersDTO.getNum());
+//        model.addAttribute("files", fileNames);
+//        model.addAttribute("restoreMethods", restoreMethods);
+//        model.addAttribute("execs", execs);
+//        model.addAttribute("actTypes",actTypes);
+//        model.addAttribute("ordersDTO",ordersDTO);
+
+        List<String> files=ordersService.getListFileNames(ordersDTO);
+
+        model.addAttribute("btnCSADisplay",ordersService.btnCSADisplay(ordersDTO));
+        model.addAttribute("btnDeviceDisplay",ordersService.btnSelDeviceDisplay(ordersDTO));
+        model.addAttribute("directory", ordersService.getFileDirectoryOrder(ordersDTO));
+        model.addAttribute("files", files);
+        model.addAttribute("execs", ordersService.getListExecs(userDetails));
+        model.addAttribute("restoreMethods", ordersService.getListOfRestoreMethods());
+        model.addAttribute("orderStatus", ordersService.loadStatusOrder());
+        model.addAttribute("actTypes", ordersService.getActTypes());
+        model.addAttribute("ordersDTO",ordersDTO);
+
+
+
+        if (result.hasErrors()) {
+            model.addAttribute("success",false);
+            return "editOrder";
+        }
+        try {
+            ordersService.save(ordersDTO);
+            System.out.println("ordersService.save(ordersDTO) - выполнено успешно");
+            System.out.println("files.length="+addFiles.length);
+            System.out.println("files="+files);
+            for (MultipartFile file : addFiles) {
+                if (fileService.saveFile(file,ordersDTO.getNum())){
+                    System.out.println("file.getOriginalFilename()="+file.getOriginalFilename());
+                    files.add(file.getOriginalFilename());
+                    System.out.println("fileNames="+files);
+                }
+            }
+            model.addAttribute("files", files);
+            model.addAttribute("success",true);
+        } catch (Exception ex) {
+            result.addError(new FieldError("ordersDTO", "err", ex.getMessage()));
+        }
+        return "/editOrder";
+    }
+
     @PostMapping("/order")
     public String objTransferToOrder(Model model,
                                      @Valid @ModelAttribute OrdersDTO ordersDTO,
@@ -144,6 +224,7 @@ public class OrdersController {
 
         return "Orders/order";
     }
+
     /**
      * метод обрабатывает переход на страницу выбора CSA
      * @param model
