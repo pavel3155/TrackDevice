@@ -225,7 +225,7 @@
 								<label id="lblServiceable">восстановлено</label>
 							</td>
 							<td >
-								<input sec:authorize="!hasRole('ROLE_CSA')" type="checkbox" th:field="*{serviceable}" th:value="${serviceable}">
+								<input sec:authorize="!hasRole('ROLE_CSA')" id="chServiceable" type="checkbox" th:field="*{serviceable}" th:value="${serviceable}">
 								<input sec:authorize="hasRole('ROLE_CSA')" type="checkbox" th:field="*{serviceable}" th:value="${serviceable}" readonly>
 							</td>
 						</tr>
@@ -409,7 +409,7 @@
 				}
 				function сreateConsult(){
 					console.log("сreateActDev...");
-					$('#order').attr("action","/Orders/consult")
+					$('#order').attr("action","/Orders/messages")
 				}
 				function closeOrder(){
 					console.log("closeOrder...");

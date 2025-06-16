@@ -1,6 +1,7 @@
 package com.example.TrackDevice.service;
 
 import com.example.TrackDevice.DTO.CommentDTO;
+import com.example.TrackDevice.DTO.MessageDTO;
 import com.example.TrackDevice.DTO.OrdersDTO;
 import com.example.TrackDevice.model.*;
 import com.example.TrackDevice.repo.*;
@@ -126,6 +127,28 @@ public class OrdersService {
             //ordersDTO.setIdCSA(csa.getId());
         }
     }
+    public String getNumCSAfromUserDetails(UserDetails userDetails){
+        return userRepository.findByEmail(userDetails.getUsername()).getCsa().getNum();
+    }
+
+
+    public List<MessageDTO> addMessage(UserDetails userDetails,MessageDTO messageDTO){
+
+        String numCsa =getNumCSAfromUserDetails(userDetails);
+        List<MessageDTO> messages;
+        if(!messageDTO.getMessage().isEmpty()) {
+            int i=userDetails.getUsername().indexOf('@');
+            String user = userDetails.getUsername().substring(0, i);
+            String coment = numCsa + ":" + user + ":" + messageDTO.getMessage();
+            String subDir = messageDTO.getNum();
+            String fileName = "consult_" + messageDTO.getNum() + ".txt";
+            String pathFile = fileService.createSubDirCons(subDir, fileName);
+            fileService.addComment(pathFile, coment);
+            messages = getListMessages(subDir);
+        } else messages=new ArrayList<>();
+        return messages;
+    }
+
     public Device getDeviceDefault(){
         List<Device> devices = deviceRepository.findBySernum("---");
         Device device=devices.get(0);
@@ -167,14 +190,9 @@ public class OrdersService {
         return role;
     }
 
-    public List<CommentDTO> getListComments(String numOrder){
-        return fileService.loadConsult(numOrder);
+    public List<MessageDTO> getListMessages(String numOrder){
+        return fileService.getListMessages(numOrder);
     }
-
-
-
-
-
 
 
     public Boolean btnCSADisplay(OrdersDTO orderDTO){

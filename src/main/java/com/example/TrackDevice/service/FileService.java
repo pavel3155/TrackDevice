@@ -1,6 +1,7 @@
 package com.example.TrackDevice.service;
 
 import com.example.TrackDevice.DTO.CommentDTO;
+import com.example.TrackDevice.DTO.MessageDTO;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
@@ -117,6 +118,11 @@ public class FileService {
         return "";
     }
 
+
+
+
+
+
     public void addComment(String fileName, String comment){
         // Проверка на null
         if (fileName == null || comment == null) {
@@ -183,6 +189,38 @@ public class FileService {
         }
         return lstConsul;
     }
+    public List<MessageDTO> getListMessages (String subDir){
+        System.out.println("loadConsult...");
+        System.out.println("subDir:= "+subDir);
+
+        Path Directory =this.fileStorageLocation.resolve(subDir).resolve("cons");
+        String fileName = "consult_"+subDir+".txt";
+        System.out.println("fileName="+fileName);
+        Path targetLocation = Directory.resolve(fileName);
+        String pathFileName =targetLocation.toString();
+        System.out.println("pathFileName:= "+pathFileName);
+
+        List<MessageDTO> lstConsul = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(pathFileName))) {
+            String read=br.readLine();
+            System.out.println("read="+read);
+            while (read!=null&&!read.isEmpty()) {
+                String[] strArr= read.split(":");
+                MessageDTO messageDTO = new MessageDTO();
+                messageDTO.setCsa(strArr[0]);
+                messageDTO.setUser(strArr[1]);
+                messageDTO.setMessage(strArr[2]);
+                lstConsul.add(messageDTO);
+                read=br.readLine();
+            }
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return lstConsul;
+    }
+
+
+
     public List<String> getAllFiles(String subDir1,String subDir2) {
         Path Directory =this.fileStorageLocation.resolve(subDir1).resolve(subDir2);
         System.out.println("getAllFiles...");

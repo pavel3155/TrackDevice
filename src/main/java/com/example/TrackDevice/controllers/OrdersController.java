@@ -2,6 +2,7 @@ package com.example.TrackDevice.controllers;
 
 import com.example.TrackDevice.DTO.CommentDTO;
 import com.example.TrackDevice.DTO.ConsultDTO;
+import com.example.TrackDevice.DTO.MessageDTO;
 import com.example.TrackDevice.DTO.OrdersDTO;
 import com.example.TrackDevice.filter.FilterOrders;
 import com.example.TrackDevice.model.*;
@@ -187,49 +188,31 @@ public class OrdersController {
         return  ResponseEntity.ok(jsonNumOrder);
     }
 
-    @PostMapping("/consult")
-    public String crConsult(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result) {
-        System.out.println("POST:Orders/crConsult...");
+    @PostMapping("/messages")
+    public String messages(Model model, @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result) {
+        System.out.println("POST:Orders/messages...");
         System.out.println("ordersDTO=" +ordersDTO);
 
-        List<CommentDTO> comments= ordersService.getListComments(ordersDTO.getNum());
-        ConsultDTO consultDTO = new ConsultDTO();
-        consultDTO.setNum(ordersDTO.getNum());
-        consultDTO.setIdOrder(ordersDTO.getId());
+        MessageDTO messageDTO = new MessageDTO();
+        messageDTO.setNum(ordersDTO.getNum());
+        messageDTO.setIdOrder(ordersDTO.getId());
 
-        model.addAttribute("consultDTO", consultDTO);
-        model.addAttribute("comments", comments);
+        model.addAttribute("messageDTO", messageDTO);
+        model.addAttribute("messages", ordersService.getListMessages(ordersDTO.getNum()));
 
-        return "Orders/сonsult";
+        return "Orders/messages";
     }
-    @PostMapping("/сomment")
-    public String addComment(Model model, @AuthenticationPrincipal UserDetails userDetails,
-                            @Valid @ModelAttribute ConsultDTO consultDTO, BindingResult result) {
-        System.out.println("POST:Order/comment...");
-        System.out.println("consultDTO=" +consultDTO);
+    @PostMapping("/addMessage")
+    public String addMessage(Model model, @AuthenticationPrincipal UserDetails userDetails,
+                            @Valid @ModelAttribute MessageDTO messageDTO, BindingResult result) {
+        System.out.println("POST:Order/addMessage...");
+        System.out.println("messageDTO=" +messageDTO);
         System.out.println("userDetails.getUsername()=" +userDetails.getUsername());
+        System.out.println("consultDTO.getNewComment().isEmpty()="+messageDTO.getMessage().isEmpty());
+        System.out.println("consultDTO.getNewComment()="+messageDTO.getMessage());
 
-        int i=userDetails.getUsername().indexOf('@');
-        String csa =userRepository.findByEmail(userDetails.getUsername()).getCsa().getNum();
-        List<CommentDTO> consults;
-
-        System.out.println("consultDTO.getNewComment().isEmpty()="+consultDTO.getNewComment().isEmpty());
-        System.out.println("consultDTO.getNewComment()="+consultDTO.getNewComment());
-
-
-        if(!consultDTO.getNewComment().isEmpty()) {
-            String user = userDetails.getUsername().substring(0, i);
-            String coment = csa + ":" + user + ":" + consultDTO.getNewComment();
-            String subDir = consultDTO.getNum();
-            String fileName = "consult_" + consultDTO.getNum() + ".txt";
-            String pathFile = fileService.createSubDirCons(subDir, fileName);
-            fileService.addComment(pathFile, coment);
-            //List<String> consults= fileService.loadConsult(subDir);
-            consults = fileService.loadConsult(subDir);
-        } else consults=new ArrayList<>();
-
-        model.addAttribute("consultDTO", consultDTO);
-        model.addAttribute("consults", consults);
-        return "crConsult";
+        model.addAttribute("messages", ordersService.addMessage(userDetails,messageDTO));
+        model.addAttribute("messageDTO", messageDTO);
+        return "Orders/messages";
     }
 }

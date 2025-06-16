@@ -21,37 +21,37 @@
 
 		<form class="forms-operation"
 			  th:method="post"
-			  th:action="@{/сomment}"
-			  th:object="${consultDTO}">
+			  th:action="@{/Orders/addMessage}"
+			  th:object="${messageDTO}">
 
 			<input id ="num" type="hidden" th:value="${num}" th:field="*{num}">
 			<input id ="idOrder" type="hidden" th:value="${idOrder}" th:field="*{idOrder}">
 			<div class="container-inner" style="margin-top:10px;">
-				<span th:text="'Консультации по заявке №'+${consultDTO.num}"></span>
+				<span th:text="'Консультации по заявке №'+${messageDTO.num}"></span>
 				<div id="allComents" class="comment-all">
-					<th:block th:each="comment : ${comments}">
+					<th:block th:each="message : ${messages}">
 						<div>
-							<p th:if="${comment.csa == '02C001'}" class="comment-exec">
-								<b th:text="${comment.user}"></b>:
-								<span th:text="${comment.comment}"></span>
+							<p th:if="${message.csa == '02C001'}" class="comment-exec">
+								<b th:text="${message.user}"></b>:
+								<span th:text="${message.message}"></span>
 							</p>
 						</div>
 						<div>
-							<p th:unless="${comment.csa == '02C001'}" class="comment-csa">
-								<b th:text="${comment.user}"></b>:
-								<span th:text="${comment.comment}"></span>
+							<p th:unless="${message.csa == '02C001'}" class="comment-csa">
+								<b th:text="${message.user}"></b>:
+								<span th:text="${message.message}"></span>
 							</p>
 						</div>
 					</th:block>
 				</div>
 				<div class="comment" >
 						<span style="width:90%; margin-right:5px">
-							<div id="lblNewComent" >Новый коментарий</div>
-							<textarea id="content" name="content" style = "width : 97%" rows="4" th:field="*{newComment}"  required></textarea>
+							<div id="lblNewMessage" >Новый коментарий</div>
+							<textarea id="content" name="content" style = "width : 97%" rows="4" th:field="*{message}"  required></textarea>
 						</span>
 						<span class="column-item">
-							<button id="btnSendComent" type=submit class="a-btn">Отправить</button>
-							<a th:href="@{/Orders/order{id}(id=${consultDTO.idOrder})}" class="a-btn">Назад</a>
+							<button id="btnSendMessage" type=submit class="a-btn">Отправить</button>
+							<a th:href="@{/Orders/order{id}(id=${messageDTO.idOrder})}" class="a-btn">Назад</a>
 						</span>
 				</div>
 
