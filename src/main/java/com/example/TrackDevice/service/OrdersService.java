@@ -321,32 +321,33 @@ public class OrdersService {
     }
     public String numOrder(String OrderDate){
         String orderNum;
+        long maxNum;
         List<Order> orders = orderRepository.findAllByNumStartingWith(OrderDate);
-        List<Long> lstNum =orders.stream()
-                .map(o -> {
-                    try {
-                        // Извлекаем подстроку и преобразуем в целое число
-                        return Long.parseLong(o.getNum());
-                    } catch (NumberFormatException e) {
-                        // Обработка ошибок: если строка не может быть преобразована или индекс вне диапазона
-                        System.err.println("Ошибка при обработке номера: " + o.getNum());
-                        return null; // Возвращаем null, чтобы отфильтровать позже
-                    }
-                })
-                .filter(num -> num != null) // Удаляем null значения
-                .toList(); // Собираем результаты в список
-        // Выводим список целых чисел
-        lstNum.forEach(System.out::println);
-        //List<String> lstNum =orders.stream().map(o->new String(o.getNum())).collect(Collectors.toList());
+        if(!orders.isEmpty()){
+            List<Long> lstNum =orders.stream()
+                    .map(o -> {
+                        try {
+                            // Извлекаем подстроку и преобразуем в целое число
+                            return Long.parseLong(o.getNum());
+                        } catch (NumberFormatException e) {
+                            // Обработка ошибок: если строка не может быть преобразована или индекс вне диапазона
+                            System.err.println("Ошибка при обработке номера: " + o.getNum());
+                            return null; // Возвращаем null, чтобы отфильтровать позже
+                        }
+                    })
+                    .filter(num -> num != null) // Удаляем null значения
+                    .toList(); // Собираем результаты в список
+            // Выводим список целых чисел
+            lstNum.forEach(System.out::println);
+            //List<String> lstNum =orders.stream().map(o->new String(o.getNum())).collect(Collectors.toList());
 
-        long maxNum = Collections.max(lstNum) + 1;
-        System.out.println("maxNum=" + maxNum);
-
-        orderNum= String.valueOf(maxNum);
-
-
+            maxNum = Collections.max(lstNum) + 1;
+            System.out.println("maxNum=" + maxNum);
+            orderNum= String.valueOf(maxNum);
+        } else{
+           orderNum=OrderDate+"001";
+        }
         return orderNum;
-
     }
 
     public String GenerationNumOrder(List<Order> orders){

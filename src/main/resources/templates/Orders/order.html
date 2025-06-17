@@ -21,7 +21,7 @@
 	<div class="container">
 		<form id="order" class="forms-operation" enctype="multipart/form-data"
 			  th:method="post"
-			  th:action="@{Orders/save}"
+			  th:action="@{/Orders/save}"
 			  th:object="${ordersDTO}">
 			<div class="container-addOrder">
 
@@ -132,7 +132,7 @@
 									<label id="lblOrderStatus" for="orderStatus" th:text="${ordersDTO.status}"></label>
 									<input type="hidden" id="orderStatus" name="orderStatus" th:field="*{status}"/>
 								</span>
-								<span th:else>
+								<span th:unless="${id == 0}">
 									<select	sec:authorize="!hasRole('ROLE_CSA')"
 											   id="selStatusOrder" class="select"
 											   th:field="*{status}">
