@@ -108,8 +108,8 @@ public class OrdersController {
 }
 
 
-    @PostMapping("/saveOrder")
-    public String save(@RequestParam("files") MultipartFile[] addFiles,
+    @PostMapping("/save")
+    public String save(@RequestParam("files") MultipartFile[] multipartFiles,
                        @AuthenticationPrincipal UserDetails userDetails,
                        @Valid @ModelAttribute OrdersDTO ordersDTO, BindingResult result, Model model) {
         System.out.println("POST:/saveOrder...");
@@ -146,12 +146,12 @@ public class OrdersController {
 //        model.addAttribute("actTypes",actTypes);
 //        model.addAttribute("ordersDTO",ordersDTO);
 
-        List<String> files=ordersService.getListFileNames(ordersDTO);
+        List<String> listNameFiles=ordersService.getListFileNames(ordersDTO);
 
         model.addAttribute("btnCSADisplay",ordersService.btnCSADisplay(ordersDTO));
         model.addAttribute("btnDeviceDisplay",ordersService.btnSelDeviceDisplay(ordersDTO));
         model.addAttribute("directory", ordersService.getFileDirectoryOrder(ordersDTO));
-        model.addAttribute("files", files);
+        model.addAttribute("files", listNameFiles);
         model.addAttribute("execs", ordersService.getListExecs(userDetails));
         model.addAttribute("restoreMethods", ordersService.getListOfRestoreMethods());
         model.addAttribute("orderStatus", ordersService.loadStatusOrder());
@@ -162,26 +162,29 @@ public class OrdersController {
 
         if (result.hasErrors()) {
             model.addAttribute("success",false);
-            return "editOrder";
+            return "Orders/order";
         }
         try {
             ordersService.save(ordersDTO);
             System.out.println("ordersService.save(ordersDTO) - выполнено успешно");
-            System.out.println("files.length="+addFiles.length);
-            System.out.println("files="+files);
-            for (MultipartFile file : addFiles) {
-                if (fileService.saveFile(file,ordersDTO.getNum())){
-                    System.out.println("file.getOriginalFilename()="+file.getOriginalFilename());
-                    files.add(file.getOriginalFilename());
-                    System.out.println("fileNames="+files);
-                }
-            }
-            model.addAttribute("files", files);
+            System.out.println("files.length="+multipartFiles.length);
+            System.out.println("files="+multipartFiles);
+
+            listNameFiles=ordersService.addNewNameFilesInList(listNameFiles,multipartFiles,ordersDTO.getNum());
+
+//            for (MultipartFile multipartFile : multipartFiles) {
+//                if (fileService.saveFile(multipartFile,ordersDTO.getNum())){
+//                    System.out.println("file.getOriginalFilename()="+multipartFile.getOriginalFilename());
+//                    listNameFiles.add(multipartFile.getOriginalFilename());
+//                    System.out.println("fileNames="+multipartFile);
+//                }
+//            }
+            model.addAttribute("files", listNameFiles);
             model.addAttribute("success",true);
         } catch (Exception ex) {
             result.addError(new FieldError("ordersDTO", "err", ex.getMessage()));
         }
-        return "/editOrder";
+        return "Orders/order";
     }
 
     @PostMapping("/order")

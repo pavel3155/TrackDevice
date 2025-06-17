@@ -8,6 +8,7 @@ import com.example.TrackDevice.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -387,6 +388,14 @@ public class OrdersService {
 
         return num;
 
+    }
+    public List<String> addNewNameFilesInList(List<String> listNameFiles, MultipartFile[] multipartFiles, String orderNum){
+        for (MultipartFile multipartFile : multipartFiles) {
+            if (fileService.saveFile(multipartFile,orderNum)){
+                listNameFiles.add(multipartFile.getOriginalFilename());
+            }
+        }
+        return listNameFiles;
     }
 
 
