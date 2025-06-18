@@ -178,7 +178,7 @@ public class OrdersService {
             orders=orderRepository.getByExecutor(executor);
         } else {
             System.out.println("role.getType()==\"SERV, ADMIN\"");
-            orders = orderRepository.findAll();
+            orders = orderRepository.findAllByOrderByDateAsc();
         }
         return orders;
     }
@@ -272,6 +272,7 @@ public class OrdersService {
         OrdersDTO orderDTO;
         if(orderID==0){
             orderDTO= new OrdersDTO();
+            //orderDTO.setId(0);
             //устанавливаем свойство csa объекта ordersDTO, в соответствии с csa объекта userDetails
             orderDTO.setCsa(getCSAfromUserDetails(userDetails));
             //устанавливаем свойство idCsa объекта ordersDTO, в соответствии с id объекта userDetails

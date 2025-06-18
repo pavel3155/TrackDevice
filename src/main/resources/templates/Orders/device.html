@@ -64,7 +64,6 @@
 				</table>
 			</div>
 			<div>
-				<span id="link"></span>
 				<span><button type="submit" class="a-btn">Назад</button></span>
 				<!---
 				<span><button th:if="${ordersDTO.id == 0}" type="submit" class="a-btn">Назад</button></span>
@@ -145,12 +144,6 @@
 					/* $('#frSelCSA').attr("action","/addOrder?idCSA=4"); */
 					$('#btnSend').click();
 				}
-
-                function addLink(){
-                	var selModelIndex=$('#selModelDev').val();
-                	console.log("addLink_selModelIndex:="+selModelIndex);
-                	$('#link').append('<a href="/addDevice/model'+selModelIndex+'">Создать ТС</a>');
-                }
 			</script>
 
 		</form>

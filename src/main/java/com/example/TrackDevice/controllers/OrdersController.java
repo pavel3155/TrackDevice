@@ -115,37 +115,6 @@ public class OrdersController {
         System.out.println("POST:/saveOrder...");
         System.out.println("ordersDTO:= "+ordersDTO);
 
-//        boolean selDevOrder= ordersService.btnSelDeviceDisplay(ordersDTO.getCsa(),ordersDTO.getDevice());
-//        model.addAttribute("selDevOrder", selDevOrder);
-
-//        List<String> fileNames;
-//        if(fileService.getAllFiles(ordersDTO.getNum(),"pic")!=null){
-//            fileNames = fileService.getAllFiles(ordersDTO.getNum(),"pic");
-//        } else{
-//            fileNames = new ArrayList<>();
-//        }
-//
-//        System.out.println("fileNames="+fileNames);
-
-//        List<Roles> roles = new ArrayList<>();
-//        roles.add(roleRepository.findByRole("ROLE_EXECDEV"));
-//        roles.add(roleRepository.findByRole("ROLE_SERV"));
-//        List<User> execs =userRepository.findByRoleIn(roles);
-//        List<Restore> restoreMethods=restoreRepository.findAll();
-//        List<ActTypes> actTypes = actTypesRepository.findAll();
-//        List<String> orderStatus = new ArrayList<>();
-//        orderStatus.add("---");
-//        orderStatus.add("открыта");
-//        orderStatus.add("закрыта");
-
-//        model.addAttribute("orderStatus", orderStatus);
-//        model.addAttribute("directory", ordersDTO.getNum());
-//        model.addAttribute("files", fileNames);
-//        model.addAttribute("restoreMethods", restoreMethods);
-//        model.addAttribute("execs", execs);
-//        model.addAttribute("actTypes",actTypes);
-//        model.addAttribute("ordersDTO",ordersDTO);
-
         List<String> listNameFiles=ordersService.getListFileNames(ordersDTO);
 
         model.addAttribute("btnCSADisplay",ordersService.btnCSADisplay(ordersDTO));
@@ -164,8 +133,10 @@ public class OrdersController {
             model.addAttribute("success",false);
             return "Orders/order";
         }
+
         try {
-            ordersService.save(ordersDTO);
+            Order order=ordersService.save(ordersDTO);
+            ordersDTO.setId(order.getId());
             System.out.println("ordersService.save(ordersDTO) - выполнено успешно");
             System.out.println("files.length="+multipartFiles.length);
             System.out.println("files="+multipartFiles);
@@ -179,6 +150,7 @@ public class OrdersController {
 //                    System.out.println("fileNames="+multipartFile);
 //                }
 //            }
+            model.addAttribute("ordersDTO",ordersDTO);
             model.addAttribute("files", listNameFiles);
             model.addAttribute("success",true);
         } catch (Exception ex) {

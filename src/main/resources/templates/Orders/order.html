@@ -25,10 +25,10 @@
 			  th:object="${ordersDTO}">
 			<div class="container-addOrder">
 
-				<div  style="text-align:center" th:unless="${id == 0}" role="alert">
+				<div  style="text-align:center" th:unless="${ordersDTO.id == 0}">
 					<h3 th:text="'Заявка№ ' + ${ordersDTO.num}"> </h3>
 				</div>
-				<div style="text-align:center" th:if="${id == 0}">
+				<div style="text-align:center" th:if="${ordersDTO.id == 0}">
 					<h3>Заявка № </h3>
 				</div>
 				<div class="div_error">
@@ -48,8 +48,8 @@
 					<input id ="idDevice" type="hidden" th:value="${idDevice}" th:field="*{idDevice}">
 					<input sec:authorize="hasRole('ROLE_CSA')" id ="textRestore" type="hidden"
 						   th:value="${restore}" th:field="*{restore}">
-					<input th:if="${id == 0}" sec:authorize="hasRole('ROLE_CSA')" id="idStatus" type="hidden"
-						   th:value="${ordersDTO.status}" th:field="*{status}">
+					<!-- <input th:if="${id == 0}" sec:authorize="hasRole('ROLE_CSA')" id="idStatus" type="hidden"
+						   th:value="${ordersDTO.status}" th:field="*{status}"> -->
 
 					<table class="table" id="tblOrder">
 						<tr>
@@ -128,11 +128,11 @@
 						<tr>
 							<td style="font-weight: 600; text-align:right">Статус</td>
 							<td class="AlignCenter">
-								<span th:if="${id == 0}">
+								<span th:if="${ordersDTO.id == 0}">
 									<label id="lblOrderStatus" for="orderStatus" th:text="${ordersDTO.status}"></label>
 									<input type="hidden" id="orderStatus" name="orderStatus" th:field="*{status}"/>
 								</span>
-								<span th:unless="${id == 0}">
+								<span th:unless="${ordersDTO.id == 0}">
 									<select	sec:authorize="!hasRole('ROLE_CSA')"
 											   id="selStatusOrder" class="select"
 											   th:field="*{status}">
@@ -179,7 +179,7 @@
 							<td></td>
 						</tr>
 
-						<tr th:unless="${id == 0}">
+						<tr th:unless="${ordersDTO.id == 0}">
 							<td  style=" font-weight: 600; text-align:right">Восстановление КСА</td>
 							<td  class="AlignCenter">
 								<select  sec:authorize="!hasRole('ROLE_CSA')"
@@ -230,22 +230,25 @@
 							</td>
 						</tr>
 
-						<tr th:unless="${id == 0}">
+						<tr th:unless="${ordersDTO.id == 0}">
 							<td  style="font-weight: 600; text-align:right">Функционирование КСА</td>
 							<td>
-								<label id="lblServiceable">восстановлено</label>
+								<input sec:authorize="!hasRole('ROLE_CSA')" id="chServiceable" type="checkbox" th:field="*{serviceable}" th:value="${serviceable}" th:text = "восстановлено"/>
+								<input sec:authorize="hasRole('ROLE_CSA')" type="checkbox" th:field="*{serviceable}" th:value="${serviceable}" th:text = "восстановлено" onclick="return false"/>
 							</td>
 							<td >
-								<input sec:authorize="!hasRole('ROLE_CSA')" id="chServiceable" type="checkbox" th:field="*{serviceable}" th:value="${serviceable}">
-								<input sec:authorize="hasRole('ROLE_CSA')" type="checkbox" th:field="*{serviceable}" th:value="${serviceable}" readonly>
+
 							</td>
 						</tr>
 
-						<tr  th:unless="${id == 0}">
+						<tr  th:unless="${ordersDTO.id == 0}">
 							<td  style="font-weight: 600; text-align:right">Дата восстановления КСА</td>
 							<td>
 								<input sec:authorize="!hasRole('ROLE_CSA')" type="date" th:value="${dateClosingOrder}" th:field="*{dateClosingOrder}"/>
-								<input sec:authorize="hasRole('ROLE_CSA')"  type="text" th:value="${dateClosingOrder}" th:field="*{dateClosingOrder}" readonly/>
+								<span sec:authorize="hasRole('ROLE_CSA')" >
+									<input   type="hidden" th:value="${dateClosingOrder}" th:field="*{dateClosingOrder}"/>
+									<label th:text="${ordersDTO.dateClosingOrder}"></label>
+								</span>
 							<td></td>
 						</tr>
 
@@ -257,7 +260,7 @@
 							</td>
 						</tr>
 
-						<tr  th:unless="${id == 0}" sec:authorize="!hasRole('ROLE_CSA')">
+						<tr  th:unless="${ordersDTO.id == 0}" sec:authorize="!hasRole('ROLE_CSA')">
 							<td  style="font-weight: 600; text-align:right">Создать акт</td>
 							<td>
 								<select
@@ -273,7 +276,7 @@
 								<button id="btnCreateActDev" type="submit" class="a-btn">Создать</button>
 							</td>
 						</tr>
-						<tr th:unless="${id == 0}">
+						<tr th:unless="${ordersDTO.id == 0}">
 							<td  style="font-weight: 600; text-align:right">Консультация </td>
 							<td></td>
 							<td>
