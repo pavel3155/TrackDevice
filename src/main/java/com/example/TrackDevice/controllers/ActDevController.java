@@ -6,6 +6,7 @@ import com.example.TrackDevice.model.*;
 import com.example.TrackDevice.repo.*;
 import com.example.TrackDevice.service.ActDevService;
 import com.example.TrackDevice.service.DeviceService;
+import com.example.TrackDevice.service.OrdersService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,12 +36,14 @@ public class ActDevController {
     DeviceRepository deviceRepository;
     @Autowired
     ActTypesRepository actTypesRepository;
-    @Autowired
-    OrderRepository orderRepository;
+//    @Autowired
+//    OrderRepository orderRepository;
     @Autowired
     TypeDeviceRepository typeDeviceRepository;
     @Autowired
     DeviceService deviceService;
+    @Autowired
+    OrdersService ordersService;
 
     @GetMapping("/ActsDev")
     public String ActsDev(Model model) {
@@ -137,7 +140,8 @@ public class ActDevController {
         System.out.println("GET:/moveActsDev?idOrder...");
         System.out.println("idOrder= "+idOrder);
         model.addAttribute("idOrder", idOrder);
-        Order order=orderRepository.getById(idOrder);
+        //Order order=orderRepository.getById(idOrder);
+        Order order=ordersService.getOrderById(idOrder);
         List<ActDev> devActs = actDevRepository.findByOrder(order);
         System.out.println("devActs ="+devActs);
         model.addAttribute("devActs", devActs);
@@ -237,7 +241,7 @@ public class ActDevController {
         }
 
 
-        actDevDTO.setOrder(orderRepository.getById(ordersDTO.getId()));
+        actDevDTO.setOrder(ordersService.getOrderById(ordersDTO.getId()));
         actDevDTO.setNote("");
 
         System.out.println("actDevDTO:= "+actDevDTO);

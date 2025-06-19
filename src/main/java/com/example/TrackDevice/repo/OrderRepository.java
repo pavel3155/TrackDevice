@@ -3,6 +3,7 @@ package com.example.TrackDevice.repo;
 import com.example.TrackDevice.model.CSA;
 import com.example.TrackDevice.model.Order;
 import com.example.TrackDevice.model.User;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -12,9 +13,12 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order,Long>, JpaSpecificationExecutor<Order> {
     List<Order> findAllByOrderByDateAsc();
     List<Order> findAll();
+    //List<Order> findAllOrderByDateAsc(Specification<Order> spec);
     Order getById(long id);
     List<Order> getByCsa(CSA csa);
+    List<Order> getByCsaOrderByDateAsc(CSA csa);
     List<Order> getByExecutor(User executor);
+    List<Order> getByExecutorOrderByDateAsc(User executor);
     List<Order> findAllByNumStartingWith(String date);
 
 

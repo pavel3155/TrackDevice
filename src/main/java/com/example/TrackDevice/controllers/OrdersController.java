@@ -14,6 +14,10 @@ import com.google.gson.Gson;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +59,29 @@ public class OrdersController {
     @Autowired
     TypeDeviceRepository typeDeviceRepository;
 
+
+    /**
+     * метод реализовывает динамический запрос по параметрам объекта filterOrders
+     * @param model
+     * @param filterOrders
+     * @return
+     */
+    @PostMapping("/filter")
+    public String filterOrders(Model model, @AuthenticationPrincipal UserDetails userDetails,
+                               @Valid @ModelAttribute FilterOrders filterOrders) {
+        System.out.println("POST:/filter...");
+        System.out.println("filterOrders= " + filterOrders);
+        System.out.println("UserName:= " + userDetails.getUsername());
+        List<Order> orders= ordersService.getListOrdersByFilterOrders(userDetails,filterOrders);
+        List<String> orderStatus = ordersService.loadStatusOrder();
+        List<CSA> csas = csaRepository.findAll();
+        model.addAttribute("orderStatus", orderStatus);
+        model.addAttribute("csas", csas);
+        model.addAttribute("orders", orders);
+        model.addAttribute("filterOrders", filterOrders);
+
+        return "Orders/orders";
+    }
     /**
      * Метод выводит сохраненные заявки на сранице Orders
      * @param userDetails - анаотация @AuthenticationPrincipal позволяет получить данные пользователя
@@ -142,18 +170,13 @@ public class OrdersController {
             System.out.println("files="+multipartFiles);
 
             listNameFiles=ordersService.addNewNameFilesInList(listNameFiles,multipartFiles,ordersDTO.getNum());
+            System.out.println("listNameFiles:= "+listNameFiles);
 
-//            for (MultipartFile multipartFile : multipartFiles) {
-//                if (fileService.saveFile(multipartFile,ordersDTO.getNum())){
-//                    System.out.println("file.getOriginalFilename()="+multipartFile.getOriginalFilename());
-//                    listNameFiles.add(multipartFile.getOriginalFilename());
-//                    System.out.println("fileNames="+multipartFile);
-//                }
-//            }
             model.addAttribute("ordersDTO",ordersDTO);
             model.addAttribute("files", listNameFiles);
             model.addAttribute("success",true);
         } catch (Exception ex) {
+            System.out.println("ОШИБКА!!!");
             result.addError(new FieldError("ordersDTO", "err", ex.getMessage()));
         }
         return "Orders/order";
@@ -271,4 +294,72 @@ public class OrdersController {
         model.addAttribute("messageDTO", messageDTO);
         return "Orders/messages";
     }
+
+    /**
+     * метод выполняет скачивание с сервера прикрепленных к заявке изображений  на локальный диск
+     * @param direc
+     * @param fileName
+     * @param model
+     * @return
+     */
+    @GetMapping("/downloadPicture")
+    public ResponseEntity<Resource> downloadPicture(@RequestParam String direc, @RequestParam String fileName, Model model) {
+        System.out.println("GET:/Orders/downloadPicture...");
+        System.out.println("directory:= " + direc);
+        System.out.println("fileName:= " + fileName);
+
+        Resource resource = fileService.loadFile(direc, fileName);
+        String encFileName = fileService.encodeFile(fileName);
+        if (!encFileName.isEmpty()) {
+            System.out.println("encFileName= " + encFileName);
+            String contentDisposition = String.format("attachment; filename*=UTF-8''%s", encFileName);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                    .body(resource);
+        } else return ResponseEntity.internalServerError().build();
+
+    }
+
+    /**
+     * метод выполняет функцию просмотра прикрепленных к заявке изображений  на локальный диск
+     * @param direc
+     * @param fileName
+     * @return
+     */
+    @GetMapping("/loadPicture")
+    public ResponseEntity<Resource> loadPicture(@RequestParam String direc, @RequestParam String fileName) {
+        System.out.println("GET:/Orders/loadPicture...");
+        System.out.println("directory:= " + direc);
+        System.out.println("fileName:= " + fileName);
+
+        Resource resource = fileService.loadFile(direc, fileName);
+        if (resource!=null) {
+            // Определяем MIME-тип файла
+            String contentType = ordersService.getContentType(resource);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(resource);
+        } else {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    /**
+     * метод выполняет удаление с сервера прикрепленных к заявке изображений
+     * @param direc
+     * @param fileName
+     * @return
+     */
+    @GetMapping("/deletPicture{direc}&{fileName}")
+    public ResponseEntity<String> delPicture(@PathVariable String direc, @PathVariable String fileName) {
+        System.out.println("GET:/Orders/delPicture...");
+        System.out.println("directory:= " + direc);
+        System.out.println("fileName:= " + fileName);
+        fileService.delFile(direc, fileName);
+        return ResponseEntity.ok("Файл удален");
+    }
+
+
+
+
 }

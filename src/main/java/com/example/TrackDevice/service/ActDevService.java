@@ -19,14 +19,15 @@ import java.util.Date;
 public class ActDevService {
     @Autowired
     ActDevRepository actDevRepository;
-    @Autowired
-    ActTypesRepository actTypesRepository;
-    @Autowired
-    CSARepository csaRepository;
-    @Autowired
-    DeviceRepository deviceRepository;
-    @Autowired
-    OrderRepository orderRepository;
+//    @Autowired
+//    ActTypesRepository actTypesRepository;
+//    @Autowired
+//    CSARepository csaRepository;
+//    @Autowired
+//    DeviceRepository deviceRepository;
+//    @Autowired
+//    OrderRepository orderRepository;
+
 public ActDevDTO getActDevDTOfromActDev(ActDev actDev){
         ActDevDTO actDevDTO = new ActDevDTO();
         actDevDTO.setId(actDev.getId());

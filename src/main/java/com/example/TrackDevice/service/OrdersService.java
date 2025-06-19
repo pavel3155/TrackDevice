@@ -3,13 +3,22 @@ package com.example.TrackDevice.service;
 import com.example.TrackDevice.DTO.CommentDTO;
 import com.example.TrackDevice.DTO.MessageDTO;
 import com.example.TrackDevice.DTO.OrdersDTO;
+import com.example.TrackDevice.filter.FilterOrders;
 import com.example.TrackDevice.model.*;
 import com.example.TrackDevice.repo.*;
+import com.example.TrackDevice.specification.OrdersSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -36,7 +45,8 @@ public class OrdersService {
     FileService fileService;
     @Autowired
     ActTypesRepository actTypesRepository;
-
+    @Autowired
+    private OrdersSpecification ordersSpecification;
 
     //проверка ТС на принадлежность к КСА
     public  boolean DeviceBelongsThisCSA(long idCSA, long idCSAthisDev){
@@ -171,16 +181,52 @@ public class OrdersService {
             System.out.println("role.getType()==\"CSA\"");
             User user = userRepository.findByEmail(userDetails.getUsername());
             CSA csa = user.getCsa();
-            orders = orderRepository.getByCsa(csa);
+            orders = orderRepository.getByCsaOrderByDateAsc(csa);
         } else if(role.equals("ROLE_EXECDEV")){
             System.out.println("role.getType()==\"EXECDEV\"");
             User executor = userRepository.findByEmail(userDetails.getUsername());
-            orders=orderRepository.getByExecutor(executor);
+            orders=orderRepository.getByExecutorOrderByDateAsc(executor);
         } else {
             System.out.println("role.getType()==\"SERV, ADMIN\"");
             orders = orderRepository.findAllByOrderByDateAsc();
         }
         return orders;
+    }
+    public Order getOrderById(long id){
+        return orderRepository.getById(id);
+    }
+
+    public List<Order> getListOrdersByFilterOrders(UserDetails userDetails, FilterOrders filterOrders){
+        Object role = getRoleFromUserDetails(userDetails);
+        Specification<Order> spec = Specification.where(null);
+
+        if (role.equals("ROLE_CSA")) {
+            System.out.println("role.getType()==\"CSA\"");
+            CSA csa = userRepository.findByEmail(userDetails.getUsername()).getCsa();
+            spec = spec.and(ordersSpecification.hasCSA(csa));
+        } else if (role.equals("ROLE_EXECDEV")) {
+            System.out.println("role.getType()==\"EXECDEV\"");
+            User executor = userRepository.findByEmail(userDetails.getUsername());
+            spec = spec.and(ordersSpecification.hasExecutor(executor));
+        } else {
+            System.out.println("role.getType()==\"SERV, ADMIN\"");
+            if (!"---".equals(filterOrders.getCsa().getNum()))
+                spec = spec.and(ordersSpecification.hasCSA(filterOrders.getCsa()));
+        }
+
+        if (!filterOrders.getStartDate().isEmpty() && !filterOrders.getEndDate().isEmpty()) {
+            LocalDate startDate = toLocalData(filterOrders.getStartDate());
+            LocalDate endDate = toLocalData(filterOrders.getEndDate());
+            spec = spec.and(ordersSpecification.dateBetween(startDate, endDate));
+        }
+        if (!filterOrders.getNum().isEmpty()) spec = spec.and(ordersSpecification.hasNum(filterOrders.getNum()));
+        if (!"---".equals(filterOrders.getStatus())) spec = spec.and(ordersSpecification.hasStatus(filterOrders.getStatus()));
+
+
+       // var orders = orderRepository.findAll(spec);
+
+        List<Order> lstOrders = orderRepository.findAll(spec, Sort.by(Sort.Direction.ASC, "date"));
+        return lstOrders;
     }
 
     public Object getRoleFromUserDetails(UserDetails userDetails){
@@ -195,6 +241,20 @@ public class OrdersService {
         return fileService.getListMessages(numOrder);
     }
 
+    //определяем MIME-тип файла
+    public String getContentType(Resource resource){
+        // Определяем файла
+        String contentType;
+
+        try {
+            Path path = Paths.get(resource.getFile().getAbsolutePath());
+            contentType = Files.probeContentType(path);
+        } catch (IOException e) {
+            System.out.println("Не удалось определить MIME-тип, используем application/octet-stream");
+            contentType = "application/octet-stream"; // тип по умолчанию
+        }
+        return contentType;
+    }
 
     public Boolean btnCSADisplay(OrdersDTO orderDTO){
 
@@ -209,8 +269,10 @@ public class OrdersService {
     public Boolean btnSelDeviceDisplay(OrdersDTO orderDTO){
         if (orderDTO.getStatus().equals("закрыта")){
             return false;
-        }
-        return true;
+        } else if (!orderDTO.getCsa().getNum().equals("---")&&!orderDTO.getDevice().getSernum().equals("---")){
+            return orderDTO.getCsa().equals(orderDTO.getDevice().getCsa());
+
+        } else return true;
     }
     public Boolean btnSelDeviceDisplay(CSA oCSA, Device oDevice){
         if (!oCSA.getNum().equals("---")&&!oDevice.getSernum().equals("---")){
