@@ -82,7 +82,10 @@
 				<input type="submit" id="btnSend" style="display:none;">
 				<span id="link"></span>
 				<span><a th:if="${idOrder == 0}" href="/" class="a-btn">Назад</a></span>
+				<!--
 				<span><a th:unless="${idOrder == 0}" th:href="@{/editOrder{order}(order=${idOrder})}" class="a-btn">Назад</a></span>
+				-->
+				<span><a th:unless="${idOrder == 0}" th:href="@{/Orders/order{id}(id=${idOrder})}" class="a-btn">Назад</a></span>
 			</div>
 
 		</form>

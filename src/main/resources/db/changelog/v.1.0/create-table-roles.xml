@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="create-table-roles" author="Koval">
+        <createTable tableName="roles">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="role" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="type" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="insert-roles" author="Koval">
+        <sql>
+            INSERT INTO roles (role, type) VALUES ('---', '---');
+            INSERT INTO roles (role, type) VALUES ('ROLE_ADMIN', 'ADMIN');
+            INSERT INTO roles (role, type) VALUES ('ROLE_SERV', 'SERV');
+            INSERT INTO roles (role, type) VALUES ('ROLE_EXECDEV', 'EXECDEV');
+            INSERT INTO roles (role, type) VALUES ('ROLE_CSA', 'CSA');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

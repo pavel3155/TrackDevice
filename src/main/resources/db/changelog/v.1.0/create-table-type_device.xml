@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+        <changeSet id="create-table-type_device" author="Koval">
+                <!-- Прописываем создание таблицы type_device-->
+                <createTable tableName="type_device">
+                <!--Создаем поля -->
+                <column autoIncrement="true" name="id" type="bigint">
+                        <constraints primaryKey="true" nullable="false"/>
+                </column>
+                <column name="type" type="varchar(255)">
+                        <constraints nullable="false" unique="true"/>
+                </column>
+                </createTable>
+        </changeSet>
+        <changeSet id="insert-type_device" author="Koval">
+                <sql>
+                        INSERT INTO type_device (type) VALUES ('---');
+                        INSERT INTO type_device (type) VALUES ('Системный блок');
+                        INSERT INTO type_device (type) VALUES ('Монитор');
+                        INSERT INTO type_device (type) VALUES ('ИБП');
+                        INSERT INTO type_device (type) VALUES ('МФУ');
+                        INSERT INTO type_device (type) VALUES ('Сервер');
+                        INSERT INTO type_device (type) VALUES ('Принтер');
+                        INSERT INTO type_device (type) VALUES ('Маршрутизатор');
+                </sql>
+        </changeSet>
+</databaseChangeLog>

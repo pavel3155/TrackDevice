@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="create-table-act_dev" author="Koval">
+        <createTable tableName="act_dev">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="num" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="date"/>
+            <column name="type_id" type="bigint" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="csa_from_id" type="bigint" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="csa_to_id" type="bigint" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dev_id" type="bigint" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="bigint"/>
+            <column name="note" type="varchar(255)"/>
+        </createTable>
+        <addForeignKeyConstraint
+                constraintName="fk-act_dev-type_id"
+                baseTableName="act_dev"
+                baseColumnNames="type_id"
+                referencedTableName="act_types"
+                referencedColumnNames="id"
+                onUpdate="CASCADE"
+                onDelete="SET DEFAULT"/>
+        <addForeignKeyConstraint
+                constraintName="fk-act_dev-csa_from_id"
+                baseTableName="act_dev"
+                baseColumnNames="csa_from_id"
+                referencedTableName="csa"
+                referencedColumnNames="id"
+                onUpdate="CASCADE"
+                onDelete="SET DEFAULT"/>
+        <addForeignKeyConstraint
+                constraintName="fk-act_dev-csa_to_id"
+                baseTableName="act_dev"
+                baseColumnNames="csa_to_id"
+                referencedTableName="csa"
+                referencedColumnNames="id"
+                onUpdate="CASCADE"
+                onDelete="SET DEFAULT"/>
+        <addForeignKeyConstraint
+                constraintName="fk-act_dev-dev_id"
+                baseTableName="act_dev"
+                baseColumnNames="dev_id"
+                referencedTableName="device"
+                referencedColumnNames="id"
+                onUpdate="CASCADE"
+                onDelete="SET DEFAULT"/>
+        <addForeignKeyConstraint
+                constraintName="fk-act_dev-order_id"
+                baseTableName="act_dev"
+                baseColumnNames="order_id"
+                referencedTableName="orders"
+                referencedColumnNames="id"
+                onUpdate="CASCADE"
+                onDelete="SET NULL"/>
+    </changeSet>
+</databaseChangeLog>

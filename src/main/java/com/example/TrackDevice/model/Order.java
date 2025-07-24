@@ -16,7 +16,8 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String odate;
+//    240725
+//    private String odate;
     private LocalDate date;
     private LocalDate date_closing;
     @Column(unique = true,nullable = false)

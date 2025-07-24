@@ -20,9 +20,11 @@ public class CSA {
     private String num;
     private String code;
     private String address;
-    @ManyToOne (fetch = FetchType.EAGER)
-    @JoinColumn (name="dev_id")
-    private Device device;
+
+//    240725
+//    @ManyToOne (fetch = FetchType.EAGER)
+//    @JoinColumn (name="dev_id")
+//    private Device device;
 
 //    @OneToMany(fetch = FetchType.EAGER)
 //    @JoinColumn (name="dev_id")

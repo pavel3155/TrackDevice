@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="create-table-orders" author="Koval">
+        <createTable tableName="orders">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="date" type="date"/>
+            <column name="date_closing" type="date"/>
+            <column name="num" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="varchar(250)"/>
+            <column name="status" type="varchar(100)"/>
+            <column name="compl_id" type="bigint" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dev_id" type="bigint" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="restore_id" type="bigint" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="serviceable" type="boolean"/>
+        </createTable>
+        <addForeignKeyConstraint
+                constraintName="fk-orders-compl_id"
+                baseTableName="orders"
+                baseColumnNames="compl_id"
+                referencedTableName="csa"
+                referencedColumnNames="id"
+                onUpdate="CASCADE"
+                onDelete="SET DEFAULT"/>
+        <addForeignKeyConstraint
+                constraintName="fk-orders-dev_id"
+                baseTableName="orders"
+                baseColumnNames="dev_id"
+                referencedTableName="device"
+                referencedColumnNames="id"
+                onUpdate="CASCADE"
+                onDelete="SET DEFAULT"/>
+        <addForeignKeyConstraint
+                constraintName="fk-orders-user_id"
+                baseTableName="orders"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onUpdate="CASCADE"
+                onDelete="SET DEFAULT"/>
+        <addForeignKeyConstraint
+                constraintName="fk-orders-restore_id"
+                baseTableName="orders"
+                baseColumnNames="restore_id"
+                referencedTableName="restore"
+                referencedColumnNames="id"
+                onUpdate="CASCADE"
+                onDelete="SET DEFAULT"/>
+
+    </changeSet>
+</databaseChangeLog>

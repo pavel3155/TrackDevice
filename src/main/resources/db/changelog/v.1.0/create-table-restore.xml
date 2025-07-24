@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+        <changeSet id="create-table-restore" author="Koval">
+                <!-- Прописываем создание таблицы type_device-->
+                <createTable tableName="restore">
+                <!--Создаем поля -->
+                <column autoIncrement="true" name="id" type="bigint">
+                        <constraints primaryKey="true" nullable="false"/>
+                </column>
+                <column name="method" type="varchar(255)">
+                        <constraints nullable="false" unique="true"/>
+                </column>
+                </createTable>
+        </changeSet>
+
+        <changeSet id="insert-restore" author="Koval">
+                <sql>
+                        INSERT INTO restore (method) VALUES ('---');
+                        INSERT INTO restore (method) VALUES ('замена ТС из ОФ');
+                        INSERT INTO restore (method) VALUES ('ремонт ТС на КСА');
+                        INSERT INTO restore (method) VALUES ('консультация');
+                </sql>
+        </changeSet>
+</databaseChangeLog>

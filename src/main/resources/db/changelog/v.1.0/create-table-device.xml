@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+        <changeSet id="create-table-device" author="Koval">
+            <!-- Прописываем создание таблицы model_device-->
+            <createTable tableName="device">
+                <!--Создаем поля -->
+                <column autoIncrement="true" name="id" type="bigint">
+                    <constraints primaryKey="true" nullable="false"/>
+                </column>
+                <column name="model_id" type="bigint"  defaultValueNumeric="1">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="invnum" type="varchar(100)">
+                    <constraints nullable="false" unique="true"/>
+                </column>
+                <column name="sernum" type="varchar(100)">
+                    <constraints nullable="false" unique="true"/>
+                </column>
+                <column name="status" type="varchar(100)"/>
+                <column name="csa_id" type="bigint"  defaultValueNumeric="1">
+                    <constraints nullable="false"/>
+                </column>
+            </createTable>
+            <addForeignKeyConstraint
+                    constraintName="fk-device-model_id"
+                    baseTableName="device"
+                    baseColumnNames="model_id"
+                    referencedTableName="model_device"
+                    referencedColumnNames="id"
+                    onUpdate="CASCADE"
+                    onDelete="SET DEFAULT"/>
+            <addForeignKeyConstraint
+                    constraintName="fk-device-csa_id"
+                    baseTableName="device"
+                    baseColumnNames="csa_id"
+                    referencedTableName="csa"
+                    referencedColumnNames="id"
+                    onUpdate="CASCADE"
+                    onDelete="SET DEFAULT"/>
+        </changeSet>
+        <changeSet id="insert-device" author="Koval">
+            <insert tableName="device">
+                <column name="model_id" valueNumeric="1" />
+                <column name="invnum" value="---" />
+                <column name="sernum" value="---" />
+                <column name="status" value="---" />
+                <column name="csa_id" valueNumeric="1" />
+            </insert>
+        </changeSet>
+</databaseChangeLog>

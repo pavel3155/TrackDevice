@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="create-table-act_types" author="Koval">
+        <createTable tableName="act_types">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="type" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="insert-act_types" author="Koval">
+        <sql>
+            INSERT INTO act_types (type) VALUES ('---');
+            INSERT INTO act_types (type) VALUES ('(Р) движение ТС (СЦ >> КСА)');
+            INSERT INTO act_types (type) VALUES ('(П) движение ТС (КСА >> СЦ)');
+            INSERT INTO act_types (type) VALUES ('(Р) движение РК (СЦ >> КСА)');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+        <changeSet id="create-table-model_device" author="Koval">
+            <!-- Прописываем создание таблицы model_device-->
+            <createTable tableName="model_device">
+                <!--Создаем поля -->
+                <column autoIncrement="true" name="id" type="bigint">
+                    <constraints primaryKey="true" nullable="false"/>
+                </column>
+                <column name="name" type="varchar(255)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="type_id" type="bigint"  defaultValueNumeric="1">
+                    <constraints nullable="false"/>
+                </column>
+            </createTable>
+            <addForeignKeyConstraint
+                    constraintName="fk-model_device-type_id"
+                    baseTableName="model_device"
+                    baseColumnNames="type_id"
+                    referencedTableName="type_device"
+                    referencedColumnNames="id"
+                    onUpdate="CASCADE"
+                    onDelete="SET DEFAULT"/>
+        </changeSet>
+        <changeSet id="insert-model_device" author="Koval">
+            <sql>
+                INSERT INTO model_device (name, type_id) VALUES ('---', 1);
+                INSERT INTO model_device (name, type_id) VALUES ('HP ProDesk 490 G3 MT', 2);
+                INSERT INTO model_device (name, type_id) VALUES ('HP ProDesk 490 G3 MT HDD 2х1ТБ', 2);
+                INSERT INTO model_device (name, type_id) VALUES ('Aquarius Pro USFF P30 K43 R53', 2);
+                INSERT INTO model_device (name, type_id) VALUES ('Acer 21.5 B226HQL', 3);
+                INSERT INTO model_device (name, type_id) VALUES ('Samsung SyncMaster T200G', 3);
+                INSERT INTO model_device (name, type_id) VALUES ('Samsung 21,5 P2250', 3);
+                INSERT INTO model_device (name, type_id) VALUES ('21.5 Benq GW2283', 3);
+                INSERT INTO model_device (name, type_id) VALUES ('APC Back-UPS, BX1100CI-RS', 4);
+                INSERT INTO model_device (name, type_id) VALUES ('APC Smart-UPS X 3000VA', 4);
+                INSERT INTO model_device (name, type_id) VALUES ('Ricoh M2701', 5);
+                INSERT INTO model_device (name, type_id) VALUES ('HP LaserJet Pro M428fdn', 5);
+                INSERT INTO model_device (name, type_id) VALUES ('HP ProLiant ML350 Gen10', 6);
+                INSERT INTO model_device (name, type_id) VALUES ('HP ProLiant ML150 G6', 6);
+                INSERT INTO model_device (name, type_id) VALUES ('Kraftway Express 200 ED13', 6);
+                INSERT INTO model_device (name, type_id) VALUES ('Xerox Phaser 5335DN', 7);
+                INSERT INTO model_device (name, type_id) VALUES ('HP LaserJet 5100', 7);
+                INSERT INTO model_device (name, type_id) VALUES ('CISCO 1251', 8);
+                INSERT INTO model_device (name, type_id) VALUES ('Eltex ESR-100', 8);
+            </sql>
+        </changeSet>
+</databaseChangeLog>
