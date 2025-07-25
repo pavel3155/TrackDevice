@@ -2,6 +2,8 @@ package com.example.TrackDevice.service;
 
 import com.example.TrackDevice.DTO.CommentDTO;
 import com.example.TrackDevice.DTO.MessageDTO;
+import com.example.TrackDevice.Poiji.PoijiDevice;
+import com.poiji.bind.Poiji;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
@@ -77,14 +79,25 @@ public class FileService {
             }
         }
     }
-    public Boolean saveFile(MultipartFile file, String subDir) {
+    // получаем путь к файлу
+    public String getPathFile(MultipartFile file, String rDir,String sDir){
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        if (!fileName.isEmpty()){
+            Path subDirectory =this.fileStorageLocation.resolve(rDir).resolve(sDir);
+            Path targetLocation = subDirectory.resolve(fileName);
+            return targetLocation.toString();
+        }
+        return null;
+    }
+    //копируем фал в директорию
+    public Boolean saveFile(MultipartFile file, String rDir,String sDir) {
         System.out.println("saveFile(MultipartFile file, String subDir)...");
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         System.out.println("fileName:= " +fileName);
         System.out.println("fileName.isEmpty()= " + fileName.isEmpty());
         if (!fileName.isEmpty()){
             try {
-                Path subDirectory =this.fileStorageLocation.resolve(subDir).resolve("pic");
+                Path subDirectory =this.fileStorageLocation.resolve(rDir).resolve(sDir);
                 Files.createDirectories(subDirectory);
                 Path targetLocation = subDirectory.resolve(fileName);
                 Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
@@ -118,11 +131,6 @@ public class FileService {
         return "";
     }
 
-
-
-
-
-
     public void addComment(String fileName, String comment){
         // Проверка на null
         if (fileName == null || comment == null) {
@@ -137,6 +145,19 @@ public class FileService {
             System.out.println(ex.getMessage());
         }
     }
+
+    public List<PoijiDevice> getListDevicesFromFileExcel(String fileLocation){
+        return Poiji.fromExcel(new File(fileLocation), PoijiDevice.class);
+    }
+
+
+
+
+
+
+
+
+
 
 //    public List<String> loadConsult (String subDir){
 //        System.out.println("loadConsult...");

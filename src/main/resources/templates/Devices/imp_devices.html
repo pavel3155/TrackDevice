@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Новое ТС</title>
+	<link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style-form.css">
+</head>
+
+<header>
+	<div id="header">
+		<script src="/js/header-for-dir.js"></script>
+	</div>
+	<div th:replace="Index ::navigation"></div>
+</header>
+<body>
+	<div class="container">
+		<form class="forms-child" enctype="multipart/form-data"
+			  th:method="post"
+			  th:action="@{/Devices/imp_devices}"
+			  th:object="${deviceDTO}">
+
+			<div th:if="${success}" class="" role="alert">
+				<strong>Техническое средство создано!</strong>
+			</div>
+			<span>
+				<h3 th:text="'Загрузка ТС: ' + ${deviceDTO.modelDevice.type.type}+': '+${deviceDTO.modelDevice.name}"> </h3>
+			</span>
+
+			<div class="container-inner">
+				<label for="idInpFileDev" th:text="'Загрузка ТС: ' + ${deviceDTO.modelDevice.type.type}+': '+${deviceDTO.modelDevice.name}"></label>
+				<input type="file" id="idInpFileDev" name="file"/>
+			</div>
+			<input type="hidden" th:value="${modelDevice}" th:field="*{modelDevice}">
+			<input type="hidden" th:value="${csa}" th:field="*{csa}">
+			<span style="margin:20px 5px 5px 5px">
+				<button type="submit" class="a-btn">Загрузить</button>
+				<a href="/device" class="a-btn">Назад</a>
+			</span>
+		</form>
+	</div>
+</body>
+
+</html>
