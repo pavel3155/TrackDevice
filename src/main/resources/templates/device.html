@@ -58,6 +58,7 @@
 			</div>
 			<div>
 				<span id="link"></span>
+				<span id="import"></span>
 				<span><a href="/" class="a-btn">Назад</a></span>
 			</div>
 			<script>
@@ -104,6 +105,7 @@
 					console.log("filterSN="+filterSN);
 					$('#link').empty().prop('disabled', false);
 					$('#link').append('<a href="/addDevice'+selModelIndex+'" class="a-btn">Создать ТС</a>');
+					$('#import').append('<a href="/Devices/imp_devices'+selModelIndex+'" class="a-btn">Загрузить ТС</a>');
 					$.getJSON('/device' + selModelIndex+'&'+filterSN)
                     	 .done(function (data) {
                     		$('#tblDevice').empty().prop('disabled', false);
@@ -122,11 +124,6 @@
                        });
 
 				}
-                function addLink(){
-                	var selModelIndex=$('#selModelDev').val();
-                	console.log("addLink_selModelIndex:="+selModelIndex);
-                	$('#link').append('<a href="/addDevice/model'+selModelIndex+'">Создать ТС</a>');
-                }
 			</script>
 
 		</form>
