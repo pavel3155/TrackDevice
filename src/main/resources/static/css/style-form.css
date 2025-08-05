@@ -267,3 +267,12 @@
 
 
    }
+   .grid_2x3 {
+        display: grid;
+        grid-template-columns: 2fr 2fr;
+        grid-template-rows: 30px 30px 30px;
+        grid-column-gap: 30px;
+
+        font-size: 12pt;
+        font-weight: 600;
+   }

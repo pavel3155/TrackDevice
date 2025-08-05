@@ -56,6 +56,9 @@ public class DevicesController {
 
         model.addAttribute("deviceDTO",deviceDTO);
         model.addAttribute("import",false);
+        model.addAttribute("numberEntries",0);
+        model.addAttribute("impNumberRecords",0);
+        model.addAttribute("notImpNumberRecords",0);
 
         return "Devices/imp_devices";
     }
@@ -94,6 +97,7 @@ public class DevicesController {
                     poijiDevice.setComment("серийный(инвентарный) номер уже существует");
                     notImpNumberRecords=notImpNumberRecords+1;
                     success=false;
+                    System.out.println("poijiDevice:= "+poijiDevice);
 
 //                    System.out.println("e.getMessage()={***"+e.getMessage()+"***}");
 //                    System.out.println("e.toString()={***"+e.toString()+"***}");
@@ -103,15 +107,17 @@ public class DevicesController {
 //                    System.out.println("e.getMostSpecificCause()={***"+e.getMostSpecificCause()+"***}");
 
                 } catch (Exception ex) {
+                    System.out.println("ex:= "+ex);
                     success=false;
                 }
 
             }
-
-            List<PoijiDevice> notImpDev= lstDevices.stream()
+            System.out.println("lstDevices= "+lstDevices);
+            List<PoijiDevice> devsNotImp= lstDevices.stream()
                     .filter(poijiDevice -> !(poijiDevice.getSuccess()))
                     .toList();
-            model.addAttribute("notImpDev",notImpDev);
+            System.out.println("devsNotImp= "+devsNotImp);
+            model.addAttribute("devsNotImp",devsNotImp);
         }
 
         model.addAttribute("numberEntries",numberEntries);

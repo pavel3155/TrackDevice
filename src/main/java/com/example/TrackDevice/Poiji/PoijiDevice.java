@@ -17,7 +17,7 @@ public class PoijiDevice {
     @ExcelCell(4)
     private String serNum;
 
-
-
+    Boolean success;
+    String comment;
 
 }

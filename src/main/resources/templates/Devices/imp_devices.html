@@ -15,44 +15,78 @@
 </header>
 <body>
 	<div class="container">
-		<form class="forms-child" enctype="multipart/form-data"
+		<form class="forms-child"  enctype="multipart/form-data"
 			  th:method="post"
 			  th:action="@{/Devices/imp_devices}"
 			  th:object="${deviceDTO}">
 
-			<div th:if="${success}" class="" role="alert">
-				<strong>Импорт прошел успешно</strong>
+			<div style=" width: 95%" class="grid_2x3">
+					<div style="grid-area: 1 / 1 / 3 / 2; justify-self: center;">
+						<p th:text="'Импорт ТС: ' + ${deviceDTO.modelDevice.type.type}+': '+${deviceDTO.modelDevice.name}"> </p>
+						<div style="display: flex; justify-content: center;">
+							<input  type="file" id="idInpFileDev" name="file"/>
+						</div>
+					</div>
+					<div style="grid-area: 1 / 2 / 3 / 3; justify-self: stretch;">
+						<table class="table"  id="tblInf1">
+							<tr>
+								<td style="width: 60%" th:text="'Количество импортируемых ТС:'"></td>
+								<td style="width: 40%" th:text="${numberEntries}"></td>
+							</tr>
+							<tr>
+								<td  style="width: 60%" th:text="'Импортировано ТС : '"></td>
+								<td style="width: 40%" th:text="${impNumberRecords}"></td>
+							</tr>
+							<tr>
+								<td  style="width: 60%" th:text="'Не импортировано ТС : '"></td>
+								<td style="width: 40%" th:text="${notImpNumberRecords}"></td>
+							</tr>
+						</table>
+					</div>
 			</div>
-			<span>
-				<h3 th:text="'Загрузка ТС: ' + ${deviceDTO.modelDevice.type.type}+': '+${deviceDTO.modelDevice.name}"> </h3>
-			</span>
+
 
 			<div class="container-inner">
-				<label for="idInpFileDev" th:text="'Загрузка ТС: ' + ${deviceDTO.modelDevice.type.type}+': '+${deviceDTO.modelDevice.name}"></label>
-				<input type="file" id="idInpFileDev" name="file"/>
-
 				<div th:if="${import}" class ="tbl-div">
-					<h3 th:text="'Количество отобранных для импорта ТС: ' + ${numberEntries}"></h3>
-					<h3 th:text="'Импортировано ТС : ' + ${impNumberRecords}"></h3>
-					<h3 th:text="'Не импортировано ТС : ' + ${notImpNumberRecords}"></h3>
-					<table th:if="!${success}" class="table" id="tblDevice">
+					<!--
+					<table class="table" style="width: 60%" id="tblInf">
+						<tr>
+							<td style="width: 60%" th:text="'Количество импортируемых ТС:'"></td>
+
+							<td style="width: 40%" th:text="${numberEntries}"></td>
+						</tr>
+						<tr>
+							<td  style="width: 60%" th:text="'Импортировано ТС : '"></td>
+							<td style="width: 40%" th:text="${impNumberRecords}"></td>
+						</tr>
+						</tr>
+						<tr>
+							<td  style="width: 60%" th:text="'Не импортировано ТС : '"></td>
+							<td style="width: 40%" th:text="${notImpNumberRecords}"></td>
+						</tr>
+					</table>
+					-->
+					<table th:if="!${success}" class="table" id="tblDevNotImp">
 						<tr>
 							<th class ="dev-col-num">№</th>
 							<th>Тип</th>
 							<th>Модель</th>
 							<th>Серийные №</th>
 							<th>Инвентарный №</th>
+							<th>Примечание</th>
 						</tr>
-						<tr>
-							<td class ="dev-col-num">1</td>
-							<td class="AlignCenter"><p class="notMarginAndPadding" th:text="${notImpDev.type}"></p></td>
-							<td class="AlignCenter"><p class="notMarginAndPadding" th:text="${notImpDev.model}"></p></td>
-							<td class="AlignCenter"><p class="notMarginAndPadding" th:text="${notImpDev.sernum}"></p></td>
-							<td class="AlignCenter"><p class="notMarginAndPadding" th:text="${notImpDev.invnum}"></p></td>
-							<td class="AlignCenter"><p class="notMarginAndPadding" th:text="${notImpDev.comment}"></p></td>
+						<tr th:each = "devNotImp, curIteration  : ${devsNotImp}">
+							<td class ="dev-col-num" th:text = "${curIteration.index+1}"></td>
+							<td class="AlignCenter" th:text="${devNotImp.type}"></td>
+							<td class="AlignCenter" th:text="${devNotImp.model}"></td>
+							<td class="AlignCenter" th:text="${devNotImp.serNum}"></td>
+							<td class="AlignCenter" th:text="${devNotImp.invNum}"></td>
+							<td class="AlignCenter" th:text="${devNotImp.comment}"></td>
 						</tr>
 					</table>
+				</div>
 			</div>
+
 			<input type="hidden" th:value="${modelDevice}" th:field="*{modelDevice}">
 			<input type="hidden" th:value="${csa}" th:field="*{csa}">
 
