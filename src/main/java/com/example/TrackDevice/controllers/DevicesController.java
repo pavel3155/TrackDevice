@@ -14,6 +14,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,10 +48,6 @@ public class DevicesController {
         DeviceDTO deviceDTO =new DeviceDTO();
         deviceDTO.setModelDevice(modelDevice);
         deviceDTO.setCsa(csa);
-//        deviceDTO.setSernum("-");
-//        deviceDTO.setInvnum("-");
-//        deviceDTO.setStatus("-");
-//        deviceDTO.setErr("");
         deviceDTO.setId(0);
         System.out.println("deviceDTO:="+deviceDTO);
 
@@ -69,66 +66,66 @@ public class DevicesController {
         System.out.println("deviceDTO:= "+deviceDTO);
 
         MultipartFile multipartFile = multipartFiles[0];
-        int numberEntries=0;
-        int impNumberRecords=0;
-        int notImpNumberRecords=0;
-        boolean success=true;
+        int numberEntries=0; //количество записей(ТС) в файле
+        int impNumberRecords=0; // количество импортированных записей(ТС)
+        int notImpNumberRecords=0; // количество не импортированных записей(ТС)
+        boolean success=true; // импорт выполнен успешно
+        boolean error = false; // ошибка
+        String txtError ="";
+        // если путь к файлу не null
+        if (fileService.saveFile(multipartFile,"import","devices")) {
+            String locationFile = fileService.getPathFile(multipartFile, "import", "devices");
 
-        if (fileService.saveFile(multipartFile,"import","devices")){
-            String locationFile=fileService.getPathFile(multipartFile,"import","devices");
-            List<PoijiDevice> lstDevices= fileService.getListDevicesFromFileExcel(locationFile).stream()
-                    .filter(poijiDevice -> poijiDevice.getModel().equals(deviceDTO.getModelDevice().getName()))
-                            .toList();
+            try {
+                List<PoijiDevice> lstDevices = fileService.getListDevicesFromFileExcel(locationFile).stream()
+                        .filter(poijiDevice -> poijiDevice.getModel().equals(deviceDTO.getModelDevice().getName()))
+                        .toList();
 
-            numberEntries=lstDevices.size();
+                numberEntries = lstDevices.size();
 
-            System.out.println("кол-во ТС отобранных для загрузки:= "+lstDevices.size());
-            deviceDTO.setStatus("исправный");
-            for(PoijiDevice poijiDevice : lstDevices){
-                deviceDTO.setInvnum(poijiDevice.getInvNum());
-                deviceDTO.setSernum(poijiDevice.getSerNum());
+                System.out.println("кол-во ТС отобранных для загрузки:= " + lstDevices.size());
+                deviceDTO.setStatus("исправный");
+                for (PoijiDevice poijiDevice : lstDevices) {
+                    deviceDTO.setInvnum(poijiDevice.getInvNum());
+                    deviceDTO.setSernum(poijiDevice.getSerNum());
 
-                try {
-                    deviceService.addDevice(deviceDTO);
-                    poijiDevice.setSuccess(true);
-                    impNumberRecords=impNumberRecords+1;
-                } catch (DataIntegrityViolationException e) {
-                    poijiDevice.setSuccess(false);
-                    poijiDevice.setComment("серийный(инвентарный) номер уже существует");
-                    notImpNumberRecords=notImpNumberRecords+1;
-                    success=false;
-                    System.out.println("poijiDevice:= "+poijiDevice);
+                    try {
+                        deviceService.addDevice(deviceDTO);
+                        poijiDevice.setSuccess(true);
+                        impNumberRecords = impNumberRecords + 1;
+                    } catch (DataIntegrityViolationException e) {
+                        poijiDevice.setSuccess(false);
+                        poijiDevice.setComment("серийный(инвентарный) номер уже существует");
+                        notImpNumberRecords = notImpNumberRecords + 1;
+                        success = false;
+                        System.out.println("poijiDevice:= " + poijiDevice);
+                    } catch (Exception ex) {
+                        System.out.println("ex:= " + ex);
+                        success = false;
+                    }
 
-//                    System.out.println("e.getMessage()={***"+e.getMessage()+"***}");
-//                    System.out.println("e.toString()={***"+e.toString()+"***}");
-//                    System.out.println("e.getCause()={***"+e.getCause()+"***}");
-//                    System.out.println("e.getRootCause()={***"+e.getRootCause()+"***}");
-//                    System.out.println("e.getLocalizedMessage()={***"+e.getLocalizedMessage()+"***}");
-//                    System.out.println("e.getMostSpecificCause()={***"+e.getMostSpecificCause()+"***}");
-
-                } catch (Exception ex) {
-                    System.out.println("ex:= "+ex);
-                    success=false;
                 }
+                System.out.println("lstDevices= " + lstDevices);
+                List<PoijiDevice> devsNotImp = lstDevices.stream()
+                        .filter(poijiDevice -> !(poijiDevice.getSuccess()))
+                        .toList();
+                System.out.println("devsNotImp= " + devsNotImp);
+                model.addAttribute("devsNotImp", devsNotImp);
+
+            } catch (Exception e) {
+                System.err.println("Ошибка при чтении файла Excel: " + e.getMessage());
+                txtError="Ошибка при чтении файла: " + e.getMessage();
+                success = false;
+                error=true;
 
             }
-            System.out.println("lstDevices= "+lstDevices);
-            List<PoijiDevice> devsNotImp= lstDevices.stream()
-                    .filter(poijiDevice -> !(poijiDevice.getSuccess()))
-                    .toList();
-            System.out.println("devsNotImp= "+devsNotImp);
-            model.addAttribute("devsNotImp",devsNotImp);
         }
-
         model.addAttribute("numberEntries",numberEntries);
         model.addAttribute("impNumberRecords",impNumberRecords);
         model.addAttribute("notImpNumberRecords",notImpNumberRecords);
         model.addAttribute("success", success);
         model.addAttribute("import",true);
-
-
-
-
+        model.addAttribute("error",txtError);
 
         return "Devices/imp_devices";
 

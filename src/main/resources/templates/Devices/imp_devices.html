@@ -26,6 +26,9 @@
 						<div style="display: flex; justify-content: center;">
 							<input  type="file" id="idInpFileDev" name="file"/>
 						</div>
+						<div th:if="${error}" class="div_error">
+							<p th:text="${error}"></p>
+						</div>
 					</div>
 					<div style="grid-area: 1 / 2 / 3 / 3; justify-self: stretch;">
 						<table class="table"  id="tblInf1">
@@ -48,24 +51,7 @@
 
 			<div class="container-inner">
 				<div th:if="${import}" class ="tbl-div">
-					<!--
-					<table class="table" style="width: 60%" id="tblInf">
-						<tr>
-							<td style="width: 60%" th:text="'Количество импортируемых ТС:'"></td>
 
-							<td style="width: 40%" th:text="${numberEntries}"></td>
-						</tr>
-						<tr>
-							<td  style="width: 60%" th:text="'Импортировано ТС : '"></td>
-							<td style="width: 40%" th:text="${impNumberRecords}"></td>
-						</tr>
-						</tr>
-						<tr>
-							<td  style="width: 60%" th:text="'Не импортировано ТС : '"></td>
-							<td style="width: 40%" th:text="${notImpNumberRecords}"></td>
-						</tr>
-					</table>
-					-->
 					<table th:if="!${success}" class="table" id="tblDevNotImp">
 						<tr>
 							<th class ="dev-col-num">№</th>
