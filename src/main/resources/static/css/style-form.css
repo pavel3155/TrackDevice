@@ -221,6 +221,12 @@
 
 }
 
+.lblText {
+    margin-bottom:5px;
+    font-size: 12pt;
+    font-weight: 600;
+    align:left;
+ }
   .a-btn{
       margin:2px;
       padding: 2px 4px 2px 4px;

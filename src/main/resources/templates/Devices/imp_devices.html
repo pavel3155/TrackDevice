@@ -51,7 +51,8 @@
 
 			<div class="container-inner">
 				<div th:if="${import}" class ="tbl-div">
-
+					<label th:if="${success}" class="div_error" style="color:blue">Импорт прошел удачно!</label>
+					<label th:if="!${success}" class="div_error">Импорт прошел неудачно! Следующие ТС не импортированы:</label>
 					<table th:if="!${success}" class="table" id="tblDevNotImp">
 						<tr>
 							<th class ="dev-col-num">№</th>

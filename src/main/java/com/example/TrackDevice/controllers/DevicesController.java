@@ -69,6 +69,7 @@ public class DevicesController {
         int numberEntries=0; //количество записей(ТС) в файле
         int impNumberRecords=0; // количество импортированных записей(ТС)
         int notImpNumberRecords=0; // количество не импортированных записей(ТС)
+        boolean impStarted=true;// импорт запущен
         boolean success=true; // импорт выполнен успешно
         boolean error = false; // ошибка
         String txtError ="";
@@ -115,6 +116,7 @@ public class DevicesController {
             } catch (Exception e) {
                 System.err.println("Ошибка при чтении файла Excel: " + e.getMessage());
                 txtError="Ошибка при чтении файла: " + e.getMessage();
+                impStarted=false;
                 success = false;
                 error=true;
 
@@ -124,7 +126,7 @@ public class DevicesController {
         model.addAttribute("impNumberRecords",impNumberRecords);
         model.addAttribute("notImpNumberRecords",notImpNumberRecords);
         model.addAttribute("success", success);
-        model.addAttribute("import",true);
+        model.addAttribute("import",impStarted);
         model.addAttribute("error",txtError);
 
         return "Devices/imp_devices";
