@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Тип ТС</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style-form.css">
+</head>
+
+<header>
+    <div id="header">
+        <script src="/js/header-for-dir.js"></script>
+    </div>
+    <div th:replace="~{index ::navigation}"></div>
+</header>
+<body>
+<div class="container">
+    <form class="forms-child"
+          th:method="post"
+          th:action="@{/Devices/types}"
+          th:object="${typeDeviceDTO}">
+
+        <span>
+            <h4 style="margin:10px 0px 10px 0px">Тип технического устройства</h4>
+        </span>
+        <div class="container-inner">
+            <div class ="tbl-div">
+                <table class="table" style="width:50%;margin:5px 0px 5px 0px" id="tblModelDevice">
+                        <tr>
+                            <th class ="dev-col-num">№</th>
+                            <th style="width: 40%;text-align:center">Тип ТС</th>
+                            <th class ="col-action">Действие</th>
+                        </tr>
+                        <tr th:each="type, curIteration : ${types}">
+                            <td class ="dev-col-num" th:text = "${curIteration.index+1}"></td>
+                            <td style="text-align:center" th:text="${type.type}"></td>
+                            <td>
+                                <a th:href="@{/Devices/type{id}(id=${type.id})}" class="a-btn a-btn-tbl">Редактировать</a>
+                            </td>
+                        </tr>
+                </table>
+            </div>
+        </div>
+        <div style="margin:0px 0px 15px 0px">
+            <span><a th:href="@{/Devices/type{id}(id=0)}" class="a-btn">Добавить тип ТС</a></span>
+            <span><a href="/" class="a-btn">Назад</a></span>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

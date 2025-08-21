@@ -1,16 +1,25 @@
 package com.example.TrackDevice.controllers;
 
 import com.example.TrackDevice.DTO.DeviceDTO;
+import com.example.TrackDevice.DTO.JSONDeviceDTO;
+import com.example.TrackDevice.DTO.ModelDeviceDTO;
+import com.example.TrackDevice.DTO.TypeDeviceDTO;
 import com.example.TrackDevice.Poiji.PoijiDevice;
 import com.example.TrackDevice.model.CSA;
+import com.example.TrackDevice.model.Device;
 import com.example.TrackDevice.model.ModelDevice;
+import com.example.TrackDevice.model.TypeDevice;
 import com.example.TrackDevice.repo.CSARepository;
+import com.example.TrackDevice.repo.DeviceRepository;
 import com.example.TrackDevice.repo.ModelDeviceRepository;
+import com.example.TrackDevice.repo.TypeDeviceRepository;
 import com.example.TrackDevice.service.DeviceService;
 import com.example.TrackDevice.service.FileService;
+import com.google.gson.Gson;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +27,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -31,7 +41,127 @@ public class DevicesController {
     @Autowired
     DeviceService deviceService;
     @Autowired
+    DeviceRepository deviceRepository;
+    @Autowired
     CSARepository csaRepository;
+    @Autowired
+    TypeDeviceRepository typeDeviceRepository;
+
+    @GetMapping("/types")
+    public String viewTypeDevice(Model model) {
+        List<TypeDevice> types = typeDeviceRepository.findAll();
+        types.remove(0);
+        model.addAttribute("types", types);
+        return "Devices/types";
+    }
+    @GetMapping("/type{id}")
+    public String editTypeDevice(@PathVariable(value ="id") long id, Model model){
+        System.out.println("id= "+id);
+        model.addAttribute("typeDeviceDTO",deviceService.getTypeDeviceDTO(id));
+        return "Devices/type";
+    }
+    @PostMapping("/type")
+    public String addTypeDev(Model model, @Valid @ModelAttribute TypeDeviceDTO typeDeviceDTO, BindingResult result) {
+        //если ошибки есть
+        if (result.hasErrors()) {
+            return "Devices/type";
+        }
+        try {
+            System.out.println("typeDeviceDTO:= "+typeDeviceDTO);
+            deviceService.saveTypeDevice(typeDeviceDTO);
+            model.addAttribute("typeDeviceDTO",typeDeviceDTO);
+            model.addAttribute("success",true);
+        } catch (Exception ex) {
+            result.addError(new FieldError("typeDeviceDTO", "name", ex.getMessage()));
+        }
+        return "Devices/type";
+    }
+
+    //загружает страницу с моделями ТС
+    @GetMapping("/models")
+    public String ModelDevice(Model model) {
+        List<TypeDevice> types = typeDeviceRepository.findAll();
+        model.addAttribute("types",types);
+        TypeDeviceDTO typeDeviceDTO  = new TypeDeviceDTO();
+        model.addAttribute(typeDeviceDTO);
+        return "Devices/models";
+    }
+    //возвращает json -объект(список моделей соответствующих выбранному типу ТС)
+    @GetMapping("/device/model{type}")
+    @ResponseBody
+    public ResponseEntity<String> loadModelDevice(@PathVariable String type){
+        System.out.println("/device/model{type}_type= "+type);
+        TypeDevice typeDevice = typeDeviceRepository.findByType(type);
+        List<ModelDevice> models =modelDeviceRepository.findByType(typeDevice);
+        Gson gson = new Gson();
+        String jsonModels = gson.toJson(models);
+        return  ResponseEntity.ok(jsonModels);
+    }
+    //открываем страницу model для создания/редактирования модели ТС
+    @GetMapping("/model{idType}&{idModel}")
+    public String displayModel(@PathVariable String idType,@PathVariable String idModel, Model model){
+        System.out.println("idModel= "+idModel);
+        model.addAttribute("modelDeviceDTO",deviceService.getModelDeviceDTO(idType,idModel));
+        return "Devices/model";
+    }
+    //сохраняем новую/измененную модель ТС в БД
+    @PostMapping("/model")
+    public String saveModel(Model model, @Valid @ModelAttribute ModelDeviceDTO modelDeviceDTO, BindingResult result) {
+        //если ошибки есть
+        if (result.hasErrors()) {
+            if (modelDeviceDTO.getType()==null)
+                result.addError(new FieldError("modelDeviceDTO", "type", "тип ТС не может быть null"));
+            return "Devices/model";
+        }
+        try {
+            System.out.println("modelDeviceDTO:= "+modelDeviceDTO);
+            deviceService.saveModelDevice(modelDeviceDTO);
+            model.addAttribute("modelDeviceDTO",modelDeviceDTO);
+            model.addAttribute("success",true);
+        } catch (Exception ex) {
+            result.addError(new FieldError("modelDeviceDTO", "name", ex.getMessage()));
+        }
+        return "Devices/model";
+    }
+    // открываем страницу devices для отображения все ТС
+    @GetMapping("/devices")
+    public String displayDevices(Model model) {
+        List<TypeDevice> types = typeDeviceRepository.findAll();
+        types.remove(0);
+        model.addAttribute("types",types);
+        DeviceDTO deviceDTO = new DeviceDTO();
+        model.addAttribute(deviceDTO);
+        return "Devices/devices";
+    }
+
+    /**
+     * возвращает json -объект(список ТС в соответствии с выбранной моделью и установленным фильтром по серийному номеру)
+     * @param idModel - модель ТС
+     * @param filterSN -серийный номер
+     * @return
+     */
+    @GetMapping("/device{idModel}&{filterSN}")
+    @ResponseBody
+    public ResponseEntity<String> loadDevices(@PathVariable String idModel, @PathVariable String filterSN){
+        System.out.println("/device{idModel}_id= "+idModel);
+        System.out.println("/device{idModel}_filterSN= "+filterSN);
+        ModelDevice model =modelDeviceRepository.getById(Long.parseLong(idModel));
+        System.out.println("model:= "+model);
+        List<Device> devices = new ArrayList<>();
+        if (filterSN.isEmpty()){
+            devices = deviceRepository.findByModel(model);
+        } else {
+            devices = deviceRepository.findByModelAndSernumContainingIgnoreCase(model,filterSN);
+        }
+        List<JSONDeviceDTO> jsonDeviceDTOList=deviceService.newObjJSONDeviceDTO(devices);
+
+        System.out.println("devices:= "+devices);
+        System.out.println("jsonDeviceDTOList:= "+jsonDeviceDTOList);
+        Gson gson = new Gson();
+        String jsonDevices = gson.toJson(jsonDeviceDTOList);
+        return  ResponseEntity.ok(jsonDevices);
+    }
+
 
     /** обработка события кнопки "Загрузить ТС" на странице device.html.
      * В качестве параметра передается id выбранной модели ТС.

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Модель ТС</title>
+	<link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style-form.css">
+	<script src="/js/jquery-3.7.1.js"></script>
+</head>
+
+<header>
+	<div id="header">
+		<script src="/js/header-for-dir.js"></script>
+	</div>
+	<div th:replace="~{index ::navigation}"></div>
+</header>
+<body>
+	<div class="container">
+		<form class="forms-child"
+			  th:method="get"
+			  th:action="@{/Devices/models}"
+			  th:object="${typeDeviceDTO}">
+
+			<div class="container-inner">
+				<div class="filter">
+					<span>
+						<label for="selTypeDev">Вуберите тип ТС: </label>
+						<select  id="selTypeDev" class="select" change="loadSelectDevModel()">
+							<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"></option>
+						</select>
+						<script>
+							$('#selTypeDev option[value=2]').prop('selected',true);
+						</script>
+					</span>
+				</div>
+
+				<div class ="tbl-div">
+					<table class="table"  id="tblModelDevice">
+						<tr>
+							<th class ="col-num">№</th>
+							<th class ="col-basic">Модель</th>
+							<th class ="col-action">Действие</th>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div>
+				<span id="link"></span>
+				<span><a href="/" class="a-btn">Назад</a></span>
+			</div>
+
+			<script>
+				$(document).ready(loadSelectDevModel);
+				$(document).ready(initEvent);
+
+                function initEvent() {
+                    $('#selTypeDev').bind('change', loadSelectDevModel);
+                }
+                function addLink(){
+                	var selTypeIndex=$('#selTypeDev option:selected').val();
+                	$('#link').append('<a href="/add-model-dev'+selTypeIndex+'">Создать модель ТС</a>');
+                }
+
+                function loadSelectDevModel() {
+                     	var selTypeIndex=$('#selTypeDev').val();
+						var selTypeText=$('#selTypeDev option:selected').text();
+						var newModelIndex=0;
+						$('#link').empty().prop('disabled', false);
+						$('#link').append('<a href="/Devices/model'+selTypeIndex+'&'+newModelIndex+'" class="a-btn">Создать модель ТС</a>');
+
+                    	$.getJSON('/device/model' + selTypeText)
+                    	 .done(function (data) {
+                    		$('#tblModelDevice').empty().prop('disabled', false);
+                    		$('#tblModelDevice').append('<tr><th class ="col-num">№</th><th class ="col-basic">Модель</th><th class ="col-action">Действие</th></tr>');
+                    		console.log(data);
+							var models=data;
+							var typeIndex=0;
+							console.log(models);
+							$.each(models, function(i) {
+								var n=i+1;
+    							$('#tblModelDevice').append('<tr><td class ="col-num">' + n +
+    														'</td><td>' + models[i].name +
+    														'</td><td><a href="/Devices/model'+typeIndex+'&'+models[i].id+'" class="a-btn a-btn-tbl">Редактировать</a></td><tr>');
+
+							});
+                       });
+                    }
+
+			</script>
+
+		</form>
+	</div>
+</body>
+
+</html>

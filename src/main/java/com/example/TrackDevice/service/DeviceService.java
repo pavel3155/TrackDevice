@@ -26,20 +26,52 @@ public class DeviceService {
     ModelDeviceRepository modelDeviceRepository;
     @Autowired
     TypeDeviceRepository typeDeviceRepository;
-public List<JSONDeviceDTO> newObjJSONDeviceDTO(List<Device> devices){
-    List<JSONDeviceDTO> jsonDeviceDTOList= new ArrayList<>();
-    for (Device dev:devices){
-        JSONDeviceDTO jsonDeviceDTO=new JSONDeviceDTO();
-        jsonDeviceDTO.setId(dev.getId());
-        jsonDeviceDTO.setType(dev.getModel().getType().getType());
-        jsonDeviceDTO.setModel(dev.getModel().getName());
-        jsonDeviceDTO.setInvnum(dev.getInvnum());
-        jsonDeviceDTO.setSernum(dev.getSernum());
-        jsonDeviceDTO.setCsa(dev.getCsa().getNum());
-        jsonDeviceDTOList.add(jsonDeviceDTO);
+
+    //создается объект TypeDeviceDTO
+    public TypeDeviceDTO getTypeDeviceDTO(long typeID){
+
+        if(typeID==0){
+            return new TypeDeviceDTO();
+        } else {
+            TypeDevice typeDevice=typeDeviceRepository.getById(typeID);
+            TypeDeviceDTO typeDeviceDTO =new TypeDeviceDTO();
+            typeDeviceDTO.setId(typeDevice.getId());
+            typeDeviceDTO.setType(typeDevice.getType());
+            return typeDeviceDTO;
+        }
     }
-    return jsonDeviceDTOList;
+
+// получаем объект  ModelDeviceDTO для создания/редактирования ModelDevice
+public  ModelDeviceDTO getModelDeviceDTO (String idType,String idModel){
+    ModelDeviceDTO modelDeviceDTO = new ModelDeviceDTO();
+    if (idModel.equals("0")){
+        TypeDevice typeDevice = typeDeviceRepository.getById(Long.parseLong(idType));
+        System.out.println("addModelDev{id}_type:=" +typeDevice);
+        modelDeviceDTO.setType(typeDevice);
+    }else{
+        ModelDevice modelDevice=modelDeviceRepository.getById(Long.parseLong(idModel));
+        modelDeviceDTO.setId(modelDevice.getId());
+        modelDeviceDTO.setType(modelDevice.getType());
+        modelDeviceDTO.setName(modelDevice.getName());
+    }
+    return modelDeviceDTO;
 }
+
+
+    public List<JSONDeviceDTO> newObjJSONDeviceDTO(List<Device> devices){
+        List<JSONDeviceDTO> jsonDeviceDTOList= new ArrayList<>();
+        for (Device dev:devices){
+            JSONDeviceDTO jsonDeviceDTO=new JSONDeviceDTO();
+            jsonDeviceDTO.setId(dev.getId());
+            jsonDeviceDTO.setType(dev.getModel().getType().getType());
+            jsonDeviceDTO.setModel(dev.getModel().getName());
+            jsonDeviceDTO.setInvnum(dev.getInvnum());
+            jsonDeviceDTO.setSernum(dev.getSernum());
+            jsonDeviceDTO.setCsa(dev.getCsa().getNum());
+            jsonDeviceDTOList.add(jsonDeviceDTO);
+        }
+        return jsonDeviceDTOList;
+    }
     public Device addDevice(@Valid DeviceDTO deviceDTO){
         Device device = new Device();
         device.setModel(deviceDTO.getModelDevice());

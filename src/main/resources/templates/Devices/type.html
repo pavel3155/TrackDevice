@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Тип ТС(редактирование)</title>
+	<link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style-form.css">
+</head>
+
+<header>
+	<div id="header">
+		<script src="/js/header-for-dir.js"></script>
+	</div>
+	<div th:replace="~{index ::navigation}"></div>
+</header>
+<body>
+	<div class="container">
+		<form class="forms-child"
+			  th:method="post"
+			  th:action="@{/Devices/type}"
+			  th:object="${typeDeviceDTO}">
+
+			<h5 th:if="${success}" style="text-align:center;margin:0px;padding:0px;color:blue;">Изменения сохранены успешно</h5>
+
+			<span style="margin:30px 5px 15px 5px">
+				<div class="div_error">
+						<p th:if="${#fields.hasErrors('type')}"  th:errors="*{type}"></p>
+				</div>
+				<input type="hidden" th:value="${id}" th:field="*{id}">
+				<b>тип ТС:</b>
+				<input type="text" id="curTypeDev" name="TypeDev" th:field="*{type}"/>
+			</span>
+			<span style="margin:20px 5px 5px 5px">
+				<button type="submit" class="a-btn">Сохранить</button>
+				<a href="/Devices/types" class="a-btn">Назад</a>
+			</span>
+		</form>
+	</div>
+</body>
+
+</html>
